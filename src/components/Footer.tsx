@@ -1,5 +1,6 @@
 import { MapPin, Mail, Clock } from 'lucide-react';
 import ContactForm from './ContactForm';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const Footer = () => {
   return (
@@ -9,10 +10,11 @@ const Footer = () => {
           {/* Column 1: Logo & Slogan */}
           <div>
             <div className="mb-6">
-              <h3 className="text-2xl font-bold mb-2">Innovafin</h3>
-              <p className="text-primary-foreground/70 text-sm font-medium">
-                Construimos Valor y Confianza
-              </p>
+              <img 
+                src={logoInnovafin} 
+                alt="Innovafin - Construimos Valor y Confianza" 
+                className="h-14 w-auto brightness-0 invert"
+              />
             </div>
             <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-sm">
               Somos una firma colombiana de banca de inversión y fintech comprometida con el crecimiento de tu empresa.
