@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const navItems = [
   { label: 'Inicio', href: '#inicio' },
@@ -42,19 +43,14 @@ const Header = () => {
       <div className="container-narrow mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="flex flex-col">
-              <span className={`text-xl md:text-2xl font-bold tracking-tight transition-colors ${
-                isScrolled ? 'text-primary' : 'text-primary-foreground'
-              }`}>
-                Innovafin
-              </span>
-              <span className={`text-[10px] md:text-xs font-medium tracking-wide transition-colors ${
-                isScrolled ? 'text-secondary' : 'text-primary-foreground/80'
-              }`}>
-                Construimos Valor y Confianza
-              </span>
-            </div>
+          <div className="flex items-center">
+            <img 
+              src={logoInnovafin} 
+              alt="Innovafin - Construimos Valor y Confianza" 
+              className={`h-12 md:h-14 w-auto transition-all duration-300 ${
+                isScrolled ? '' : 'brightness-0 invert'
+              }`}
+            />
           </div>
 
           {/* Desktop Navigation */}
