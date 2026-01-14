@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const navItems = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Gestor Profesional', href: '#gestor' },
-  { label: 'Servicios', href: '#servicios' },
-  { label: 'Fintech', href: '#fintech' },
-  { label: 'Contacto', href: '#contacto' },
+  { label: 'Inicio', href: '#inicio', isRoute: false },
+  { label: 'Gestor Profesional', href: '#gestor', isRoute: false },
+  { label: 'Servicios', href: '#servicios', isRoute: false },
+  { label: 'Fintech', href: '#fintech', isRoute: false },
+  { label: 'Portal Factoring', href: '/factoring', isRoute: true },
+  { label: 'Contacto', href: '#contacto', isRoute: false },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +27,10 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (href: string) => {
+    if (location.pathname !== '/') {
+      window.location.href = '/' + href;
+      return;
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -71,17 +78,31 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
-                  isScrolled
-                    ? 'text-foreground hover:text-primary hover:bg-muted'
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {item.label}
-              </button>
+              item.isRoute ? (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                    isScrolled
+                      ? 'text-foreground hover:text-primary hover:bg-muted'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.label}
+                  onClick={() => scrollToSection(item.href)}
+                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                    isScrolled
+                      ? 'text-foreground hover:text-primary hover:bg-muted'
+                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              )
             ))}
             <Button 
               onClick={scrollToContact}
@@ -110,13 +131,24 @@ const Header = () => {
         <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-border/50 animate-fade-in">
           <nav className="container-narrow mx-auto px-4 py-6 flex flex-col gap-2">
             {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => scrollToSection(item.href)}
-                className="px-4 py-3 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors text-left"
-              >
-                {item.label}
-              </button>
+              item.isRoute ? (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="px-4 py-3 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors text-left"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.label}
+                  onClick={() => scrollToSection(item.href)}
+                  className="px-4 py-3 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors text-left"
+                >
+                  {item.label}
+                </button>
+              )
             ))}
             <Button 
               onClick={() => {
