@@ -1,87 +1,88 @@
-import { Shield, Video, Smartphone, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Brain, Video, Smartphone, Sparkles } from 'lucide-react';
 
 const features = [
   {
-    icon: Shield,
-    title: 'Software de Evaluación de Riesgo',
-    description: 'Análisis avanzado de riesgo crediticio con algoritmos de última generación.',
+    icon: Brain,
+    title: 'Evaluación de Riesgo con IA',
+    description: 'Algoritmos avanzados de machine learning para análisis predictivo de riesgo crediticio.',
   },
   {
     icon: Video,
-    title: 'Comité de Crédito 100% a Distancia',
-    description: 'Sesiones virtuales seguras para la toma de decisiones de crédito en tiempo real.',
+    title: 'Comité de Crédito 100% Digital',
+    description: 'Sesiones virtuales seguras para toma de decisiones en tiempo real desde cualquier lugar.',
   },
   {
     icon: Smartphone,
     title: 'Solución Mobile y Offline',
-    description: 'Accede a tus análisis desde cualquier lugar, incluso sin conexión a internet.',
+    description: 'Accede a todos tus análisis y reportes desde cualquier dispositivo, incluso sin conexión.',
   },
 ];
 
 const FintechSection = () => {
   return (
-    <section id="fintech" className="section-padding bg-muted">
-      <div className="container-narrow mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Content */}
-          <div>
-            <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary text-sm font-medium rounded-full mb-4">
-              Innova Fintech
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-              Tecnología de Última Generación
-            </h2>
-            <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
-              Innovamos constantemente para ofrecer soluciones tecnológicas que transforman la manera de gestionar las finanzas empresariales.
-            </p>
+    <section id="fintech" className="section-padding bg-primary relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
+      </div>
 
-            <div className="space-y-6">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div key={index} className="flex gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex-shrink-0 flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground mb-1">
-                        {feature.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <Button 
-              className="mt-10 bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-6 py-5 rounded-lg shadow-medium transition-all duration-300 hover:shadow-lg"
-            >
-              Solicitar Demo
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+      <div className="container-narrow mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 mb-6">
+            <Sparkles className="w-4 h-4 text-secondary" />
+            <span className="text-sm font-medium text-white/80">Innova Fintech</span>
           </div>
+          
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+            Tecnología de{' '}
+            <span className="text-secondary">Última Generación</span>
+          </h2>
+          
+          <p className="text-white/70 text-lg max-w-2xl mx-auto">
+            Innovamos constantemente para transformar la gestión financiera empresarial
+          </p>
+        </div>
 
-          {/* Visual */}
-          <div className="relative">
-            <div className="aspect-square max-w-md mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl transform rotate-3" />
-              <div className="absolute inset-0 bg-gradient-to-br from-primary to-navy-light rounded-3xl shadow-elevated flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-primary-foreground/10 flex items-center justify-center">
-                    <Shield className="w-12 h-12 text-primary-foreground" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-primary-foreground mb-2">
-                    Innova Fintech
-                  </h3>
-                  <p className="text-primary-foreground/80 text-sm">
-                    Soluciones financieras inteligentes
-                  </p>
+        {/* Feature Cards */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div
+                key={index}
+                className="group glass-dark rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 hover:-translate-y-2"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-6 group-hover:bg-secondary/30 transition-colors">
+                  <Icon className="w-8 h-8 text-secondary" strokeWidth={1.5} />
                 </div>
+                
+                <h3 className="text-xl font-bold text-white mb-4">
+                  {feature.title}
+                </h3>
+                
+                <p className="text-white/70 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
+            );
+          })}
+        </div>
+
+        {/* Bottom Visual */}
+        <div className="mt-16 text-center">
+          <div className="inline-flex items-center gap-4 glass-dark rounded-full px-8 py-4">
+            <div className="flex -space-x-2">
+              {['MTG', 'EC', 'ALV'].map((initials, i) => (
+                <div key={i} className="w-10 h-10 rounded-full bg-secondary/30 border-2 border-white/20 flex items-center justify-center">
+                  <span className="text-xs font-medium text-white">{initials}</span>
+                </div>
+              ))}
+            </div>
+            <div className="text-left">
+              <p className="text-white font-medium">Equipo de expertos</p>
+              <p className="text-white/60 text-sm">Listos para asesorarte</p>
             </div>
           </div>
         </div>

@@ -6,61 +6,69 @@
 
 @layer base {
   :root {
-    /* Navy Blue Corporate Palette */
+    /* Modern Fintech Palette - Revolut/N26 inspired */
     --background: 0 0% 100%;
-    --foreground: 220 30% 15%;
+    --foreground: 220 30% 12%;
 
-    /* Card surfaces */
+    /* Off-white surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 220 30% 15%;
+    --card-foreground: 220 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 30% 15%;
+    --popover-foreground: 220 30% 12%;
 
-    /* Navy Blue - Primary Corporate */
-    --primary: 220 50% 20%;
+    /* Deep Navy Blue - Primary Corporate */
+    --primary: 220 55% 15%;
     --primary-foreground: 0 0% 100%;
 
     /* Forest Green - Growth/Accent */
-    --secondary: 150 40% 35%;
+    --secondary: 150 45% 35%;
     --secondary-foreground: 0 0% 100%;
 
     /* Light Gray Sections */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 15% 45%;
+    --muted: 220 20% 97%;
+    --muted-foreground: 220 15% 40%;
 
     /* Green Accent */
-    --accent: 150 45% 40%;
+    --accent: 150 50% 38%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 150 40% 35%;
+    --border: 220 15% 92%;
+    --input: 220 15% 92%;
+    --ring: 150 45% 35%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
     /* Custom Design Tokens */
-    --navy-deep: 220 55% 15%;
-    --navy-medium: 220 50% 25%;
-    --navy-light: 220 45% 35%;
-    --green-forest: 150 40% 35%;
-    --green-light: 150 35% 45%;
-    --gray-section: 220 14% 97%;
+    --navy-deep: 220 55% 12%;
+    --navy-medium: 220 50% 20%;
+    --navy-light: 220 45% 30%;
+    --green-forest: 150 45% 35%;
+    --green-light: 150 40% 45%;
+    --gray-section: 220 20% 98%;
     --gray-border: 220 15% 92%;
 
-    /* Gradients */
-    --gradient-navy: linear-gradient(135deg, hsl(220, 55%, 15%) 0%, hsl(220, 45%, 28%) 100%);
-    --gradient-hero: linear-gradient(135deg, hsla(220, 55%, 15%, 0.92) 0%, hsla(150, 40%, 25%, 0.85) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 98%) 100%);
+    /* Glassmorphism */
+    --glass-bg: 0 0% 100% / 0.7;
+    --glass-border: 0 0% 100% / 0.2;
+    --glass-shadow: 220 30% 15% / 0.1;
 
-    /* Shadows */
-    --shadow-sm: 0 1px 3px hsla(220, 30%, 15%, 0.06);
-    --shadow-md: 0 4px 12px hsla(220, 30%, 15%, 0.08);
-    --shadow-lg: 0 8px 30px hsla(220, 30%, 15%, 0.12);
-    --shadow-card: 0 4px 20px hsla(220, 30%, 15%, 0.06);
+    /* Gradients */
+    --gradient-navy: linear-gradient(135deg, hsl(220, 55%, 12%) 0%, hsl(220, 45%, 22%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsla(220, 55%, 12%, 0.95) 0%, hsla(220, 50%, 20%, 0.9) 100%);
+    --gradient-green: linear-gradient(135deg, hsl(150, 45%, 32%) 0%, hsl(150, 50%, 42%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 20%, 98%) 100%);
+
+    /* Enhanced Shadows */
+    --shadow-sm: 0 1px 3px hsla(220, 30%, 15%, 0.04);
+    --shadow-md: 0 4px 16px hsla(220, 30%, 15%, 0.06);
+    --shadow-lg: 0 8px 40px hsla(220, 30%, 15%, 0.1);
+    --shadow-xl: 0 20px 60px hsla(220, 30%, 15%, 0.15);
+    --shadow-card: 0 2px 20px hsla(220, 30%, 15%, 0.05);
+    --shadow-bento: 0 4px 24px hsla(220, 30%, 15%, 0.08);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -73,25 +81,25 @@
   }
 
   .dark {
-    --background: 220 30% 8%;
+    --background: 220 30% 6%;
     --foreground: 0 0% 98%;
-    --card: 220 30% 12%;
+    --card: 220 30% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 220 30% 12%;
+    --popover: 220 30% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 150 40% 45%;
-    --primary-foreground: 220 30% 10%;
-    --secondary: 220 40% 30%;
+    --primary: 150 45% 45%;
+    --primary-foreground: 220 30% 8%;
+    --secondary: 220 45% 25%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 220 30% 18%;
+    --muted: 220 30% 15%;
     --muted-foreground: 220 15% 65%;
-    --accent: 150 40% 40%;
+    --accent: 150 45% 42%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 30% 22%;
-    --input: 220 30% 22%;
-    --ring: 150 40% 45%;
+    --border: 220 30% 18%;
+    --input: 220 30% 18%;
+    --ring: 150 45% 45%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -124,22 +132,44 @@
 
 @layer components {
   .section-padding {
-    @apply py-20 md:py-28 px-4 md:px-8;
+    @apply py-24 md:py-32 px-4 md:px-8;
   }
 
   .container-narrow {
-    @apply max-w-6xl mx-auto;
+    @apply max-w-7xl mx-auto;
+  }
+
+  /* Bento Card Styles */
+  .bento-card {
+    @apply bg-card rounded-2xl p-8 shadow-bento border border-border/50 transition-all duration-300;
+  }
+
+  .bento-card:hover {
+    @apply shadow-lg -translate-y-1;
+  }
+
+  .bento-card-featured {
+    @apply bg-gradient-to-br from-card to-muted rounded-3xl p-10 shadow-lg border border-border/30;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-white/10 backdrop-blur-xl border border-white/10;
   }
 
   .text-gradient-navy {
-    background: linear-gradient(135deg, hsl(220, 55%, 15%) 0%, hsl(220, 45%, 35%) 100%);
+    background: linear-gradient(135deg, hsl(220, 55%, 12%) 0%, hsl(220, 45%, 28%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .text-gradient-green {
-    background: linear-gradient(135deg, hsl(150, 40%, 30%) 0%, hsl(150, 45%, 45%) 100%);
+    background: linear-gradient(135deg, hsl(150, 45%, 30%) 0%, hsl(150, 50%, 45%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -150,8 +180,13 @@
   }
 
   .card-hover:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
+  }
+
+  /* Pill Button */
+  .btn-pill {
+    @apply rounded-full px-6 py-3 font-medium transition-all duration-300;
   }
 }
 
@@ -164,10 +199,14 @@
     animation: fadeIn 0.5s ease-out forwards;
   }
 
+  .animate-slide-in {
+    animation: slideIn 0.7s ease-out forwards;
+  }
+
   @keyframes fadeUp {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
@@ -182,5 +221,20 @@
     to {
       opacity: 1;
     }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .shadow-bento {
+    box-shadow: var(--shadow-bento);
   }
 }

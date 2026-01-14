@@ -68,7 +68,7 @@ const ContactForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Input
           type="text"
@@ -76,7 +76,7 @@ const ContactForm = () => {
           placeholder="Nombre"
           value={formData.nombre}
           onChange={handleChange}
-          className="bg-background border-border focus:border-secondary focus:ring-secondary/20 h-12"
+          className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-11 rounded-xl"
           maxLength={100}
           disabled={isSubmitting}
         />
@@ -88,7 +88,7 @@ const ContactForm = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          className="bg-background border-border focus:border-secondary focus:ring-secondary/20 h-12"
+          className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-11 rounded-xl"
           maxLength={255}
           disabled={isSubmitting}
         />
@@ -99,8 +99,8 @@ const ContactForm = () => {
           placeholder="Mensaje"
           value={formData.mensaje}
           onChange={handleChange}
-          rows={4}
-          className="bg-background border-border focus:border-secondary focus:ring-secondary/20 resize-none"
+          rows={3}
+          className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 resize-none rounded-xl"
           maxLength={1000}
           disabled={isSubmitting}
         />
@@ -108,15 +108,15 @@ const ContactForm = () => {
       <Button
         type="submit"
         disabled={isSubmitting || isSubmitted}
-        className={`w-full h-12 font-medium rounded-lg transition-all duration-300 ${
+        className={`w-full h-11 font-medium rounded-xl transition-all duration-300 ${
           isSubmitted 
             ? 'bg-secondary hover:bg-secondary text-secondary-foreground' 
-            : 'bg-primary hover:bg-primary/90 text-primary-foreground'
+            : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
         }`}
       >
         {isSubmitting ? (
           <span className="flex items-center gap-2">
-            <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             Enviando...
           </span>
         ) : isSubmitted ? (

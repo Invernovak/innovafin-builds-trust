@@ -1,5 +1,4 @@
 import { 
-  Briefcase, 
   BarChart3, 
   Calculator, 
   Building2, 
@@ -8,71 +7,71 @@ import {
 
 const services = [
   {
-    icon: Briefcase,
-    title: 'Gestor Profesional',
-    description: 'Somos expertos en la administración de portafolios y en el manejo de los activos aceptables para invertir.',
-    highlighted: true,
-  },
-  {
     icon: BarChart3,
-    title: 'Valoración de Empresas y Proyectos',
-    description: 'Asesoramos en la toma de decisiones de inversión y empleamos métodos para obtener el valor financiero real.',
-    highlighted: false,
+    title: 'Valoración de Empresas',
+    description: 'Toma decisiones de inversión con métodos de valor financiero real.',
+    gradient: 'from-blue-500/10 to-indigo-500/10',
+    iconBg: 'bg-blue-500/10',
+    iconColor: 'text-blue-600',
   },
   {
     icon: Calculator,
-    title: 'Consultoría Financiera y Planeación Fiscal',
-    description: 'Asesoría en compras apalancadas (MBO y LBO), fusiones y adquisiciones con experiencia única en Colombia.',
-    highlighted: false,
+    title: 'Consultoría Financiera',
+    description: 'Asesoría en MBO, LBO, fusiones y adquisiciones.',
+    gradient: 'from-emerald-500/10 to-teal-500/10',
+    iconBg: 'bg-emerald-500/10',
+    iconColor: 'text-emerald-600',
   },
   {
     icon: Building2,
     title: 'Estructuración de Negocios',
-    description: 'Fondos de capital privado, negocios fiduciarios y titularizaciones.',
-    highlighted: false,
+    description: 'Fondos de capital privado, fiduciarios y titularizaciones.',
+    gradient: 'from-violet-500/10 to-purple-500/10',
+    iconBg: 'bg-violet-500/10',
+    iconColor: 'text-violet-600',
   },
   {
     icon: RefreshCw,
     title: 'Re-perfilamiento de Deuda',
-    description: 'Estructuración de deuda corporativa y optimización de estructuras de capital.',
-    highlighted: false,
+    description: 'Optimización de estructuras de capital y deuda corporativa.',
+    gradient: 'from-amber-500/10 to-orange-500/10',
+    iconBg: 'bg-amber-500/10',
+    iconColor: 'text-amber-600',
   },
 ];
 
 const ServicesSection = () => {
   return (
-    <section id="servicios" className="section-padding bg-muted">
+    <section id="servicios" className="section-padding bg-background">
       <div className="container-narrow mx-auto">
+        {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <span className="inline-block px-4 py-2 rounded-full bg-primary/5 text-primary text-sm font-semibold mb-4">
             Nuestros Servicios
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            Soluciones financieras{' '}
+            <span className="text-gradient-green">integrales</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Soluciones financieras integrales diseñadas para impulsar el crecimiento de tu empresa
+            Diseñadas para impulsar el crecimiento sostenible de tu empresa
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {/* Bento Grid */}
+        <div className="grid md:grid-cols-2 gap-6">
           {services.map((service, index) => {
             const Icon = service.icon;
             return (
               <div
                 key={index}
-                className={`group bg-card rounded-xl p-8 shadow-card card-hover border ${
-                  service.highlighted 
-                    ? 'border-secondary/30 ring-1 ring-secondary/20' 
-                    : 'border-border'
-                }`}
+                className={`group bento-card bg-gradient-to-br ${service.gradient} hover:shadow-xl`}
               >
-                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-colors ${
-                  service.highlighted 
-                    ? 'bg-secondary/10 text-secondary group-hover:bg-secondary group-hover:text-secondary-foreground' 
-                    : 'bg-primary/5 text-primary group-hover:bg-primary group-hover:text-primary-foreground'
-                }`}>
-                  <Icon className="w-7 h-7" strokeWidth={1.5} />
+                <div className={`w-14 h-14 rounded-2xl ${service.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className={`w-7 h-7 ${service.iconColor}`} strokeWidth={1.5} />
                 </div>
                 
-                <h3 className="text-xl font-semibold text-foreground mb-3">
+                <h3 className="text-xl font-bold text-foreground mb-3">
                   {service.title}
                 </h3>
                 
@@ -80,11 +79,13 @@ const ServicesSection = () => {
                   {service.description}
                 </p>
 
-                {service.highlighted && (
-                  <div className="mt-4 inline-flex items-center text-sm font-medium text-secondary">
-                    Servicio destacado
-                  </div>
-                )}
+                {/* Hover Arrow */}
+                <div className="mt-6 flex items-center gap-2 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span>Conocer más</span>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
               </div>
             );
           })}
