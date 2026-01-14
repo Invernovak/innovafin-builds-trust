@@ -44,13 +44,15 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <img 
-              src={logoInnovafin} 
-              alt="Innovafin - Construimos Valor y Confianza" 
-              className={`h-12 md:h-14 w-auto transition-all duration-300 ${
-                isScrolled ? '' : 'brightness-0 invert'
-              }`}
-            />
+            <div className={`transition-all duration-300 rounded-lg ${
+              isScrolled ? '' : 'bg-white/95 px-3 py-1.5'
+            }`}>
+              <img 
+                src={logoInnovafin} 
+                alt="Innovafin - Construimos Valor y Confianza" 
+                className="h-10 md:h-11 w-auto"
+              />
+            </div>
           </div>
 
           {/* Desktop Navigation */}
