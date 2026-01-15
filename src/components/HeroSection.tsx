@@ -1,5 +1,6 @@
 import { ArrowRight, TrendingUp, Shield, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import heroVideo from '@/assets/animacion_1.mp4';
 
 const HeroSection = () => {
   const scrollToContact = () => {
@@ -14,20 +15,19 @@ const HeroSection = () => {
       id="inicio"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-primary"
     >
-      {/* Gradient Background */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(135deg, hsl(220, 55%, 12%) 0%, hsl(220, 50%, 18%) 50%, hsl(220, 45%, 22%) 100%)'
-        }}
-      />
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
       
-      {/* Abstract Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-secondary/30 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl" />
-      </div>
+      {/* Dark Overlay for better text readability */}
+      <div className="absolute inset-0 bg-primary/70" />
 
       {/* Content */}
       <div className="relative z-10 container-narrow mx-auto px-4 md:px-8 py-32">
