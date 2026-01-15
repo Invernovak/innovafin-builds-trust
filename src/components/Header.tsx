@@ -75,14 +75,14 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* Desktop Navigation - visible from md breakpoint */}
+          <nav className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) => (
               item.isRoute ? (
                 <Link
                   key={item.label}
                   to={item.href}
-                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
                     isScrolled
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
@@ -94,7 +94,7 @@ const Header = () => {
                 <button
                   key={item.label}
                   onClick={() => scrollToSection(item.href)}
-                  className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full ${
+                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
                     isScrolled
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
@@ -106,17 +106,18 @@ const Header = () => {
             ))}
             <Button 
               onClick={scrollToContact}
-              className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-6 shadow-lg hover:shadow-xl transition-all duration-300"
+              size="sm"
+              className="ml-2 lg:ml-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-full px-4 lg:px-6 shadow-lg hover:shadow-xl transition-all duration-300 text-xs lg:text-sm"
             >
               Agenda tu Asesoría
             </Button>
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - only visible on small screens */}
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden rounded-full ${
+            className={`md:hidden rounded-full ${
               isScrolled ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
             }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -126,9 +127,9 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - only for small screens */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-border/50 animate-fade-in">
+        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-border/50 animate-fade-in">
           <nav className="container-narrow mx-auto px-4 py-6 flex flex-col gap-2">
             {navItems.map((item) => (
               item.isRoute ? (
