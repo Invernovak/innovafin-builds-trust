@@ -1,4 +1,5 @@
 import { Brain, Video, Smartphone, Sparkles } from 'lucide-react';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const features = [
   {
@@ -73,12 +74,8 @@ const FintechSection = () => {
         {/* Bottom Visual */}
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-4 glass-dark rounded-full px-8 py-4">
-            <div className="flex -space-x-2">
-              {['MTG', 'EC', 'ALV'].map((initials, i) => (
-                <div key={i} className="w-10 h-10 rounded-full bg-secondary/30 border-2 border-white/20 flex items-center justify-center">
-                  <span className="text-xs font-medium text-white">{initials}</span>
-                </div>
-              ))}
+            <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center p-2">
+              <img src={logoInnovafin} alt="Innovafin" className="w-full h-auto" />
             </div>
             <div className="text-left">
               <p className="text-white font-medium">Equipo de expertos</p>
