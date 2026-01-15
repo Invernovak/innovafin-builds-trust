@@ -5,9 +5,8 @@ import { Button } from '@/components/ui/button';
 import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const navItems = [
-  { label: 'Inicio', href: '#inicio', isRoute: false },
-  { label: 'Gestor Profesional', href: '#gestor', isRoute: false },
-  { label: 'Servicios', href: '#servicios', isRoute: false },
+  { label: 'Quienes Somos', href: '#nosotros', isRoute: false },
+  { label: 'Nuestros Servicios', href: '#servicios', isRoute: false },
   { label: 'Fintech', href: '#fintech', isRoute: false },
   { label: 'Portal Factoring', href: '/factoring', isRoute: true },
   { label: 'Contacto', href: '#contacto', isRoute: false },
@@ -55,8 +54,8 @@ const Header = () => {
     >
       <div className="container-narrow mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo with Tagline */}
-          <div className="flex items-center gap-4">
+          {/* Logo */}
+          <div className="flex items-center">
             <div className={`transition-all duration-300 rounded-xl ${
               isScrolled ? '' : 'bg-white/95 px-4 py-2'
             }`}>
@@ -65,13 +64,6 @@ const Header = () => {
                 alt="Innovafin" 
                 className="h-9 md:h-10 w-auto"
               />
-            </div>
-            <div className={`hidden md:block transition-all duration-300 ${
-              isScrolled ? 'opacity-100' : 'opacity-0'
-            }`}>
-              <span className="text-xs font-medium text-muted-foreground tracking-wide">
-                Construimos Valor y Confianza
-              </span>
             </div>
           </div>
 

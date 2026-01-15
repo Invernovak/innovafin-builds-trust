@@ -1,4 +1,5 @@
 import { TrendingUp, PieChart, LineChart, ArrowUpRight } from 'lucide-react';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const GestorProfesionalSection = () => {
   return (
@@ -47,9 +48,14 @@ const GestorProfesionalSection = () => {
 
             {/* Right: Visual Dashboard */}
             <div className="relative">
-              <div className="bg-primary rounded-3xl p-8 shadow-xl">
+              <div className="bg-primary rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                {/* Logo watermark */}
+                <div className="absolute top-6 right-6 opacity-20">
+                  <img src={logoInnovafin} alt="" className="w-20 h-auto brightness-0 invert" />
+                </div>
+                
                 {/* Dashboard Header */}
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-8 relative z-10">
                   <div>
                     <p className="text-primary-foreground/60 text-sm">Portfolio Dashboard</p>
                     <p className="text-2xl font-bold text-primary-foreground">Gestión Activa</p>

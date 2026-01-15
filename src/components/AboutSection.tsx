@@ -1,4 +1,5 @@
 import { Target, Rocket } from 'lucide-react';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const teamMembers = [
   {
@@ -39,7 +40,12 @@ const AboutSection = () => {
           </span>
           
           <div className="max-w-4xl mx-auto">
-            <div className="bento-card-featured text-center py-12">
+            <div className="bento-card-featured text-center py-12 relative overflow-hidden">
+              {/* Logo watermark */}
+              <div className="absolute top-8 right-8 opacity-10">
+                <img src={logoInnovafin} alt="" className="w-24 h-auto" />
+              </div>
+              
               <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-secondary/20 to-secondary/10 mx-auto mb-8 flex items-center justify-center">
                 <Rocket className="w-10 h-10 text-secondary" strokeWidth={1.5} />
               </div>

@@ -4,6 +4,7 @@ import {
   Building2, 
   RefreshCw 
 } from 'lucide-react';
+import logoInnovafin from '@/assets/logo-innovafin.png';
 
 const services = [
   {
@@ -13,6 +14,7 @@ const services = [
     gradient: 'from-blue-500/10 to-indigo-500/10',
     iconBg: 'bg-blue-500/10',
     iconColor: 'text-blue-600',
+    showLogo: true,
   },
   {
     icon: Calculator,
@@ -21,6 +23,7 @@ const services = [
     gradient: 'from-emerald-500/10 to-teal-500/10',
     iconBg: 'bg-emerald-500/10',
     iconColor: 'text-emerald-600',
+    showLogo: false,
   },
   {
     icon: Building2,
@@ -29,6 +32,7 @@ const services = [
     gradient: 'from-violet-500/10 to-purple-500/10',
     iconBg: 'bg-violet-500/10',
     iconColor: 'text-violet-600',
+    showLogo: true,
   },
   {
     icon: RefreshCw,
@@ -37,6 +41,7 @@ const services = [
     gradient: 'from-amber-500/10 to-orange-500/10',
     iconBg: 'bg-amber-500/10',
     iconColor: 'text-amber-600',
+    showLogo: false,
   },
 ];
 
@@ -65,8 +70,15 @@ const ServicesSection = () => {
             return (
               <div
                 key={index}
-                className={`group bento-card bg-gradient-to-br ${service.gradient} hover:shadow-xl`}
+                className={`group bento-card bg-gradient-to-br ${service.gradient} hover:shadow-xl relative overflow-hidden`}
               >
+                {/* Logo watermark */}
+                {service.showLogo && (
+                  <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                    <img src={logoInnovafin} alt="" className="w-16 h-auto" />
+                  </div>
+                )}
+                
                 <div className={`w-14 h-14 rounded-2xl ${service.iconBg} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   <Icon className={`w-7 h-7 ${service.iconColor}`} strokeWidth={1.5} />
                 </div>
