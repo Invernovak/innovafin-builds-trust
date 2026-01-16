@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import avatarPresentation from '@/assets/avatar-presentation.png';
 
 const compartimentos = [
   {
@@ -111,13 +112,24 @@ const Portfolio = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Fondo de Capital InnovaFin
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Gestione su inversión en nuestros tres compartimientos especializados
-          </p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left md:max-w-xl">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                Fondo de Capital InnovaFin
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Gestione su inversión en nuestros tres compartimientos especializados
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 max-w-md">
+              <img 
+                src={avatarPresentation} 
+                alt="Asesora presentando información del portafolio" 
+                className="w-full h-auto rounded-2xl shadow-xl"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
