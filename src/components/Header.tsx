@@ -4,24 +4,32 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import logoInnovafin from '@/assets/logo-innovafin.png';
 const navItems = [{
-  label: 'Quienes Somos',
+  label: 'Inicio',
+  href: '#hero',
+  isRoute: false
+}, {
+  label: 'Quiénes Somos',
   href: '#nosotros',
   isRoute: false
 }, {
-  label: 'Nuestros Servicios',
+  label: 'Servicios',
   href: '#servicios',
   isRoute: false
 }, {
-  label: 'Fintech',
-  href: '#fintech',
+  label: 'Inversionistas',
+  href: '#inversionistas',
   isRoute: false
 }, {
-  label: 'Portal Factoring',
-  href: '/factoring',
+  label: 'Originadores',
+  href: '/originators',
   isRoute: true
 }, {
-  label: 'Contacto',
-  href: '#contacto',
+  label: 'Portafolio',
+  href: '#portafolio',
+  isRoute: false
+}, {
+  label: 'Dashboard',
+  href: '#dashboard',
   isRoute: false
 }];
 const Header = () => {
