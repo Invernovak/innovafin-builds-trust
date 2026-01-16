@@ -25,8 +25,8 @@ const navItems = [{
   isRoute: true
 }, {
   label: 'Portafolio',
-  href: '#portafolio',
-  isRoute: false
+  href: '/portfolio',
+  isRoute: true
 }, {
   label: 'Dashboard',
   href: '#dashboard',
