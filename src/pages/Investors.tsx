@@ -71,22 +71,22 @@ const Investors = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
+      <section className="pt-32 pb-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-center md:text-left md:max-w-xl">
-              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-                Portal de Inversionistas
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="text-left md:max-w-lg">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+                Portal de<br />Inversionistas
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Únase a nuestra red de inversionistas y acceda a oportunidades exclusivas de inversión
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Únase a nuestra red de inversionistas y acceda a oportunidades exclusivas de inversión con el respaldo y la seguridad que InnovaFin ofrece.
               </p>
             </div>
-            <div className="w-full md:w-1/2 max-w-md">
+            <div className="w-full md:w-auto">
               <img 
                 src={avatarCharts} 
                 alt="Asesora de inversiones mostrando gráficos" 
-                className="w-full h-auto rounded-2xl shadow-xl"
+                className="w-full max-w-sm h-auto rounded-2xl shadow-xl"
               />
             </div>
           </div>
@@ -94,44 +94,43 @@ const Investors = () => {
       </section>
 
       {/* Tabs Section */}
-      <section className="py-12">
-        <div className="container mx-auto px-4 max-w-5xl">
+      <section className="py-12 bg-muted/30">
+        <div className="container mx-auto px-4 max-w-4xl">
           <Tabs defaultValue="vinculacion" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8 h-14 bg-muted/30 rounded-xl p-1">
-              <TabsTrigger 
-                value="vinculacion" 
-                className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                Vinculación
-              </TabsTrigger>
-              <TabsTrigger 
-                value="compartimentos"
-                className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                Compartimentos
-              </TabsTrigger>
-              <TabsTrigger 
-                value="beneficios"
-                className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                Beneficios
-              </TabsTrigger>
-            </TabsList>
+            {/* Tab Pills */}
+            <div className="flex justify-center mb-8">
+              <TabsList className="inline-flex h-12 bg-muted/50 rounded-full p-1 gap-1">
+                <TabsTrigger 
+                  value="vinculacion" 
+                  className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all"
+                >
+                  Vinculación
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="compartimentos"
+                  className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all"
+                >
+                  Compartimentos
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="beneficios"
+                  className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm transition-all"
+                >
+                  Beneficios
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Vinculación Tab */}
             <TabsContent value="vinculacion">
-              <Card className="border-border/50 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="text-xl md:text-2xl text-primary">
-                    Proceso de Vinculación de Inversionistas
-                  </CardTitle>
-                  
+              <Card className="border-0 shadow-xl bg-background rounded-2xl">
+                <CardContent className="p-8">
                   {/* Stepper */}
-                  <div className="flex items-center justify-between mt-6 max-w-md">
+                  <div className="flex items-center justify-center mb-8">
                     {[1, 2, 3].map((step, index) => (
                       <div key={step} className="flex items-center">
                         <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-semibold transition-colors ${
+                          className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
                             currentStep >= step
                               ? 'bg-primary text-primary-foreground'
                               : 'bg-muted text-muted-foreground'
@@ -141,108 +140,113 @@ const Investors = () => {
                         </div>
                         {index < 2 && (
                           <div
-                            className={`w-16 md:w-32 h-0.5 mx-2 transition-colors ${
-                              currentStep > step ? 'bg-primary' : 'bg-muted'
+                            className={`w-20 md:w-32 h-0.5 transition-colors ${
+                              currentStep > step ? 'bg-primary' : 'bg-border'
                             }`}
                           />
                         )}
                       </div>
                     ))}
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
+
+                  <div className="mb-6">
+                    <h2 className="text-xl md:text-2xl font-bold text-foreground mb-1">
+                      Proceso de Vinculación de Inversionistas
+                    </h2>
+                    <p className="text-muted-foreground">
+                      Paso {currentStep}: {currentStep === 1 ? 'Información Personal' : currentStep === 2 ? 'Documentación' : 'Confirmación'}
+                    </p>
+                  </div>
                   {currentStep === 1 && (
-                    <>
-                      <h3 className="text-lg font-semibold text-foreground">
-                        Paso 1: Información Personal
-                      </h3>
-                      
-                      <div className="space-y-4">
+                    <div className="space-y-5">
+                      <div>
+                        <Label htmlFor="tipoPersona" className="text-sm font-medium text-foreground">
+                          Tipo de Persona
+                        </Label>
+                        <Select
+                          value={formData.tipoPersona}
+                          onValueChange={(value) => handleInputChange('tipoPersona', value)}
+                        >
+                          <SelectTrigger className="mt-2 h-12 bg-muted/30 border-0 rounded-lg">
+                            <SelectValue placeholder="Seleccione tipo de persona" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-background border shadow-lg">
+                            <SelectItem value="natural">Persona Natural</SelectItem>
+                            <SelectItem value="juridica">Persona Jurídica</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-5">
                         <div>
-                          <Label htmlFor="tipoPersona">Tipo de Persona</Label>
-                          <Select
-                            value={formData.tipoPersona}
-                            onValueChange={(value) => handleInputChange('tipoPersona', value)}
-                          >
-                            <SelectTrigger className="mt-1">
-                              <SelectValue placeholder="Seleccione tipo de persona" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="natural">Persona Natural</SelectItem>
-                              <SelectItem value="juridica">Persona Jurídica</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <Label htmlFor="nombreCompleto" className="text-sm font-medium text-foreground">
+                            Nombre Completo
+                          </Label>
+                          <Input
+                            id="nombreCompleto"
+                            placeholder="Juan Pérez"
+                            value={formData.nombreCompleto}
+                            onChange={(e) => handleInputChange('nombreCompleto', e.target.value)}
+                            className="mt-2 h-12 bg-muted/30 border-0 rounded-lg"
+                          />
                         </div>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="nombreCompleto">Nombre Completo</Label>
-                            <Input
-                              id="nombreCompleto"
-                              placeholder="Juan Pérez"
-                              value={formData.nombreCompleto}
-                              onChange={(e) => handleInputChange('nombreCompleto', e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="numeroIdentificacion">Número de Identificación</Label>
-                            <Input
-                              id="numeroIdentificacion"
-                              placeholder="1234567890"
-                              value={formData.numeroIdentificacion}
-                              onChange={(e) => handleInputChange('numeroIdentificacion', e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="correoElectronico">Correo Electrónico</Label>
-                            <Input
-                              id="correoElectronico"
-                              type="email"
-                              placeholder="correo@ejemplo.com"
-                              value={formData.correoElectronico}
-                              onChange={(e) => handleInputChange('correoElectronico', e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="telefono">Teléfono</Label>
-                            <Input
-                              id="telefono"
-                              placeholder="+57 300 123 4567"
-                              value={formData.telefono}
-                              onChange={(e) => handleInputChange('telefono', e.target.value)}
-                              className="mt-1"
-                            />
-                          </div>
+                        <div>
+                          <Label htmlFor="numeroIdentificacion" className="text-sm font-medium text-foreground">
+                            Número de Identificación
+                          </Label>
+                          <Input
+                            id="numeroIdentificacion"
+                            placeholder="1234567890"
+                            value={formData.numeroIdentificacion}
+                            onChange={(e) => handleInputChange('numeroIdentificacion', e.target.value)}
+                            className="mt-2 h-12 bg-muted/30 border-0 rounded-lg"
+                          />
                         </div>
                       </div>
-                    </>
+
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <div>
+                          <Label htmlFor="correoElectronico" className="text-sm font-medium text-foreground">
+                            Correo Electrónico
+                          </Label>
+                          <Input
+                            id="correoElectronico"
+                            type="email"
+                            placeholder="correo@ejemplo.com"
+                            value={formData.correoElectronico}
+                            onChange={(e) => handleInputChange('correoElectronico', e.target.value)}
+                            className="mt-2 h-12 bg-muted/30 border-0 rounded-lg"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="telefono" className="text-sm font-medium text-foreground">
+                            Teléfono
+                          </Label>
+                          <Input
+                            id="telefono"
+                            placeholder="+57 300 123 4567"
+                            value={formData.telefono}
+                            onChange={(e) => handleInputChange('telefono', e.target.value)}
+                            className="mt-2 h-12 bg-muted/30 border-0 rounded-lg"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   )}
 
                   {currentStep === 2 && (
-                    <>
-                      <h3 className="text-lg font-semibold text-foreground">
-                        Paso 2: Documentación
-                      </h3>
+                    <div className="space-y-4">
                       <p className="text-muted-foreground">
                         Por favor cargue los documentos requeridos para completar su vinculación.
                       </p>
-                      <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
+                      <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-muted/20">
                         <p className="text-muted-foreground">Arrastre sus documentos aquí o haga clic para seleccionar</p>
                       </div>
-                    </>
+                    </div>
                   )}
 
                   {currentStep === 3 && (
-                    <>
-                      <h3 className="text-lg font-semibold text-foreground">
-                        Paso 3: Confirmación
-                      </h3>
+                    <div className="space-y-4">
                       <p className="text-muted-foreground">
                         Revise su información y confirme para completar el proceso de vinculación.
                       </p>
@@ -253,13 +257,15 @@ const Investors = () => {
                         <p><strong>Email:</strong> {formData.correoElectronico || 'No especificado'}</p>
                         <p><strong>Teléfono:</strong> {formData.telefono || 'No especificado'}</p>
                       </div>
-                    </>
+                    </div>
                   )}
 
-                  <Button onClick={handleNextStep} className="bg-primary hover:bg-primary/90">
-                    {currentStep === 3 ? 'Confirmar' : 'Siguiente'}
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <div className="pt-4">
+                    <Button onClick={handleNextStep} className="bg-primary hover:bg-primary/90 h-12 px-8 rounded-lg">
+                      {currentStep === 3 ? 'Confirmar' : 'Siguiente'}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
