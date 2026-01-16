@@ -66,7 +66,7 @@ const Header = () => {
   };
   return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-md border-b border-border/50' : 'bg-transparent'}`}>
       <div className="container-narrow mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-20 text-secondary bg-primary-foreground">
           {/* Logo */}
           <div className="flex items-center">
             <div className={`transition-all duration-300 rounded-xl ${isScrolled ? '' : 'bg-white/95 px-4 py-2'}`}>
