@@ -66,10 +66,12 @@ const Header = () => {
   };
   return <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-md border-b border-border/50' : 'bg-transparent'}`}>
       <div className="container-narrow mx-auto px-4 md:px-8">
-        <div className="flex items-center justify-between h-20 bg-primary-foreground text-secondary">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            
+            <div className={`transition-all duration-300 rounded-xl ${isScrolled ? '' : 'bg-white/95 px-4 py-2'}`}>
+              <img alt="Innovafin" className="h-14 md:h-20 lg:h-24 w-auto object-contain" src="/lovable-uploads/e5546305-49f3-46f8-9903-dc6821f73e5a.png" />
+            </div>
           </div>
 
           {/* Desktop Navigation - visible from md breakpoint */}
