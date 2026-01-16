@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import avatarCharts from '@/assets/avatar-charts.png';
 
 const compartimentos = [
   {
@@ -71,13 +72,24 @@ const Investors = () => {
       
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Portal de Inversionistas
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Únase a nuestra red de inversionistas y acceda a oportunidades exclusivas de inversión
-          </p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left md:max-w-xl">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                Portal de Inversionistas
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Únase a nuestra red de inversionistas y acceda a oportunidades exclusivas de inversión
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 max-w-md">
+              <img 
+                src={avatarCharts} 
+                alt="Asesora de inversiones mostrando gráficos" 
+                className="w-full h-auto rounded-2xl shadow-xl"
+              />
+            </div>
+          </div>
         </div>
       </section>
 

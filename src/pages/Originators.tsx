@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import avatarHandshake from '@/assets/avatar-handshake.png';
 
 // Datos de originadores activos
 const originatorsData = [
@@ -126,13 +127,24 @@ const Originators = () => {
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Portal de Originadores
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Conectamos empresas con potencial de crecimiento con capital estratégico
-          </p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left md:max-w-xl">
+              <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+                Portal de Originadores
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Conectamos empresas con potencial de crecimiento con capital estratégico
+              </p>
+            </div>
+            <div className="w-full md:w-1/2 max-w-md">
+              <img 
+                src={avatarHandshake} 
+                alt="Asesora cerrando acuerdos con originadores" 
+                className="w-full h-auto rounded-2xl shadow-xl"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
