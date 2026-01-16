@@ -62,7 +62,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <div className={`transition-all duration-300 rounded-xl ${isScrolled ? '' : 'bg-white/95 px-4 py-2'}`}>
-              <img alt="Innovafin" className="h-9 md:h-10 w-auto object-fill" src="/lovable-uploads/e5546305-49f3-46f8-9903-dc6821f73e5a.png" />
+              <img alt="Innovafin" className="h-12 md:h-14 w-auto object-contain" src="/lovable-uploads/e5546305-49f3-46f8-9903-dc6821f73e5a.png" />
             </div>
           </div>
 
