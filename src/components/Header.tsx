@@ -17,8 +17,8 @@ const navItems = [{
   isRoute: false
 }, {
   label: 'Inversionistas',
-  href: '#inversionistas',
-  isRoute: false
+  href: '/investors',
+  isRoute: true
 }, {
   label: 'Originadores',
   href: '/originators',
