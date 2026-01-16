@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Upload, FileText, CheckCircle, TrendingUp,
   ClipboardList, Users, Search, BadgeCheck, Banknote
@@ -8,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import logoInnovafin from '@/assets/logo-innovafin.png';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 // Datos de originadores activos
 const originatorsData = [
@@ -122,20 +122,22 @@ const Originators = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-[#1a365d] to-[#2d4a7c] text-white py-12">
+      <Header />
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
         <div className="container mx-auto px-4 text-center">
-          <Link to="/" className="inline-block mb-6">
-            <img src={logoInnovafin} alt="Innovafin" className="h-12 mx-auto" />
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Portal de Originadores</h1>
-          <p className="text-lg text-white/80">
+          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+            Portal de Originadores
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Conectamos empresas con potencial de crecimiento con capital estratégico
           </p>
         </div>
-      </header>
+      </section>
 
-      <main className="container mx-auto px-4 py-12">
+      <section className="py-12">
+        <div className="container mx-auto px-4 max-w-5xl">
         <Tabs defaultValue="vinculacion" className="space-y-8">
           <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-muted/50">
             <TabsTrigger 
@@ -396,7 +398,10 @@ const Originators = () => {
             </Card>
           </TabsContent>
         </Tabs>
-      </main>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };

@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Originators from "./pages/Originators";
 import FactoringWeb from "./pages/FactoringWeb";
 import Investors from "./pages/Investors";
+import Portfolio from "./pages/Portfolio";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/originators" element={<Originators />} />
           <Route path="/factoring" element={<FactoringWeb />} />
           <Route path="/investors" element={<Investors />} />
+          <Route path="/portfolio" element={<Portfolio />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
