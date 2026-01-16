@@ -63,7 +63,8 @@ const Investors = () => {
         <div className="container mx-auto px-4">
           <div className="flex-col items-center justify-between gap-12 flex md:flex-col border-0 rounded-lg shadow-md">
             <div className="text-left md:max-w-lg">
-              <h1 className="text-4xl text-primary mb-6 leading-tight text-center md:text-7xl font-extrabold">Portal de Inversionistas<br />Inversionistas
+              <h1 className="text-4xl text-primary mb-6 leading-tight md:text-7xl font-extrabold text-justify">Portal de Inversionistas
+              <br />Inversionistas
               </h1>
               <p className="text-lg text-muted-foreground leading-relaxed text-center">
                 Únase a nuestra red de inversionistas y acceda a oportunidades exclusivas de inversión con el respaldo y la seguridad que InnovaFin ofrece.
