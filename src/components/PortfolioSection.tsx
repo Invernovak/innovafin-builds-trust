@@ -2,7 +2,6 @@ import { PieChart, Layers, TrendingUp, ChevronRight, CheckCircle, Clock } from '
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
-import portfolioVideo from '@/assets/portfolio-interaction.mp4';
 
 const currentCompartments = [
   {
@@ -54,32 +53,16 @@ const PortfolioSection = () => {
   return (
     <section id="portafolio" className="section-padding bg-background">
       <div className="container-narrow mx-auto">
-        {/* Hero Video Section */}
-        <div className="relative mb-16 rounded-3xl overflow-hidden">
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline
-            className="w-full h-[400px] md:h-[500px] object-cover"
-          >
-            <source src={portfolioVideo} type="video/mp4" />
-          </video>
-          {/* Overlay with corporate colors */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/50 to-transparent" />
-          <div className="absolute inset-0 flex items-center">
-            <div className="p-8 md:p-12 max-w-2xl">
-              <span className="inline-block px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-semibold mb-6">
-                Nuestro Portafolio
-              </span>
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                Fondo de Capital Privado <span className="text-secondary">InnovaFin</span>
-              </h2>
-              <p className="text-white/90 text-lg max-w-xl">
-                Estructura diversificada con compartimientos especializados para maximizar rendimientos y gestionar riesgos.
-              </p>
-            </div>
-          </div>
+        <div className="text-center mb-16">
+          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+            Nuestro Portafolio
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Fondo de Capital Privado <span className="text-primary">InnovaFin</span>
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Estructura diversificada con compartimientos especializados para maximizar rendimientos y gestionar riesgos.
+          </p>
         </div>
 
         {/* Current Compartments */}
