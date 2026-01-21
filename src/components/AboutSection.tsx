@@ -1,5 +1,23 @@
-import { Target, Rocket } from 'lucide-react';
+import { Target, Rocket, Lightbulb, Shield, TrendingUp } from 'lucide-react';
 import logoInnovafin from '@/assets/logo-innovafin.png';
+
+const whyUsItems = [
+  {
+    icon: Lightbulb,
+    title: 'Innovación Constante',
+    description: 'Desarrollamos soluciones financieras disruptivas adaptadas a las necesidades del mercado.',
+  },
+  {
+    icon: Shield,
+    title: 'Confianza y Seguridad',
+    description: 'Construimos relaciones sólidas basadas en transparencia y resultados comprobados.',
+  },
+  {
+    icon: TrendingUp,
+    title: 'Excelencia en Resultados',
+    description: 'Maximizamos el valor para nuestros clientes con estrategias financieras efectivas.',
+  },
+];
 
 const teamMembers = [
   {
@@ -13,9 +31,9 @@ const teamMembers = [
     initials: 'EC',
   },
   {
-    name: 'Adolfo León Vélez',
+    name: 'Gustavo Guerra Galvez',
     role: 'Director de Riesgos',
-    initials: 'ALV',
+    initials: 'GGG',
   },
   {
     name: 'Nathalia Sandoval Herrera',
@@ -27,13 +45,53 @@ const teamMembers = [
     role: 'Directora Administrativa',
     initials: 'PAG',
   },
+  {
+    name: 'Víctor Arango',
+    role: 'Asesor Legal',
+    initials: 'VA',
+  },
 ];
 
 const AboutSection = () => {
   return (
     <section id="nosotros" className="section-padding bg-muted">
       <div className="container-narrow mx-auto">
-        {/* Vision 2026 - Main Focus */}
+        {/* Why Innovafin - NEW BLOCK */}
+        <div className="text-center mb-20">
+          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+            Quiénes Somos
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            ¿Por qué <span className="text-primary">Innovafin</span> es su mejor opción?
+          </h2>
+          <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-12">
+            Diseñamos servicios financieros con innovación y excelencia para construir valor y confianza
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {whyUsItems.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={index}
+                  className="bento-card text-center group hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-primary/10 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Icon className="w-8 h-8 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="text-xl font-bold text-foreground mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Vision 2026 */}
         <div className="text-center mb-20">
           <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-semibold mb-6">
             Nuestra Visión
