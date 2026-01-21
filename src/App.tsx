@@ -9,6 +9,11 @@ import Originators from "./pages/Originators";
 import FactoringWeb from "./pages/FactoringWeb";
 import Investors from "./pages/Investors";
 import Portfolio from "./pages/Portfolio";
+import GestorProfesional from "./pages/services/GestorProfesional";
+import ValoracionEmpresas from "./pages/services/ValoracionEmpresas";
+import ConsultoriaFinanciera from "./pages/services/ConsultoriaFinanciera";
+import EstructuracionNegocios from "./pages/services/EstructuracionNegocios";
+import ReperfilamientoDeuda from "./pages/services/ReperfilamientoDeuda";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +29,11 @@ const App = () => (
           <Route path="/factoring" element={<FactoringWeb />} />
           <Route path="/investors" element={<Investors />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/servicios/gestor-profesional" element={<GestorProfesional />} />
+          <Route path="/servicios/valoracion-empresas" element={<ValoracionEmpresas />} />
+          <Route path="/servicios/consultoria-financiera" element={<ConsultoriaFinanciera />} />
+          <Route path="/servicios/estructuracion-negocios" element={<EstructuracionNegocios />} />
+          <Route path="/servicios/reperfilamiento-deuda" element={<ReperfilamientoDeuda />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

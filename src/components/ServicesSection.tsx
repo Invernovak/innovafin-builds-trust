@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import logoInnovafin from '@/assets/logo-innovafin.png';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const services = [
   {
@@ -18,6 +19,7 @@ const services = [
     iconBg: 'bg-primary/10',
     iconColor: 'text-primary',
     showLogo: true,
+    route: '/servicios/gestor-profesional',
   },
   {
     icon: BarChart3,
@@ -27,6 +29,7 @@ const services = [
     iconBg: 'bg-blue-500/10',
     iconColor: 'text-blue-600',
     showLogo: false,
+    route: '/servicios/valoracion-empresas',
   },
   {
     icon: Calculator,
@@ -36,6 +39,7 @@ const services = [
     iconBg: 'bg-emerald-500/10',
     iconColor: 'text-emerald-600',
     showLogo: true,
+    route: '/servicios/consultoria-financiera',
   },
   {
     icon: Building2,
@@ -45,6 +49,7 @@ const services = [
     iconBg: 'bg-violet-500/10',
     iconColor: 'text-violet-600',
     showLogo: false,
+    route: '/servicios/estructuracion-negocios',
   },
   {
     icon: RefreshCw,
@@ -54,6 +59,7 @@ const services = [
     iconBg: 'bg-amber-500/10',
     iconColor: 'text-amber-600',
     showLogo: true,
+    route: '/servicios/reperfilamiento-deuda',
   },
 ];
 
@@ -101,9 +107,11 @@ const ServicesSection = () => {
                   {services[0].description}
                 </p>
 
-                <Button variant="outline" className="rounded-full group/btn">
-                  Conocer más
-                  <ChevronRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                <Button variant="outline" className="rounded-full group/btn" asChild>
+                  <Link to={services[0].route}>
+                    Conocer más
+                    <ChevronRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -138,9 +146,11 @@ const ServicesSection = () => {
                   {service.description}
                 </p>
 
-                <Button variant="ghost" size="sm" className="rounded-full group/btn text-primary hover:text-primary p-0">
-                  Conocer más
-                  <ChevronRight className="ml-1 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                <Button variant="ghost" size="sm" className="rounded-full group/btn text-primary hover:text-primary p-0" asChild>
+                  <Link to={service.route}>
+                    Conocer más
+                    <ChevronRight className="ml-1 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </Link>
                 </Button>
               </div>
             );
