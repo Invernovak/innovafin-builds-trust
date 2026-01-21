@@ -237,4 +237,13 @@
   .shadow-bento {
     box-shadow: var(--shadow-bento);
   }
+
+  @keyframes star-btn {
+    0% {
+      offset-distance: 0%;
+    }
+    100% {
+      offset-distance: 100%;
+    }
+  }
 }

@@ -108,6 +108,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "slide-up": "slide-up 0.4s ease-out",
         "float": "float 3s ease-in-out infinite",
+        "star-btn": "star-btn calc(var(--duration, 6) * 1s) linear infinite",
       },
     },
   },
