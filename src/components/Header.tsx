@@ -17,20 +17,56 @@ const serviceItems = [
   { label: 'Re-perfilamiento de Deuda', href: '/servicios/reperfilamiento-deuda' },
 ];
 
-const navItems = [
-  { label: 'Inicio', href: '#hero', isRoute: false },
-  { label: 'Quiénes Somos', href: '#nosotros', isRoute: false },
-  { label: 'Servicios', href: '#servicios', isRoute: false, hasSubmenu: true },
-  { label: 'Inversionistas', href: '/investors', isRoute: true },
-  { label: 'Originadores', href: '/originators', isRoute: true },
+const aboutItems = [
+  { label: 'Historia', href: '#nosotros-historia', isSection: true },
+  { label: 'Equipo', href: '#nosotros-equipo', isSection: true },
+  { label: 'Misión/Visión', href: '#nosotros-mision', isSection: true },
+  { label: 'Valores', href: '#nosotros-valores', isSection: true },
+];
+
+const originatorItems = [
+  { label: 'Info General', href: '/originators', isRoute: true },
+  { label: 'Registro', href: '/originators#registro', isSection: true },
+  { label: 'Originadores Activos', href: '/originators#activos', isSection: true },
+  { label: 'Portal Originadores', href: '/originators', isRoute: true },
+];
+
+const investorItems = [
+  { label: 'Info General', href: '/investors', isRoute: true },
+  { label: 'Beneficios', href: '/investors#beneficios', isSection: true },
+  { label: 'Cómo Invertir', href: '/investors#como-invertir', isSection: true },
+  { label: 'Portal Inversionistas', href: '/investors', isRoute: true },
+];
+
+const dashboardItems = [
+  { label: 'Resumen', href: '#dashboard', isSection: true },
+  { label: 'Métricas', href: '#dashboard-metricas', isSection: true },
+  { label: 'Reportes', href: '#dashboard-reportes', isSection: true },
   { label: 'Portafolio', href: '/portfolio', isRoute: true },
-  { label: 'Dashboard', href: '#dashboard', isRoute: false },
+];
+
+interface NavItem {
+  label: string;
+  href: string;
+  isRoute: boolean;
+  hasSubmenu?: boolean;
+  submenuItems?: { label: string; href: string; isSection?: boolean; isRoute?: boolean }[];
+}
+
+const navItems: NavItem[] = [
+  { label: 'Inicio', href: '#hero', isRoute: false },
+  { label: 'Quiénes Somos', href: '#nosotros', isRoute: false, hasSubmenu: true, submenuItems: aboutItems },
+  { label: 'Servicios', href: '#servicios', isRoute: false, hasSubmenu: true, submenuItems: serviceItems },
+  { label: 'Inversionistas', href: '/investors', isRoute: true, hasSubmenu: true, submenuItems: investorItems },
+  { label: 'Originadores', href: '/originators', isRoute: true, hasSubmenu: true, submenuItems: originatorItems },
+  { label: 'Portafolio', href: '/portfolio', isRoute: true },
+  { label: 'Dashboard', href: '#dashboard', isRoute: false, hasSubmenu: true, submenuItems: dashboardItems },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -42,19 +78,31 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (href: string) => {
-    if (location.pathname !== '/') {
+    const isHashLink = href.includes('#');
+    const [path, hash] = href.split('#');
+    
+    if (path && location.pathname !== path && path !== '/') {
+      window.location.href = href;
+      return;
+    }
+    
+    if (location.pathname !== '/' && !path) {
       window.location.href = '/' + href;
       return;
     }
-    if (href === '#hero') {
+    
+    const targetHash = hash ? `#${hash}` : href;
+    
+    if (targetHash === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      const element = document.querySelector(href);
+      const element = document.querySelector(targetHash);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }
     setIsMobileMenuOpen(false);
+    setOpenMobileSubmenu(null);
   };
 
   const scrollToContact = () => {
@@ -62,6 +110,10 @@ const Header = () => {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const toggleMobileSubmenu = (label: string) => {
+    setOpenMobileSubmenu(openMobileSubmenu === label ? null : label);
   };
 
   return (
@@ -92,7 +144,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-0.5">
             {navItems.map((item) =>
-              item.hasSubmenu ? (
+              item.hasSubmenu && item.submenuItems ? (
                 <DropdownMenu key={item.label}>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -110,19 +162,20 @@ const Header = () => {
                     align="start"
                     className="w-56 bg-background border border-border shadow-lg z-[60]"
                   >
-                    <DropdownMenuItem asChild>
-                      <button
-                        onClick={() => scrollToSection('#servicios')}
-                        className="w-full text-left cursor-pointer"
-                      >
-                        Ver todos los servicios
-                      </button>
-                    </DropdownMenuItem>
-                    {serviceItems.map((service) => (
-                      <DropdownMenuItem key={service.href} asChild>
-                        <Link to={service.href} className="cursor-pointer">
-                          {service.label}
-                        </Link>
+                    {item.submenuItems.map((subItem) => (
+                      <DropdownMenuItem key={subItem.href} asChild>
+                        {subItem.isRoute || subItem.href.startsWith('/') && !subItem.href.includes('#') ? (
+                          <Link to={subItem.href} className="cursor-pointer">
+                            {subItem.label}
+                          </Link>
+                        ) : (
+                          <button
+                            onClick={() => scrollToSection(subItem.href)}
+                            className="w-full text-left cursor-pointer"
+                          >
+                            {subItem.label}
+                          </button>
+                        )}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
@@ -178,40 +231,44 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-border/50 animate-fade-in">
+        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-border/50 animate-fade-in max-h-[80vh] overflow-y-auto">
           <nav className="container-narrow mx-auto px-4 py-6 flex flex-col gap-2">
             {navItems.map((item) =>
-              item.hasSubmenu ? (
+              item.hasSubmenu && item.submenuItems ? (
                 <div key={item.label}>
                   <button
-                    onClick={() => setIsServicesOpen(!isServicesOpen)}
+                    onClick={() => toggleMobileSubmenu(item.label)}
                     className="w-full px-4 py-3 text-sm font-medium text-foreground hover:bg-muted rounded-xl transition-colors text-left flex items-center justify-between"
                   >
                     {item.label}
                     <ChevronDown
                       className={`w-4 h-4 transition-transform ${
-                        isServicesOpen ? 'rotate-180' : ''
+                        openMobileSubmenu === item.label ? 'rotate-180' : ''
                       }`}
                     />
                   </button>
-                  {isServicesOpen && (
+                  {openMobileSubmenu === item.label && (
                     <div className="ml-4 mt-1 flex flex-col gap-1 border-l-2 border-primary/20 pl-4">
-                      <button
-                        onClick={() => scrollToSection('#servicios')}
-                        className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors text-left"
-                      >
-                        Ver todos
-                      </button>
-                      {serviceItems.map((service) => (
-                        <Link
-                          key={service.href}
-                          to={service.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
-                        >
-                          {service.label}
-                        </Link>
-                      ))}
+                      {item.submenuItems.map((subItem) =>
+                        subItem.isRoute || (subItem.href.startsWith('/') && !subItem.href.includes('#')) ? (
+                          <Link
+                            key={subItem.href}
+                            to={subItem.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                          >
+                            {subItem.label}
+                          </Link>
+                        ) : (
+                          <button
+                            key={subItem.href}
+                            onClick={() => scrollToSection(subItem.href)}
+                            className="px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors text-left"
+                          >
+                            {subItem.label}
+                          </button>
+                        )
+                      )}
                     </div>
                   )}
                 </div>
