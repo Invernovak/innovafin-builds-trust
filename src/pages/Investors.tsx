@@ -84,8 +84,14 @@ const Investors = () => {
       {/* Tabs Section */}
       <section className="py-12">
         <div className="container mx-auto px-4 max-w-5xl">
-          <Tabs defaultValue="vinculacion" className="w-full">
+          <Tabs defaultValue="beneficios" className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-8 h-14 bg-muted/30 rounded-xl p-1">
+              <TabsTrigger 
+                value="beneficios"
+                className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              >
+                Beneficios
+              </TabsTrigger>
               <TabsTrigger 
                 value="vinculacion" 
                 className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
@@ -98,13 +104,26 @@ const Investors = () => {
               >
                 Compartimentos
               </TabsTrigger>
-              <TabsTrigger 
-                value="beneficios"
-                className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm"
-              >
-                Beneficios
-              </TabsTrigger>
             </TabsList>
+
+            {/* Beneficios Tab */}
+            <TabsContent value="beneficios">
+              <div className="grid md:grid-cols-3 gap-6">
+                {beneficios.map((beneficio, index) => (
+                  <Card key={index} className="border-border/50 shadow-lg hover:shadow-xl transition-shadow">
+                    <CardContent className="p-6">
+                      <beneficio.icon className="h-12 w-12 text-primary mb-4" />
+                      <h3 className="text-lg font-bold text-primary mb-2">
+                        {beneficio.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm">
+                        {beneficio.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
 
             {/* Vinculación Tab */}
             <TabsContent value="vinculacion">
@@ -274,25 +293,6 @@ const Investors = () => {
                       <Button variant="outline" className="w-full mt-6">
                         Ver Detalles
                       </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Beneficios Tab */}
-            <TabsContent value="beneficios">
-              <div className="grid md:grid-cols-3 gap-6">
-                {beneficios.map((beneficio, index) => (
-                  <Card key={index} className="border-border/50 shadow-lg hover:shadow-xl transition-shadow">
-                    <CardContent className="p-6">
-                      <beneficio.icon className="h-12 w-12 text-primary mb-4" />
-                      <h3 className="text-lg font-bold text-primary mb-2">
-                        {beneficio.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        {beneficio.description}
-                      </p>
                     </CardContent>
                   </Card>
                 ))}

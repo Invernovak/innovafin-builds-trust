@@ -138,8 +138,14 @@ const Originators = () => {
 
       <section className="py-12">
         <div className="container mx-auto px-4 max-w-5xl">
-        <Tabs defaultValue="vinculacion" className="space-y-8">
+        <Tabs defaultValue="beneficios" className="space-y-8">
           <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-muted/50">
+            <TabsTrigger 
+              value="beneficios" 
+              className="py-3 text-base data-[state=active]:bg-white data-[state=active]:shadow-sm"
+            >
+              Beneficios
+            </TabsTrigger>
             <TabsTrigger 
               value="vinculacion" 
               className="py-3 text-base data-[state=active]:bg-white data-[state=active]:shadow-sm"
@@ -147,18 +153,54 @@ const Originators = () => {
               Vinculación
             </TabsTrigger>
             <TabsTrigger 
-              value="originadores" 
+              value="compartimentos" 
               className="py-3 text-base data-[state=active]:bg-white data-[state=active]:shadow-sm"
             >
-              Originadores Activos
-            </TabsTrigger>
-            <TabsTrigger 
-              value="proceso" 
-              className="py-3 text-base data-[state=active]:bg-white data-[state=active]:shadow-sm"
-            >
-              Proceso
+              Compartimentos
             </TabsTrigger>
           </TabsList>
+
+          {/* Beneficios Tab */}
+          <TabsContent value="beneficios" className="space-y-8">
+            <Card className="border-border/50 bg-muted/30">
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Beneficios para Originadores
+                </h2>
+                
+                <div className="space-y-3">
+                  {benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
+                      <span className="text-muted-foreground">{benefit}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/50">
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold text-foreground mb-6">
+                  Proceso de Vinculación
+                </h2>
+                
+                <div className="space-y-6">
+                  {processSteps.map((step, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+                        <step.icon className="w-6 h-6 text-primary-foreground" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-foreground">{step.title}</h3>
+                        <p className="text-sm text-muted-foreground">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           {/* Vinculación Tab */}
           <TabsContent value="vinculacion">
@@ -299,7 +341,7 @@ const Originators = () => {
                     </button>
                   </div>
 
-                  <Button type="submit" className="bg-[#1a365d] hover:bg-[#2d4a7c] text-white px-8">
+                  <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8">
                     Enviar Solicitud
                   </Button>
                 </form>
@@ -307,8 +349,8 @@ const Originators = () => {
             </Card>
           </TabsContent>
 
-          {/* Originadores Activos Tab */}
-          <TabsContent value="originadores">
+          {/* Compartimentos Tab */}
+          <TabsContent value="compartimentos">
             <div className="grid md:grid-cols-2 gap-6">
               {originatorsData.map((originator) => (
                 <Card key={originator.id} className="border-border/50 hover:shadow-lg transition-shadow">
@@ -354,48 +396,6 @@ const Originators = () => {
                 </Card>
               ))}
             </div>
-          </TabsContent>
-
-          {/* Proceso Tab */}
-          <TabsContent value="proceso" className="space-y-8">
-            <Card className="border-border/50">
-              <CardContent className="p-8">
-                <h2 className="text-2xl font-bold text-foreground mb-6">
-                  Proceso de Vinculación
-                </h2>
-                
-                <div className="space-y-6">
-                  {processSteps.map((step, index) => (
-                    <div key={index} className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#1a365d] flex items-center justify-center flex-shrink-0">
-                        <step.icon className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-foreground">{step.title}</h3>
-                        <p className="text-sm text-muted-foreground">{step.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-muted/30">
-              <CardContent className="p-8">
-                <h2 className="text-2xl font-bold text-foreground mb-6">
-                  Beneficios para Originadores
-                </h2>
-                
-                <div className="space-y-3">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="w-5 h-5 text-[#1a365d] flex-shrink-0" />
-                      <span className="text-muted-foreground">{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
         </div>
