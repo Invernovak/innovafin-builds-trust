@@ -10,6 +10,7 @@ import Originators from "./pages/Originators";
 import FactoringWeb from "./pages/FactoringWeb";
 import Investors from "./pages/Investors";
 import Portfolio from "./pages/Portfolio";
+import Admin from "./pages/Admin";
 import GestorProfesional from "./pages/services/GestorProfesional";
 import ValoracionEmpresas from "./pages/services/ValoracionEmpresas";
 import ConsultoriaFinanciera from "./pages/services/ConsultoriaFinanciera";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/factoring" element={<FactoringWeb />} />
           <Route path="/investors" element={<Investors />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/servicios/gestor-profesional" element={<GestorProfesional />} />
           <Route path="/servicios/valoracion-empresas" element={<ValoracionEmpresas />} />
           <Route path="/servicios/consultoria-financiera" element={<ConsultoriaFinanciera />} />
