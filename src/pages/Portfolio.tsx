@@ -121,10 +121,8 @@ const ficAlternativos180Plus = {
   ],
 };
 
-// Usar totales del fondo directamente
-const totalActivos = fondoCapitalPrivado.totalFondo;
-const totalDisponible = fondoCapitalPrivado.totalDisponible;
-const totalInvertido = fondoCapitalPrivado.totalInvertido;
+// Calcular Portafolio Total Administrado (Capital Privado + FIC)
+const portafolioTotalAdministrado = fondoCapitalPrivado.totalFondo + ficAlternativos180Plus.saldo;
 
 const beneficios = [
   'Diversificación automática entre compartimentos',
@@ -189,7 +187,7 @@ const Portfolio = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Portafolio Total Administrado</p>
-                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(ficAlternativos180Plus.saldo)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(portafolioTotalAdministrado)}</p>
                     </div>
                   </div>
                   <Badge variant="outline" className="bg-muted text-muted-foreground hidden md:flex">
@@ -351,21 +349,7 @@ const Portfolio = () => {
                     >
                       <CardHeader className="pb-4">
                         <div className="flex items-start justify-between">
-                          <div>
-                            <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
-                            <Badge 
-                              variant="secondary"
-                              className={cn(
-                                "mt-2",
-                                comp.nivelRiesgo === 'Bajo' 
-                                  ? 'bg-secondary/10 text-secondary hover:bg-secondary/20' 
-                                  : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
-                              )}
-                            >
-                              <ShieldCheck className="w-3 h-3 mr-1" />
-                              Riesgo {comp.nivelRiesgo}
-                            </Badge>
-                          </div>
+                          <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
                           <div className={cn(
                             "w-3 h-3 rounded-full",
                             comp.id === 'libranzas' ? 'bg-[#0F172A]' : 
@@ -604,17 +588,19 @@ const Portfolio = () => {
                           <p className="text-2xl font-bold text-secondary">{tipo.remuneracionEfectiva}% E.A.</p>
                         </div>
 
-                        <Button 
-                          className={cn(
-                            "w-full",
-                            index === 1 
-                              ? "bg-secondary hover:bg-secondary/90 text-white" 
-                              : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
-                          )}
-                        >
-                          Seleccionar {tipo.nombre}
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
+                        <Link to="/investors#vinculacion">
+                          <Button 
+                            className={cn(
+                              "w-full",
+                              index === 1 
+                                ? "bg-secondary hover:bg-secondary/90 text-white" 
+                                : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
+                            )}
+                          >
+                            Invertir en {tipo.nombre}
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Button>
+                        </Link>
                       </CardContent>
                     </Card>
                   ))}
