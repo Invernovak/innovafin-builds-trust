@@ -16,6 +16,7 @@ import ValoracionEmpresas from "./pages/services/ValoracionEmpresas";
 import ConsultoriaFinanciera from "./pages/services/ConsultoriaFinanciera";
 import EstructuracionNegocios from "./pages/services/EstructuracionNegocios";
 import ReperfilamientoDeuda from "./pages/services/ReperfilamientoDeuda";
+import AvatarShowcase from "./components/AvatarShowcase";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/servicios/consultoria-financiera" element={<ConsultoriaFinanciera />} />
           <Route path="/servicios/estructuracion-negocios" element={<EstructuracionNegocios />} />
           <Route path="/servicios/reperfilamiento-deuda" element={<ReperfilamientoDeuda />} />
+          <Route path="/avatar-showcase" element={<AvatarShowcase />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
