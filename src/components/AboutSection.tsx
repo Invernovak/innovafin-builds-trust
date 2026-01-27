@@ -91,49 +91,61 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* Vision 2026 */}
-        <div id="vision" className="text-center mb-20 scroll-mt-24">
-          <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-semibold mb-6">
-            Nuestra Visión
-          </span>
-          
-          <div className="max-w-4xl mx-auto">
-            <div className="bento-card-featured text-center py-12 relative overflow-hidden">
+        {/* Vision & Mission - Professional Two Column Layout */}
+        <div className="grid md:grid-cols-2 gap-8 mb-20">
+          {/* Vision Card */}
+          <div id="vision" className="scroll-mt-24">
+            <div className="bento-card h-full relative overflow-hidden border-2 border-secondary/20 bg-gradient-to-br from-background via-background to-secondary/5">
               {/* Logo watermark */}
-              <div className="absolute top-8 right-8 opacity-10">
-                <img src={logoInnovafin} alt="" className="w-24 h-auto" />
+              <div className="absolute top-4 right-4 opacity-5">
+                <img src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
               
-              <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-secondary/20 to-secondary/10 mx-auto mb-8 flex items-center justify-center">
-                <Rocket className="w-10 h-10 text-secondary" strokeWidth={1.5} />
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary/20 to-secondary/10 flex-shrink-0 flex items-center justify-center">
+                  <Rocket className="w-7 h-7 text-secondary" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <span className="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-semibold mb-3">
+                    Visión 2026
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 leading-tight">
+                    "Seremos reconocidos como el mejor{' '}
+                    <span className="text-secondary">Gestor Profesional</span>{' '}
+                    en Colombia"
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Ofreciendo servicios disruptivos, innovadores y confiables para nuestros clientes.
+                  </p>
+                </div>
               </div>
-              
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4 leading-tight">
-                "Seremos reconocidos en el{' '}
-                <span className="text-secondary">2026</span>{' '}
-                como el mejor Gestor Profesional en Colombia"
-              </h2>
-              
-              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Ofreciendo servicios disruptivos, innovadores y confiables para nuestros clientes.
-              </p>
             </div>
           </div>
-        </div>
 
-        {/* Mission Card */}
-        <div id="mision" className="mb-20 scroll-mt-24">
-          <div className="bento-card flex flex-col md:flex-row items-start gap-8">
-            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex-shrink-0 flex items-center justify-center">
-              <Target className="w-8 h-8 text-primary" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">
-                Nuestra Misión
-              </h3>
-              <p className="text-muted-foreground text-lg leading-relaxed">
-                Brindar servicios financieros de alta calidad que construyan valor y generen confianza para nuestros clientes, impulsando el crecimiento sostenible de sus negocios a través de soluciones innovadoras y un equipo de profesionales comprometidos.
-              </p>
+          {/* Mission Card */}
+          <div id="mision" className="scroll-mt-24">
+            <div className="bento-card h-full relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-background via-background to-primary/5">
+              {/* Logo watermark */}
+              <div className="absolute top-4 right-4 opacity-5">
+                <img src={logoInnovafin} alt="" className="w-16 h-auto" />
+              </div>
+              
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex-shrink-0 flex items-center justify-center">
+                  <Target className="w-7 h-7 text-primary" strokeWidth={1.5} />
+                </div>
+                <div className="flex-1">
+                  <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-3">
+                    Nuestra Misión
+                  </span>
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
+                    Construir <span className="text-primary">valor y confianza</span> para nuestros clientes
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Brindar servicios financieros de alta calidad impulsando el crecimiento sostenible de sus negocios a través de soluciones innovadoras y un equipo de profesionales comprometidos.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
