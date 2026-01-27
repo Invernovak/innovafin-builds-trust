@@ -57,7 +57,7 @@ const AboutSection = () => {
     <section id="nosotros" className="section-padding bg-muted">
       <div className="container-narrow mx-auto">
         {/* Why Innovafin - NEW BLOCK */}
-        <div className="text-center mb-20">
+        <div id="por-que-nosotros" className="text-center mb-20 scroll-mt-24">
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
             Quiénes Somos
           </span>
@@ -92,7 +92,7 @@ const AboutSection = () => {
         </div>
 
         {/* Vision 2026 */}
-        <div className="text-center mb-20">
+        <div id="vision" className="text-center mb-20 scroll-mt-24">
           <span className="inline-block px-4 py-2 rounded-full bg-secondary/10 text-secondary text-sm font-semibold mb-6">
             Nuestra Visión
           </span>
@@ -122,7 +122,7 @@ const AboutSection = () => {
         </div>
 
         {/* Mission Card */}
-        <div className="mb-20">
+        <div id="mision" className="mb-20 scroll-mt-24">
           <div className="bento-card flex flex-col md:flex-row items-start gap-8">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex-shrink-0 flex items-center justify-center">
               <Target className="w-8 h-8 text-primary" strokeWidth={1.5} />
@@ -139,7 +139,7 @@ const AboutSection = () => {
         </div>
 
         {/* Team Section */}
-        <div>
+        <div id="equipo" className="scroll-mt-24">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
               Nuestro Equipo
