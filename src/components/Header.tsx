@@ -41,9 +41,9 @@ const investorItems = [
 
 const factoringItems = [
   { label: 'Portal Factoring', href: '/factoring', isRoute: true },
-  { label: 'Calculadora', href: '/factoring#calculadora', isSection: true },
-  { label: 'Solicitar Descuento', href: '/factoring#solicitud', isSection: true },
-  { label: 'Historial', href: '/factoring#historial', isSection: true },
+  { label: 'Calculadora', href: '/factoring#calculadora', isRoute: false },
+  { label: 'Solicitar Descuento', href: '/factoring#solicitud', isRoute: false },
+  { label: 'Historial', href: '/factoring#historial', isRoute: false },
 ];
 
 interface NavItem {
@@ -89,12 +89,14 @@ const Header = () => {
     const isHashLink = href.includes('#');
     const [path, hash] = href.split('#');
     
-    if (path && location.pathname !== path && path !== '/') {
+    // If we need to navigate to a different path first
+    if (path && path !== '/' && location.pathname !== path) {
       window.location.href = href;
       return;
     }
     
-    if (location.pathname !== '/' && !path) {
+    // If we're on a different page and need to go to home page sections
+    if (!path && location.pathname !== '/') {
       window.location.href = '/' + href;
       return;
     }
