@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { CheckCircle, TrendingUp, Briefcase, Wallet, PiggyBank, BarChart3, Calendar } from 'lucide-react';
+import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,17 +23,21 @@ const formatCOP = (value: number) => {
   }).format(value);
 };
 
-// FIC Alternativos 180 Plus - Datos según la imagen del usuario
-const ficAlternativos180Plus = {
-  id: 'fic-alternativos-180-plus',
-  name: 'FIC Alternativos 180 Plus',
-  administrador: 'AVAL Fiduciaria - Asset Management',
-  fechaReporte: 'domingo, 25 de enero de 2026',
-  saldo: 186988400000,
-  rentabilidadEA30dias: 11.88,
-  rentabilidadEA365dias: 12.41,
-  ultimoLlamado: 'NA',
-  descripcion: 'Fondo de Inversión Colectiva especializado en activos alternativos con rentabilidades competitivas y gestión profesional.',
+// Formato compacto para números muy grandes
+const formatCompactCOP = (value: number) => {
+  if (value >= 1e12) {
+    return `$${(value / 1e12).toFixed(2)}B`;
+  } else if (value >= 1e9) {
+    return `$${(value / 1e9).toFixed(2)}MM`;
+  } else if (value >= 1e6) {
+    return `$${(value / 1e6).toFixed(2)}M`;
+  }
+  return formatCOP(value);
+};
+
+// Fondo de Capital Privado - Compartimentos
+const fondoCapitalPrivado = {
+  name: 'Fondo de Inversión Alternativos Plus',
   compartimentos: [
     {
       id: 'libranzas',
@@ -44,7 +49,6 @@ const ficAlternativos180Plus = {
       rentabilidadDia: 14.19,
       rentabilidad30dias: 14.81,
       nivelRiesgo: 'Bajo',
-      nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
     },
     {
       id: 'educapital1',
@@ -56,7 +60,6 @@ const ficAlternativos180Plus = {
       rentabilidadDia: 6.07,
       rentabilidad30dias: 12.28,
       nivelRiesgo: 'Bajo',
-      nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
     },
     {
       id: 'evolucion',
@@ -68,15 +71,44 @@ const ficAlternativos180Plus = {
       rentabilidadDia: 8.27,
       rentabilidad30dias: 40.69,
       nivelRiesgo: 'Medio',
-      nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
     },
   ],
 };
 
-// Calcular totales de compartimentos
-const totalActivosCompartimentos = ficAlternativos180Plus.compartimentos.reduce((acc, comp) => acc + comp.totalActivos, 0);
-const totalDisponibleCompartimentos = ficAlternativos180Plus.compartimentos.reduce((acc, comp) => acc + comp.disponible, 0);
-const totalInvertidoCompartimentos = ficAlternativos180Plus.compartimentos.reduce((acc, comp) => acc + comp.invertido, 0);
+// FIC Alternativos 180 Plus - Tipos de Participación
+const ficAlternativos180Plus = {
+  name: 'FIC Alternativos 180 Plus',
+  administrador: 'AVAL Fiduciaria - Asset Management',
+  fechaReporte: 'domingo, 25 de enero de 2026',
+  saldo: 186988400000,
+  rentabilidadEA30dias: 11.88,
+  rentabilidadEA365dias: 12.41,
+  tiposParticipacion: [
+    {
+      id: 'tp1',
+      nombre: 'TP1',
+      inversionMinimaInicial: 10000000,
+      comisionAdministracion: 2.25,
+      pactoPermanencia: 180,
+      remuneracionEfectiva: 2.25,
+      descripcion: 'Ideal para inversores individuales que buscan iniciar con montos accesibles.',
+    },
+    {
+      id: 'tp2',
+      nombre: 'TP2',
+      inversionMinimaInicial: 1000000000,
+      comisionAdministracion: 1.75,
+      pactoPermanencia: 180,
+      remuneracionEfectiva: 1.75,
+      descripcion: 'Diseñado para inversores institucionales y de alto patrimonio.',
+    },
+  ],
+};
+
+// Calcular totales
+const totalActivos = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.totalActivos, 0);
+const totalDisponible = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.disponible, 0);
+const totalInvertido = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.invertido, 0);
 
 const beneficios = [
   'Diversificación automática entre compartimentos',
@@ -86,18 +118,14 @@ const beneficios = [
 ];
 
 const Portfolio = () => {
-  const [selectedCompartimento, setSelectedCompartimento] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     compartimento: '',
-    montoInversion: '$100,000,000',
-    terminosPago: '',
-    retornoEsperado: '12%',
+    tipoParticipacion: '',
+    montoInversion: '',
   });
 
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
-
-  const activeCompartimento = ficAlternativos180Plus.compartimentos.find(c => c.id === selectedCompartimento);
 
   return (
     <div className="min-h-screen bg-background">
@@ -107,11 +135,11 @@ const Portfolio = () => {
         {/* Hero Section */}
         <section 
           ref={heroRef}
-          className="bg-gradient-to-br from-primary to-primary/80 py-16 relative overflow-hidden"
+          className="bg-[#0F172A] py-16 relative overflow-hidden"
         >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
           </div>
           
           <div className="container-narrow mx-auto px-4 relative">
@@ -119,24 +147,21 @@ const Portfolio = () => {
               "text-center transition-all duration-700",
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-6">
                 <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
-                Portafolio InnovaFin
+                Portafolio de Inversiones
               </span>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                {ficAlternativos180Plus.name}
+                Inversiones <span className="text-secondary">Inteligentes</span>
               </h1>
-              <p className="text-white/80 text-lg max-w-2xl mx-auto mb-4">
-                {ficAlternativos180Plus.descripcion}
-              </p>
-              <p className="text-white/60 text-sm">
-                Administrador: {ficAlternativos180Plus.administrador}
+              <p className="text-white/70 text-lg max-w-2xl mx-auto">
+                Gestión profesional de activos con rentabilidades competitivas y diversificación estratégica.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Stats Cards - Informe Diario */}
+        {/* Stats Cards */}
         <section className="container-narrow mx-auto px-4 -mt-8 relative z-10">
           <div 
             ref={statsRef}
@@ -145,33 +170,45 @@ const Portfolio = () => {
               statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            {/* Fecha del Informe */}
-            <div className="text-center mb-4">
-              <Badge variant="outline" className="bg-white text-muted-foreground">
-                <Calendar className="w-4 h-4 mr-2" />
-                Informe Diario - {ficAlternativos180Plus.fechaReporte}
-              </Badge>
-            </div>
-
-            {/* Main Stats Card */}
-            <Card className="bg-white shadow-xl border-0 mb-6">
+            <Card className="bg-card shadow-xl border-0">
               <CardContent className="p-6">
-                <div className="grid md:grid-cols-4 gap-6">
-                  <div className="text-center p-4 bg-primary/5 rounded-xl">
-                    <p className="text-sm text-muted-foreground mb-2">Saldo (Pesos)</p>
-                    <p className="text-xl md:text-2xl font-bold text-primary">{formatCOP(ficAlternativos180Plus.saldo)}</p>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center">
+                      <Wallet className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Portafolio Total Administrado</p>
+                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(ficAlternativos180Plus.saldo)}</p>
+                    </div>
                   </div>
-                  <div className="text-center p-4 bg-secondary/5 rounded-xl">
-                    <p className="text-sm text-muted-foreground mb-2">Rentabilidad EA 30 días</p>
-                    <p className="text-xl md:text-2xl font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</p>
+                  <Badge variant="outline" className="bg-muted text-muted-foreground hidden md:flex">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {ficAlternativos180Plus.fechaReporte}
+                  </Badge>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="p-4 bg-secondary/10 rounded-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="w-4 h-4 text-secondary" />
+                      <p className="text-sm text-muted-foreground">Rent. EA 30 días</p>
+                    </div>
+                    <p className="text-2xl font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</p>
                   </div>
-                  <div className="text-center p-4 bg-green-50 rounded-xl">
-                    <p className="text-sm text-muted-foreground mb-2">Rentabilidad EA 365 días</p>
-                    <p className="text-xl md:text-2xl font-bold text-green-600">{ficAlternativos180Plus.rentabilidadEA365dias}%</p>
+                  <div className="p-4 bg-secondary/10 rounded-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="w-4 h-4 text-secondary" />
+                      <p className="text-sm text-muted-foreground">Rent. EA 365 días</p>
+                    </div>
+                    <p className="text-2xl font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA365dias}%</p>
                   </div>
-                  <div className="text-center p-4 bg-muted/30 rounded-xl">
-                    <p className="text-sm text-muted-foreground mb-2">Último Llamado</p>
-                    <p className="text-xl md:text-2xl font-bold text-muted-foreground">{ficAlternativos180Plus.ultimoLlamado}</p>
+                  <div className="p-4 bg-muted rounded-xl">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Briefcase className="w-4 h-4 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">Compartimentos</p>
+                    </div>
+                    <p className="text-2xl font-bold text-foreground">3 Activos</p>
                   </div>
                 </div>
               </CardContent>
@@ -179,123 +216,123 @@ const Portfolio = () => {
           </div>
         </section>
 
-        {/* Tabs Section */}
-        <section className="py-8">
+        {/* Main Content Tabs */}
+        <section className="py-12">
           <div className="container mx-auto px-4 max-w-7xl">
-            <Tabs defaultValue="fondos" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8 h-14 bg-muted/30 rounded-xl p-1 max-w-md mx-auto">
+            <Tabs defaultValue="capital-privado" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-2xl mx-auto">
                 <TabsTrigger 
-                  value="fondos" 
-                  className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary"
+                  value="capital-privado" 
+                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
-                  Compartimentos
+                  Capital Privado
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="fic"
+                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
+                >
+                  FIC 180 Plus
                 </TabsTrigger>
                 <TabsTrigger 
                   value="invertir"
-                  className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary"
+                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
                   Invertir
                 </TabsTrigger>
               </TabsList>
 
-              {/* Compartimentos Tab */}
-              <TabsContent value="fondos">
-                {/* Resumen de Compartimentos */}
-                <Card className="mb-8 border-l-4 border-l-primary bg-gradient-to-r from-muted/30 to-background">
-                  <CardContent className="p-6 md:p-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <Briefcase className="w-7 h-7 text-primary" />
-                      </div>
-                      <div>
-                        <h2 className="text-xl font-bold text-primary">
-                          Compartimentos del Fondo
-                        </h2>
-                        <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
-                          3 Compartimentos Activos
-                        </Badge>
-                      </div>
+              {/* Fondo de Capital Privado Tab */}
+              <TabsContent value="capital-privado">
+                {/* Header */}
+                <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-[#0F172A] flex items-center justify-center">
+                      <ShieldCheck className="w-7 h-7 text-white" />
                     </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                      <div className="bg-background/50 rounded-xl p-4 border border-border/30">
-                        <div className="flex items-center gap-2 mb-2">
-                          <BarChart3 className="w-4 h-4 text-primary" />
-                          <p className="text-sm text-muted-foreground">Total Activos</p>
-                        </div>
-                        <p className="text-lg md:text-xl font-bold text-foreground">{formatCOP(totalActivosCompartimentos)}</p>
+                    <div>
+                      <h2 className="text-2xl font-bold text-[#0F172A]">
+                        {fondoCapitalPrivado.name}
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Gestión diversificada en 3 compartimentos especializados
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary Stats */}
+                <Card className="mb-8 bg-gradient-to-r from-[#0F172A] to-[#1e293b] text-white">
+                  <CardContent className="p-6">
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="text-center p-4">
+                        <p className="text-white/60 text-sm mb-2">Total Activos</p>
+                        <p className="text-2xl font-bold">{formatCompactCOP(totalActivos)}</p>
                       </div>
-                      <div className="bg-background/50 rounded-xl p-4 border border-border/30">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Wallet className="w-4 h-4 text-secondary" />
-                          <p className="text-sm text-muted-foreground">Disponible</p>
-                        </div>
-                        <p className="text-lg md:text-xl font-bold text-secondary">{formatCOP(totalDisponibleCompartimentos)}</p>
+                      <div className="text-center p-4 border-x border-white/10">
+                        <p className="text-white/60 text-sm mb-2">Saldo Disponible</p>
+                        <p className="text-2xl font-bold text-secondary">{formatCompactCOP(totalDisponible)}</p>
                       </div>
-                      <div className="bg-background/50 rounded-xl p-4 border border-border/30">
-                        <div className="flex items-center gap-2 mb-2">
-                          <PiggyBank className="w-4 h-4 text-primary" />
-                          <p className="text-sm text-muted-foreground">Invertido</p>
-                        </div>
-                        <p className="text-lg md:text-xl font-bold text-foreground">{formatCOP(totalInvertidoCompartimentos)}</p>
-                      </div>
-                      <div className="bg-background/50 rounded-xl p-4 border border-border/30">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Briefcase className="w-4 h-4 text-accent" />
-                          <p className="text-sm text-muted-foreground">Compartimentos</p>
-                        </div>
-                        <p className="text-lg md:text-xl font-bold text-foreground">3</p>
+                      <div className="text-center p-4">
+                        <p className="text-white/60 text-sm mb-2">Total Invertido</p>
+                        <p className="text-2xl font-bold">{formatCompactCOP(totalInvertido)}</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Compartimentos Cards */}
-                <div className="grid lg:grid-cols-3 gap-8 mb-8">
-                  {ficAlternativos180Plus.compartimentos.map((comp) => (
+                {/* Compartimentos Grid */}
+                <div className="grid lg:grid-cols-3 gap-6">
+                  {fondoCapitalPrivado.compartimentos.map((comp) => (
                     <Card 
                       key={comp.id} 
-                      className={cn(
-                        "border-2 transition-all duration-300 cursor-pointer hover:shadow-xl",
-                        selectedCompartimento === comp.id 
-                          ? 'border-primary shadow-lg' 
-                          : 'border-border/50 hover:border-primary/50'
-                      )}
-                      onClick={() => setSelectedCompartimento(selectedCompartimento === comp.id ? null : comp.id)}
+                      className="border border-border/50 hover:border-[#0F172A]/30 hover:shadow-lg transition-all duration-300"
                     >
-                      <CardContent className="p-6">
-                        {/* Header del Compartimento */}
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center gap-3">
-                            <div className={cn(
-                              "w-4 h-4 rounded-full",
-                              comp.id === 'libranzas' ? 'bg-primary' : 
-                              comp.id === 'educapital1' ? 'bg-secondary' : 'bg-accent'
-                            )} />
-                            <div>
-                              <h3 className="text-xl font-bold text-foreground">{comp.name}</h3>
-                              <Badge className={comp.nivelRiesgoColor + ' mt-1'}>
-                                Riesgo {comp.nivelRiesgo}
-                              </Badge>
-                            </div>
+                      <CardHeader className="pb-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
+                            <Badge 
+                              variant="secondary"
+                              className={cn(
+                                "mt-2",
+                                comp.nivelRiesgo === 'Bajo' 
+                                  ? 'bg-secondary/10 text-secondary hover:bg-secondary/20' 
+                                  : 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                              )}
+                            >
+                              <ShieldCheck className="w-3 h-3 mr-1" />
+                              Riesgo {comp.nivelRiesgo}
+                            </Badge>
                           </div>
+                          <div className={cn(
+                            "w-3 h-3 rounded-full",
+                            comp.id === 'libranzas' ? 'bg-[#0F172A]' : 
+                            comp.id === 'educapital1' ? 'bg-secondary' : 'bg-amber-500'
+                          )} />
                         </div>
-
-                        {/* Total de Activos */}
-                        <div className="bg-muted/30 rounded-xl p-4 mb-4">
-                          <p className="text-xs text-muted-foreground mb-1">Total de Activos</p>
-                          <p className="text-2xl font-bold text-foreground">{formatCOP(comp.totalActivos)}</p>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Total Activos */}
+                        <div className="bg-muted/50 rounded-xl p-4">
+                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
+                            <Wallet className="w-3 h-3" />
+                            Total de Activos
+                          </p>
+                          <p className="text-xl font-bold text-[#0F172A]">{formatCOP(comp.totalActivos)}</p>
                         </div>
 
                         {/* Rentabilidad EA */}
-                        <div className="mb-4">
-                          <p className="text-xs font-semibold text-muted-foreground mb-2">Rentabilidad EA</p>
+                        <div>
+                          <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3" />
+                            Rentabilidad EA
+                          </p>
                           <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-primary/5 rounded-lg p-2 text-center">
+                            <div className="bg-secondary/5 rounded-lg p-3 text-center">
                               <p className="text-xs text-muted-foreground">Día</p>
-                              <p className="text-lg font-bold text-primary">{comp.rentabilidadDia}%</p>
+                              <p className="text-lg font-bold text-secondary">{comp.rentabilidadDia}%</p>
                             </div>
-                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
+                            <div className="bg-secondary/10 rounded-lg p-3 text-center">
                               <p className="text-xs text-muted-foreground">30 días</p>
                               <p className="text-lg font-bold text-secondary">{comp.rentabilidad30dias}%</p>
                             </div>
@@ -303,133 +340,235 @@ const Portfolio = () => {
                         </div>
 
                         {/* Distribución */}
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center text-sm">
-                            <span className="text-muted-foreground">Disponible</span>
-                            <span className="font-semibold text-foreground">{formatCOP(comp.disponible)}</span>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Saldo Disponible</span>
+                            <span className="font-medium text-foreground">{formatCompactCOP(comp.disponible)}</span>
                           </div>
-                          <div className="flex justify-between items-center text-sm">
-                            <span className="text-muted-foreground">Invertido</span>
-                            <span className="font-semibold text-foreground">{formatCOP(comp.invertido)}</span>
-                          </div>
-                          <div className="flex justify-between items-center text-sm pt-2 border-t border-border">
-                            <span className="text-muted-foreground">% de Activos Invertido</span>
-                            <Badge variant="outline" className="font-bold">{comp.porcentajeActivos}%</Badge>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Saldo Invertido</span>
+                            <span className="font-medium text-foreground">{formatCompactCOP(comp.invertido)}</span>
                           </div>
                         </div>
 
-                        {/* Progress bar */}
-                        <div className="mt-4">
-                          <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
-                              className={cn(
-                                "h-full rounded-full",
-                                comp.id === 'libranzas' ? 'bg-primary' : 
-                                comp.id === 'educapital1' ? 'bg-secondary' : 'bg-accent'
-                              )}
-                              style={{ width: `${comp.porcentajeActivos}%` }}
-                            />
+                        {/* Progress Bar */}
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs text-muted-foreground">% de Activos Invertidos</span>
+                            <span className="text-sm font-bold text-[#0F172A]">{comp.porcentajeActivos}%</span>
                           </div>
+                          <Progress 
+                            value={comp.porcentajeActivos} 
+                            className="h-2 bg-muted"
+                          />
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
+              </TabsContent>
 
-                {/* Detalle del Compartimento Seleccionado */}
-                {activeCompartimento && (
-                  <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-background">
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-2xl font-bold text-primary">
-                          Detalle: {activeCompartimento.name}
-                        </h3>
-                        <Button variant="ghost" onClick={() => setSelectedCompartimento(null)}>
-                          Cerrar
+              {/* FIC Alternativos 180 Plus Tab */}
+              <TabsContent value="fic">
+                {/* Header */}
+                <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary flex items-center justify-center">
+                      <Users className="w-7 h-7 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-[#0F172A]">
+                        {ficAlternativos180Plus.name}
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Fondo de Inversión Colectiva - Compare tipos de participación
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comparison Cards */}
+                <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  {ficAlternativos180Plus.tiposParticipacion.map((tipo, index) => (
+                    <Card 
+                      key={tipo.id}
+                      className={cn(
+                        "relative overflow-hidden border-2 transition-all duration-300",
+                        index === 1 
+                          ? "border-secondary bg-gradient-to-br from-secondary/5 to-secondary/10" 
+                          : "border-border hover:border-[#0F172A]/30"
+                      )}
+                    >
+                      {index === 1 && (
+                        <div className="absolute top-4 right-4">
+                          <Badge className="bg-secondary text-white">
+                            Recomendado
+                          </Badge>
+                        </div>
+                      )}
+                      <CardHeader>
+                        <CardTitle className="text-2xl text-[#0F172A]">
+                          Tipo {tipo.nombre}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">{tipo.descripcion}</p>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        {/* Inversión Mínima */}
+                        <div className="p-4 bg-muted/50 rounded-xl">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Wallet className="w-4 h-4 text-[#0F172A]" />
+                            <p className="text-sm text-muted-foreground">Inversión Inicial Mínima</p>
+                          </div>
+                          <p className="text-2xl font-bold text-[#0F172A]">
+                            {formatCOP(tipo.inversionMinimaInicial)}
+                          </p>
+                        </div>
+
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="p-4 bg-card border border-border rounded-xl">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Percent className="w-4 h-4 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground">Comisión Admin.</p>
+                            </div>
+                            <p className="text-xl font-bold text-[#0F172A]">{tipo.comisionAdministracion}%</p>
+                          </div>
+                          <div className="p-4 bg-card border border-border rounded-xl">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Clock className="w-4 h-4 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground">Permanencia</p>
+                            </div>
+                            <p className="text-xl font-bold text-[#0F172A]">{tipo.pactoPermanencia} días</p>
+                          </div>
+                        </div>
+
+                        {/* Remuneración */}
+                        <div className="p-4 bg-secondary/10 rounded-xl">
+                          <div className="flex items-center gap-2 mb-2">
+                            <TrendingUp className="w-4 h-4 text-secondary" />
+                            <p className="text-sm text-muted-foreground">Remuneración Efectiva Cobrada</p>
+                          </div>
+                          <p className="text-2xl font-bold text-secondary">{tipo.remuneracionEfectiva}% E.A.</p>
+                        </div>
+
+                        <Button 
+                          className={cn(
+                            "w-full",
+                            index === 1 
+                              ? "bg-secondary hover:bg-secondary/90 text-white" 
+                              : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
+                          )}
+                        >
+                          Seleccionar {tipo.nombre}
+                          <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
-                      </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
 
-                      <div className="grid md:grid-cols-2 gap-8">
-                        {/* Información General */}
-                        <div className="space-y-4">
-                          <h4 className="text-lg font-semibold text-foreground">Información General</h4>
-                          <div className="bg-muted/30 rounded-xl p-5 space-y-3">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Total de Activos</span>
-                              <span className="font-bold text-foreground">{formatCOP(activeCompartimento.totalActivos)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Disponible</span>
-                              <span className="font-semibold text-secondary">{formatCOP(activeCompartimento.disponible)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Invertido</span>
-                              <span className="font-semibold text-foreground">{formatCOP(activeCompartimento.invertido)}</span>
-                            </div>
-                            <div className="flex justify-between items-center pt-2 border-t border-border">
-                              <span className="text-muted-foreground">% de Activos Invertido</span>
-                              <Badge className={activeCompartimento.nivelRiesgoColor}>
-                                {activeCompartimento.porcentajeActivos}%
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Rentabilidades */}
-                        <div className="space-y-4">
-                          <h4 className="text-lg font-semibold text-foreground">Rentabilidad EA por Período</h4>
-                          <div className="bg-muted/30 rounded-xl overflow-hidden">
-                            <table className="w-full text-sm">
-                              <thead>
-                                <tr className="bg-muted/50">
-                                  <th className="text-left py-3 px-4 font-semibold text-foreground">Período</th>
-                                  <th className="text-right py-3 px-4 font-semibold text-foreground">Rentabilidad EA</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr className="border-b border-border/30">
-                                  <td className="py-3 px-4 text-muted-foreground">Día</td>
-                                  <td className="py-3 px-4 text-right font-bold text-primary">{activeCompartimento.rentabilidadDia}%</td>
-                                </tr>
-                                <tr>
-                                  <td className="py-3 px-4 text-muted-foreground">30 días</td>
-                                  <td className="py-3 px-4 text-right font-bold text-secondary">{activeCompartimento.rentabilidad30dias}%</td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                {/* Comparison Table */}
+                <Card className="border-border/50">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-[#0F172A]">Comparativa Detallada</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-muted/50">
+                            <th className="text-left py-4 px-4 font-semibold text-[#0F172A] rounded-tl-lg">Característica</th>
+                            <th className="text-center py-4 px-4 font-semibold text-[#0F172A]">TP1</th>
+                            <th className="text-center py-4 px-4 font-semibold text-secondary rounded-tr-lg">TP2</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border/50">
+                            <td className="py-4 px-4 text-muted-foreground">Inversión Inicial Mínima</td>
+                            <td className="py-4 px-4 text-center font-medium">$10.000.000</td>
+                            <td className="py-4 px-4 text-center font-medium text-secondary">$1.000.000.000</td>
+                          </tr>
+                          <tr className="border-b border-border/50 bg-muted/20">
+                            <td className="py-4 px-4 text-muted-foreground">Comisión de Administración</td>
+                            <td className="py-4 px-4 text-center font-medium">2.25%</td>
+                            <td className="py-4 px-4 text-center font-medium text-secondary">1.75%</td>
+                          </tr>
+                          <tr className="border-b border-border/50">
+                            <td className="py-4 px-4 text-muted-foreground">Pacto de Permanencia</td>
+                            <td className="py-4 px-4 text-center font-medium">180 días</td>
+                            <td className="py-4 px-4 text-center font-medium">180 días</td>
+                          </tr>
+                          <tr className="bg-muted/20">
+                            <td className="py-4 px-4 text-muted-foreground rounded-bl-lg">Remuneración Efectiva</td>
+                            <td className="py-4 px-4 text-center font-medium">2.25% E.A.</td>
+                            <td className="py-4 px-4 text-center font-bold text-secondary rounded-br-lg">1.75% E.A.</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               {/* Invertir Tab */}
               <TabsContent value="invertir">
                 <Card className="border-border/50">
                   <CardContent className="p-6 md:p-8">
-                    <h2 className="text-2xl font-bold text-primary mb-8">
-                      Solicitud de Inversión
-                    </h2>
+                    <div className="flex items-center gap-3 mb-8">
+                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
+                        <TrendingUp className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-[#0F172A]">
+                          Solicitud de Inversión
+                        </h2>
+                        <p className="text-muted-foreground">Complete el formulario para iniciar su inversión</p>
+                      </div>
+                    </div>
                     
                     <div className="grid md:grid-cols-2 gap-6 mb-8">
+                      <div>
+                        <Label htmlFor="fondo">Seleccione Fondo</Label>
+                        <Select>
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Seleccione un fondo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="capital-privado">Fondo de Inversión Alternativos Plus</SelectItem>
+                            <SelectItem value="fic-180">FIC Alternativos 180 Plus</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <div>
                         <Label htmlFor="compartimento">Compartimento</Label>
                         <Select
                           value={formData.compartimento}
                           onValueChange={(value) => setFormData({...formData, compartimento: value})}
                         >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Seleccione un compartimento" />
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Seleccione compartimento" />
                           </SelectTrigger>
                           <SelectContent>
-                            {ficAlternativos180Plus.compartimentos.map((comp) => (
+                            {fondoCapitalPrivado.compartimentos.map((comp) => (
                               <SelectItem key={comp.id} value={comp.id}>
                                 {comp.name} - Rent. {comp.rentabilidadDia}% EA
                               </SelectItem>
                             ))}
-                            <SelectItem value="todos">Todos los compartimentos</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="tipo">Tipo de Participación</Label>
+                        <Select
+                          value={formData.tipoParticipacion}
+                          onValueChange={(value) => setFormData({...formData, tipoParticipacion: value})}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Seleccione tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="tp1">TP1 - Inversión desde $10M</SelectItem>
+                            <SelectItem value="tp2">TP2 - Inversión desde $1.000M</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -437,56 +576,33 @@ const Portfolio = () => {
                         <Label htmlFor="montoInversion">Monto de Inversión</Label>
                         <Input
                           id="montoInversion"
+                          placeholder="$100.000.000"
                           value={formData.montoInversion}
                           onChange={(e) => setFormData({...formData, montoInversion: e.target.value})}
-                          className="mt-1"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="terminosPago">Términos de Pago</Label>
-                        <Select
-                          value={formData.terminosPago}
-                          onValueChange={(value) => setFormData({...formData, terminosPago: value})}
-                        >
-                          <SelectTrigger className="mt-1">
-                            <SelectValue placeholder="Seleccione términos" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="mensual">Mensual</SelectItem>
-                            <SelectItem value="trimestral">Trimestral</SelectItem>
-                            <SelectItem value="semestral">Semestral</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="retornoEsperado">Retorno Esperado</Label>
-                        <Input
-                          id="retornoEsperado"
-                          value={formData.retornoEsperado}
-                          onChange={(e) => setFormData({...formData, retornoEsperado: e.target.value})}
-                          className="mt-1"
-                          readOnly
+                          className="mt-2"
                         />
                       </div>
                     </div>
 
                     {/* Beneficios */}
                     <div className="bg-muted/30 rounded-xl p-6 mb-8">
-                      <h3 className="font-semibold text-foreground mb-4">
-                        Beneficios del FIC Alternativos 180 Plus
+                      <h3 className="font-semibold text-[#0F172A] mb-4 flex items-center gap-2">
+                        <ShieldCheck className="w-5 h-5 text-secondary" />
+                        Beneficios de Invertir con InnovaFin
                       </h3>
-                      <ul className="space-y-2">
+                      <ul className="grid md:grid-cols-2 gap-3">
                         {beneficios.map((beneficio, index) => (
                           <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="w-4 h-4 text-secondary" />
+                            <CheckCircle className="w-4 h-4 text-secondary flex-shrink-0" />
                             {beneficio}
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                    <Button className="bg-secondary hover:bg-secondary/90 text-white">
                       Enviar Solicitud de Inversión
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                   </CardContent>
                 </Card>
