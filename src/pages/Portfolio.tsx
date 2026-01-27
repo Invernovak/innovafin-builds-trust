@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingCart, AlertCircle, DollarSign, CheckCircle, TrendingUp, Shield, Calendar, Briefcase, ChevronRight } from 'lucide-react';
+import { ShoppingCart, AlertCircle, DollarSign, CheckCircle, TrendingUp, Shield, Calendar, Briefcase, ChevronRight, Wallet, PiggyBank, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,149 +10,94 @@ import { Label } from '@/components/ui/label';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-// Definición de los 3 fondos de capital
-const fondosCapital = [
-  {
-    id: 'plus1',
-    name: 'InnovaFin Plus 1',
-    description: 'Fondo enfocado en cartera de libranzas con perfil conservador',
-    valorTotal: '$25.8M',
-    rendimientoPromedio: '12.5%',
-    inversionistas: 128,
-    compartimientos: [
-      {
-        id: 'libranzas',
-        name: 'Libranzas',
-        valorTotal: '$12.5M',
-        numeroCreditos: '1,850',
-        tasaPromedio: '13%',
-        plazoPromedio: '48 meses',
-        desempeno: '+11.2% YTD',
-        nivelRiesgo: 'Bajo',
-        nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
+// Formato para números grandes en COP
+const formatCOP = (value: number) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+};
+
+// Fondo Alternativos Plus con sus compartimentos reales
+const fondoAlternativosPlus = {
+  id: 'alternativos-plus',
+  name: 'FCP Alternativos Plus',
+  description: 'Fondo de Capital Privado especializado en activos alternativos con diversificación en libranzas, educación y evolución empresarial',
+  compartimentos: [
+    {
+      id: 'libranzas',
+      name: 'Libranzas',
+      totalActivos: 167884754457,
+      disponible: 9230991982,
+      invertido: 158305370171,
+      porcentajeActivos: 94,
+      rentabilidad: {
+        dia: 14.19,
+        dias30: 14.81,
+        dias60: null,
+        dias90: null,
+        dias180: null,
+        dias365: null,
       },
-      {
-        id: 'factoring',
-        name: 'Factoring',
-        valorTotal: '$8.3M',
-        numeroCreditos: '95',
-        tasaPromedio: '16%',
-        plazoPromedio: '60 días',
-        desempeno: '+13.5% YTD',
-        nivelRiesgo: 'Bajo',
-        nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
+      nivelRiesgo: 'Bajo',
+      nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
+    },
+    {
+      id: 'educapital1',
+      name: 'Educapital 1',
+      totalActivos: 9153246775,
+      disponible: 3152001722,
+      invertido: 6020669257,
+      porcentajeActivos: 66,
+      rentabilidad: {
+        dia: 6.07,
+        dias30: 12.28,
+        dias60: null,
+        dias90: null,
+        dias180: null,
+        dias365: null,
       },
-      {
-        id: 'consumo',
-        name: 'Cartera de Consumo',
-        valorTotal: '$5.0M',
-        numeroCreditos: '920',
-        tasaPromedio: '18%',
-        plazoPromedio: '24 meses',
-        desempeno: '+14.8% YTD',
-        nivelRiesgo: 'Medio',
-        nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
+      nivelRiesgo: 'Bajo',
+      nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
+    },
+    {
+      id: 'evolucion',
+      name: 'Evolución',
+      totalActivos: 188626597,
+      disponible: 189689510,
+      invertido: 0,
+      porcentajeActivos: 0,
+      rentabilidad: {
+        dia: 8.27,
+        dias30: 40.69,
+        dias60: null,
+        dias90: null,
+        dias180: null,
+        dias365: null,
       },
-    ],
-  },
-  {
-    id: 'plus2',
-    name: 'InnovaFin Plus 2',
-    description: 'Fondo balanceado con diversificación en factoring y consumo',
-    valorTotal: '$38.2M',
-    rendimientoPromedio: '15.8%',
-    inversionistas: 186,
-    compartimientos: [
-      {
-        id: 'libranzas',
-        name: 'Libranzas',
-        valorTotal: '$10.2M',
-        numeroCreditos: '1,520',
-        tasaPromedio: '14%',
-        plazoPromedio: '36 meses',
-        desempeno: '+12.8% YTD',
-        nivelRiesgo: 'Bajo',
-        nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
-      },
-      {
-        id: 'factoring',
-        name: 'Factoring',
-        valorTotal: '$18.5M',
-        numeroCreditos: '145',
-        tasaPromedio: '19%',
-        plazoPromedio: '90 días',
-        desempeno: '+17.2% YTD',
-        nivelRiesgo: 'Medio',
-        nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
-      },
-      {
-        id: 'consumo',
-        name: 'Cartera de Consumo',
-        valorTotal: '$9.5M',
-        numeroCreditos: '1,680',
-        tasaPromedio: '22%',
-        plazoPromedio: '36 meses',
-        desempeno: '+18.5% YTD',
-        nivelRiesgo: 'Medio',
-        nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
-      },
-    ],
-  },
-  {
-    id: 'plus3',
-    name: 'InnovaFin Plus 3',
-    description: 'Fondo de crecimiento con mayor exposición a cartera de consumo',
-    valorTotal: '$52.6M',
-    rendimientoPromedio: '18.2%',
-    inversionistas: 245,
-    compartimientos: [
-      {
-        id: 'libranzas',
-        name: 'Libranzas',
-        valorTotal: '$8.6M',
-        numeroCreditos: '1,280',
-        tasaPromedio: '15%',
-        plazoPromedio: '48 meses',
-        desempeno: '+13.5% YTD',
-        nivelRiesgo: 'Bajo',
-        nivelRiesgoColor: 'bg-emerald-100 text-emerald-700',
-      },
-      {
-        id: 'factoring',
-        name: 'Factoring',
-        valorTotal: '$16.8M',
-        numeroCreditos: '128',
-        tasaPromedio: '20%',
-        plazoPromedio: '75 días',
-        desempeno: '+19.8% YTD',
-        nivelRiesgo: 'Medio',
-        nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
-      },
-      {
-        id: 'consumo',
-        name: 'Cartera de Consumo',
-        valorTotal: '$27.2M',
-        numeroCreditos: '3,450',
-        tasaPromedio: '24%',
-        plazoPromedio: '42 meses',
-        desempeno: '+21.2% YTD',
-        nivelRiesgo: 'Medio-Alto',
-        nivelRiesgoColor: 'bg-orange-100 text-orange-700',
-      },
-    ],
-  },
-];
+      nivelRiesgo: 'Medio',
+      nivelRiesgoColor: 'bg-yellow-100 text-yellow-700',
+    },
+  ],
+};
+
+// Calcular totales del fondo
+const totalActivosFondo = fondoAlternativosPlus.compartimentos.reduce((acc, comp) => acc + comp.totalActivos, 0);
+const totalDisponibleFondo = fondoAlternativosPlus.compartimentos.reduce((acc, comp) => acc + comp.disponible, 0);
+const totalInvertidoFondo = fondoAlternativosPlus.compartimentos.reduce((acc, comp) => acc + comp.invertido, 0);
 
 const procesoSteps = [
   {
     icon: ShoppingCart,
-    title: 'Selección de Fondo',
-    description: 'Elija el fondo que mejor se adapte a su perfil',
+    title: 'Selección de Compartimento',
+    description: 'Elija el compartimento que mejor se adapte a su perfil',
   },
   {
     icon: AlertCircle,
     title: 'Due Diligence',
-    description: 'Análisis detallado del fondo seleccionado',
+    description: 'Análisis detallado del compartimento seleccionado',
   },
   {
     icon: DollarSign,
@@ -169,39 +114,38 @@ const procesoSteps = [
 const desempenoCards = [
   {
     icon: TrendingUp,
-    title: 'Rentabilidad Histórica',
-    description: 'Rendimiento consistente superior al 15% anual en los últimos 3 años',
+    title: 'Rentabilidad Consistente',
+    description: 'Rendimientos competitivos con tasas EA superiores al mercado tradicional',
   },
   {
     icon: Shield,
     title: 'Gestión de Riesgos',
-    description: 'Diversificación óptima entre los tres compartimientos de cada fondo',
+    description: 'Diversificación óptima entre los tres compartimentos del fondo',
   },
   {
     icon: Calendar,
-    title: 'Reportes Mensuales',
-    description: 'Información detallada del desempeño de cada compartimiento',
+    title: 'Reportes Periódicos',
+    description: 'Información detallada del desempeño de cada compartimento',
   },
 ];
 
 const beneficios = [
-  'Diversificación automática entre tres compartimientos',
+  'Diversificación automática entre tres compartimentos',
   'Gestión profesional del portafolio',
-  'Liquidez trimestral garantizada',
-  'Reportes mensuales de desempeño',
+  'Liquidez según términos del fondo',
+  'Reportes periódicos de desempeño',
 ];
 
 const Portfolio = () => {
-  const [selectedFondo, setSelectedFondo] = useState<string | null>(null);
+  const [selectedCompartimento, setSelectedCompartimento] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    fondo: '',
-    compartimiento: '',
-    montoInversion: '$1,000,000',
+    compartimento: '',
+    montoInversion: '$100,000,000',
     terminosPago: '',
-    retornoEsperado: '15%',
+    retornoEsperado: '14%',
   });
 
-  const activeFondo = fondosCapital.find(f => f.id === selectedFondo);
+  const activeCompartimento = fondoAlternativosPlus.compartimentos.find(c => c.id === selectedCompartimento);
 
   return (
     <div className="min-h-screen bg-background">
@@ -211,10 +155,10 @@ const Portfolio = () => {
       <section className="pt-32 pb-16 bg-gradient-to-b from-muted/50 to-background">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            Fondos de Capital InnovaFin
+            Portafolio Total InnovaFin
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Tres fondos especializados con compartimientos en Libranzas, Factoring y Cartera de Consumo
+            Fondo de Capital Privado Alternativos Plus con compartimentos especializados en Libranzas, Educapital y Evolución
           </p>
         </div>
       </section>
@@ -228,7 +172,7 @@ const Portfolio = () => {
                 value="fondos" 
                 className="rounded-lg text-sm md:text-base font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-primary"
               >
-                Fondos de Capital
+                FCP Alternativos Plus
               </TabsTrigger>
               <TabsTrigger 
                 value="desempeno"
@@ -246,189 +190,254 @@ const Portfolio = () => {
 
             {/* Fondos Tab */}
             <TabsContent value="fondos">
-              {/* Resumen General */}
+              {/* Resumen General del Fondo */}
               <Card className="mb-8 border-l-4 border-l-primary bg-gradient-to-r from-muted/30 to-background">
                 <CardContent className="p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-primary mb-2">
-                    Portafolio Total InnovaFin
-                  </h2>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Briefcase className="w-7 h-7 text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-primary">
+                        {fondoAlternativosPlus.name}
+                      </h2>
+                      <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+                        Fondo Activo
+                      </Badge>
+                    </div>
+                  </div>
                   <p className="text-muted-foreground mb-6">
-                    Tres fondos de capital privado con compartimientos especializados para diferentes perfiles de inversión
+                    {fondoAlternativosPlus.description}
                   </p>
                   
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Valor Total Gestionado</p>
-                      <p className="text-3xl font-bold text-foreground">$116.6M</p>
+                    <div className="bg-background/50 rounded-xl p-4 border border-border/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <BarChart3 className="w-4 h-4 text-primary" />
+                        <p className="text-sm text-muted-foreground">Total Activos</p>
+                      </div>
+                      <p className="text-xl md:text-2xl font-bold text-foreground">{formatCOP(totalActivosFondo)}</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Rendimiento Promedio</p>
-                      <p className="text-3xl font-bold text-secondary">15.5%</p>
+                    <div className="bg-background/50 rounded-xl p-4 border border-border/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Wallet className="w-4 h-4 text-secondary" />
+                        <p className="text-sm text-muted-foreground">Disponible</p>
+                      </div>
+                      <p className="text-xl md:text-2xl font-bold text-secondary">{formatCOP(totalDisponibleFondo)}</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Fondos Activos</p>
-                      <p className="text-3xl font-bold text-foreground">3</p>
+                    <div className="bg-background/50 rounded-xl p-4 border border-border/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <PiggyBank className="w-4 h-4 text-primary" />
+                        <p className="text-sm text-muted-foreground">Invertido</p>
+                      </div>
+                      <p className="text-xl md:text-2xl font-bold text-foreground">{formatCOP(totalInvertidoFondo)}</p>
                     </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Total Inversionistas</p>
-                      <p className="text-3xl font-bold text-foreground">559</p>
+                    <div className="bg-background/50 rounded-xl p-4 border border-border/30">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Briefcase className="w-4 h-4 text-accent" />
+                        <p className="text-sm text-muted-foreground">Compartimentos</p>
+                      </div>
+                      <p className="text-xl md:text-2xl font-bold text-foreground">3</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Fondos Cards */}
+              {/* Compartimentos Cards */}
+              <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-primary" />
+                Compartimentos del Fondo
+              </h3>
               <div className="grid lg:grid-cols-3 gap-8 mb-8">
-                {fondosCapital.map((fondo) => (
+                {fondoAlternativosPlus.compartimentos.map((comp) => (
                   <Card 
-                    key={fondo.id} 
+                    key={comp.id} 
                     className={`border-2 transition-all duration-300 cursor-pointer hover:shadow-xl ${
-                      selectedFondo === fondo.id 
+                      selectedCompartimento === comp.id 
                         ? 'border-primary shadow-lg' 
                         : 'border-border/50 hover:border-primary/50'
                     }`}
-                    onClick={() => setSelectedFondo(selectedFondo === fondo.id ? null : fondo.id)}
+                    onClick={() => setSelectedCompartimento(selectedCompartimento === comp.id ? null : comp.id)}
                   >
                     <CardContent className="p-6">
-                      {/* Header del Fondo */}
+                      {/* Header del Compartimento */}
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <Briefcase className="w-6 h-6 text-primary" />
-                          </div>
+                          <div className={`w-4 h-4 rounded-full ${
+                            comp.id === 'libranzas' ? 'bg-primary' : 
+                            comp.id === 'educapital1' ? 'bg-secondary' : 'bg-accent'
+                          }`} />
                           <div>
-                            <h3 className="text-xl font-bold text-primary">{fondo.name}</h3>
-                            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 mt-1">
-                              Activo
+                            <h3 className="text-xl font-bold text-foreground">{comp.name}</h3>
+                            <Badge className={comp.nivelRiesgoColor + ' mt-1'}>
+                              Riesgo {comp.nivelRiesgo}
                             </Badge>
                           </div>
                         </div>
-                      </div>
-                      
-                      <p className="text-sm text-muted-foreground mb-6">
-                        {fondo.description}
-                      </p>
-
-                      {/* Métricas del Fondo */}
-                      <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-muted/30 rounded-xl">
-                        <div className="text-center">
-                          <p className="text-xs text-muted-foreground">Valor Total</p>
-                          <p className="text-lg font-bold text-foreground">{fondo.valorTotal}</p>
-                        </div>
-                        <div className="text-center border-x border-border">
-                          <p className="text-xs text-muted-foreground">Rendimiento</p>
-                          <p className="text-lg font-bold text-secondary">{fondo.rendimientoPromedio}</p>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-muted-foreground">Inversores</p>
-                          <p className="text-lg font-bold text-foreground">{fondo.inversionistas}</p>
-                        </div>
+                        <ChevronRight className={`w-5 h-5 text-muted-foreground transition-transform ${selectedCompartimento === comp.id ? 'rotate-90' : ''}`} />
                       </div>
 
-                      {/* Compartimientos */}
-                      <div className="space-y-3">
-                        <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                          Compartimientos
-                          <ChevronRight className={`w-4 h-4 transition-transform ${selectedFondo === fondo.id ? 'rotate-90' : ''}`} />
-                        </h4>
-                        
-                        {fondo.compartimientos.map((comp) => (
-                          <div 
-                            key={comp.id} 
-                            className="flex items-center justify-between p-3 bg-muted/20 rounded-lg border border-border/30"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className={`w-2 h-2 rounded-full ${
-                                comp.id === 'libranzas' ? 'bg-primary' : 
-                                comp.id === 'factoring' ? 'bg-secondary' : 'bg-accent'
-                              }`} />
-                              <span className="text-sm font-medium text-foreground">{comp.name}</span>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <span className="text-sm font-semibold text-foreground">{comp.valorTotal}</span>
-                              <Badge className={comp.nivelRiesgoColor + ' text-xs'}>
-                                {comp.nivelRiesgo}
-                              </Badge>
-                            </div>
+                      {/* Total de Activos */}
+                      <div className="bg-muted/30 rounded-xl p-4 mb-4">
+                        <p className="text-xs text-muted-foreground mb-1">Total de Activos</p>
+                        <p className="text-2xl font-bold text-foreground">{formatCOP(comp.totalActivos)}</p>
+                      </div>
+
+                      {/* Rentabilidad EA */}
+                      <div className="mb-4">
+                        <p className="text-xs font-semibold text-muted-foreground mb-2">Rentabilidad EA</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="bg-primary/5 rounded-lg p-2 text-center">
+                            <p className="text-xs text-muted-foreground">Día</p>
+                            <p className="text-lg font-bold text-primary">{comp.rentabilidad.dia}%</p>
                           </div>
-                        ))}
+                          <div className="bg-secondary/5 rounded-lg p-2 text-center">
+                            <p className="text-xs text-muted-foreground">30 días</p>
+                            <p className="text-lg font-bold text-secondary">{comp.rentabilidad.dias30}%</p>
+                          </div>
+                        </div>
                       </div>
 
-                      <Button 
-                        variant="outline" 
-                        className="w-full mt-6"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedFondo(fondo.id);
-                        }}
-                      >
-                        Ver Detalles Completos
-                      </Button>
+                      {/* Distribución */}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">Disponible</span>
+                          <span className="font-semibold text-foreground">{formatCOP(comp.disponible)}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">Invertido</span>
+                          <span className="font-semibold text-foreground">{formatCOP(comp.invertido)}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm pt-2 border-t border-border">
+                          <span className="text-muted-foreground">% de Activos Invertido</span>
+                          <Badge variant="outline" className="font-bold">{comp.porcentajeActivos}%</Badge>
+                        </div>
+                      </div>
+
+                      {/* Progress bar */}
+                      <div className="mt-4">
+                        <div className="h-2 bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${
+                              comp.id === 'libranzas' ? 'bg-primary' : 
+                              comp.id === 'educapital1' ? 'bg-secondary' : 'bg-accent'
+                            }`}
+                            style={{ width: `${comp.porcentajeActivos}%` }}
+                          />
+                        </div>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
 
-              {/* Detalle del Fondo Seleccionado */}
-              {activeFondo && (
+              {/* Detalle del Compartimento Seleccionado */}
+              {activeCompartimento && (
                 <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-background">
                   <CardContent className="p-6 md:p-8">
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-2xl font-bold text-primary">
-                        Detalle: {activeFondo.name}
+                        Detalle: {activeCompartimento.name}
                       </h3>
-                      <Button variant="ghost" onClick={() => setSelectedFondo(null)}>
+                      <Button variant="ghost" onClick={() => setSelectedCompartimento(null)}>
                         Cerrar
                       </Button>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                      {activeFondo.compartimientos.map((comp) => (
-                        <Card key={comp.id} className="border-border/50">
-                          <CardContent className="p-5">
-                            <div className="flex items-center gap-3 mb-4">
-                              <div className={`w-4 h-4 rounded-full ${
-                                comp.id === 'libranzas' ? 'bg-primary' : 
-                                comp.id === 'factoring' ? 'bg-secondary' : 'bg-accent'
-                              }`} />
-                              <h4 className="text-lg font-bold text-foreground">{comp.name}</h4>
-                            </div>
+                    <div className="grid md:grid-cols-2 gap-8">
+                      {/* Información General */}
+                      <div className="space-y-4">
+                        <h4 className="text-lg font-semibold text-foreground">Información General</h4>
+                        <div className="bg-muted/30 rounded-xl p-5 space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Total de Activos</span>
+                            <span className="font-bold text-foreground">{formatCOP(activeCompartimento.totalActivos)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Disponible</span>
+                            <span className="font-semibold text-secondary">{formatCOP(activeCompartimento.disponible)}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Invertido</span>
+                            <span className="font-semibold text-foreground">{formatCOP(activeCompartimento.invertido)}</span>
+                          </div>
+                          <div className="flex justify-between items-center pt-2 border-t border-border">
+                            <span className="text-muted-foreground">% de Activos Invertido</span>
+                            <Badge className={activeCompartimento.nivelRiesgoColor}>
+                              {activeCompartimento.porcentajeActivos}%
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
 
-                            <div className="space-y-3 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Valor Total</span>
-                                <span className="font-semibold text-foreground">{comp.valorTotal}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">N° Créditos</span>
-                                <span className="font-semibold text-foreground">{comp.numeroCreditos}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Tasa Promedio</span>
-                                <span className="font-semibold text-foreground">{comp.tasaPromedio}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Plazo Promedio</span>
-                                <span className="font-semibold text-foreground">{comp.plazoPromedio}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">Desempeño</span>
-                                <span className="font-semibold text-secondary">{comp.desempeno}</span>
-                              </div>
-                              <div className="flex justify-between items-center pt-2 border-t border-border">
-                                <span className="text-muted-foreground">Nivel de Riesgo</span>
-                                <Badge className={comp.nivelRiesgoColor}>
-                                  {comp.nivelRiesgo}
-                                </Badge>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                      {/* Tabla de Rentabilidades */}
+                      <div className="space-y-4">
+                        <h4 className="text-lg font-semibold text-foreground">Rentabilidad EA por Período</h4>
+                        <div className="bg-muted/30 rounded-xl overflow-hidden">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="bg-muted/50">
+                                <th className="text-left py-3 px-4 font-semibold text-foreground">Período</th>
+                                <th className="text-right py-3 px-4 font-semibold text-foreground">Rentabilidad EA</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="border-b border-border/30">
+                                <td className="py-3 px-4 text-muted-foreground">Día</td>
+                                <td className="py-3 px-4 text-right font-bold text-primary">{activeCompartimento.rentabilidad.dia}%</td>
+                              </tr>
+                              <tr className="border-b border-border/30">
+                                <td className="py-3 px-4 text-muted-foreground">30 días</td>
+                                <td className="py-3 px-4 text-right font-bold text-secondary">{activeCompartimento.rentabilidad.dias30}%</td>
+                              </tr>
+                              <tr className="border-b border-border/30">
+                                <td className="py-3 px-4 text-muted-foreground">60 días</td>
+                                <td className="py-3 px-4 text-right text-muted-foreground">{activeCompartimento.rentabilidad.dias60 ?? '—'}</td>
+                              </tr>
+                              <tr className="border-b border-border/30">
+                                <td className="py-3 px-4 text-muted-foreground">90 días</td>
+                                <td className="py-3 px-4 text-right text-muted-foreground">{activeCompartimento.rentabilidad.dias90 ?? '—'}</td>
+                              </tr>
+                              <tr className="border-b border-border/30">
+                                <td className="py-3 px-4 text-muted-foreground">180 días</td>
+                                <td className="py-3 px-4 text-right text-muted-foreground">{activeCompartimento.rentabilidad.dias180 ?? '—'}</td>
+                              </tr>
+                              <tr>
+                                <td className="py-3 px-4 text-muted-foreground">365 días</td>
+                                <td className="py-3 px-4 text-right text-muted-foreground">{activeCompartimento.rentabilidad.dias365 ?? '—'}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               )}
+
+              {/* Resumen Total del FCP */}
+              <Card className="mt-8 border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+                <CardContent className="p-6 md:p-8">
+                  <h3 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+                    <BarChart3 className="w-5 h-5" />
+                    Total FCP Alternativos Plus
+                  </h3>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="text-center p-4 bg-background/50 rounded-xl">
+                      <p className="text-sm text-muted-foreground mb-2">Total Activos</p>
+                      <p className="text-2xl md:text-3xl font-bold text-primary">{formatCOP(totalActivosFondo)}</p>
+                    </div>
+                    <div className="text-center p-4 bg-background/50 rounded-xl">
+                      <p className="text-sm text-muted-foreground mb-2">Total Disponible</p>
+                      <p className="text-2xl md:text-3xl font-bold text-secondary">{formatCOP(totalDisponibleFondo)}</p>
+                    </div>
+                    <div className="text-center p-4 bg-background/50 rounded-xl">
+                      <p className="text-sm text-muted-foreground mb-2">Total Invertido</p>
+                      <p className="text-2xl md:text-3xl font-bold text-foreground">{formatCOP(totalInvertidoFondo)}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             {/* Desempeño Tab */}
@@ -471,35 +480,33 @@ const Portfolio = () => {
                 ))}
               </div>
 
-              {/* Comparativa de Fondos */}
+              {/* Comparativa de Compartimentos */}
               <Card className="border-border/50">
                 <CardContent className="p-6 md:p-8">
-                  <h3 className="text-xl font-bold text-primary mb-6">Comparativa de Fondos</h3>
+                  <h3 className="text-xl font-bold text-primary mb-6">Comparativa de Compartimentos</h3>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 font-semibold text-foreground">Fondo</th>
-                          <th className="text-center py-3 px-4 font-semibold text-foreground">Valor Total</th>
-                          <th className="text-center py-3 px-4 font-semibold text-foreground">Rendimiento</th>
-                          <th className="text-center py-3 px-4 font-semibold text-foreground">Inversionistas</th>
-                          <th className="text-center py-3 px-4 font-semibold text-foreground">Perfil</th>
+                          <th className="text-left py-3 px-4 font-semibold text-foreground">Compartimento</th>
+                          <th className="text-right py-3 px-4 font-semibold text-foreground">Total Activos</th>
+                          <th className="text-center py-3 px-4 font-semibold text-foreground">Rent. EA Día</th>
+                          <th className="text-center py-3 px-4 font-semibold text-foreground">Rent. 30 días</th>
+                          <th className="text-center py-3 px-4 font-semibold text-foreground">% Invertido</th>
+                          <th className="text-center py-3 px-4 font-semibold text-foreground">Riesgo</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {fondosCapital.map((fondo, index) => (
-                          <tr key={fondo.id} className={index < fondosCapital.length - 1 ? 'border-b border-border/50' : ''}>
-                            <td className="py-4 px-4 font-medium text-foreground">{fondo.name}</td>
-                            <td className="py-4 px-4 text-center font-semibold">{fondo.valorTotal}</td>
-                            <td className="py-4 px-4 text-center font-semibold text-secondary">{fondo.rendimientoPromedio}</td>
-                            <td className="py-4 px-4 text-center">{fondo.inversionistas}</td>
+                        {fondoAlternativosPlus.compartimentos.map((comp, index) => (
+                          <tr key={comp.id} className={index < fondoAlternativosPlus.compartimentos.length - 1 ? 'border-b border-border/50' : ''}>
+                            <td className="py-4 px-4 font-medium text-foreground">{comp.name}</td>
+                            <td className="py-4 px-4 text-right font-semibold">{formatCOP(comp.totalActivos)}</td>
+                            <td className="py-4 px-4 text-center font-semibold text-primary">{comp.rentabilidad.dia}%</td>
+                            <td className="py-4 px-4 text-center font-semibold text-secondary">{comp.rentabilidad.dias30}%</td>
+                            <td className="py-4 px-4 text-center">{comp.porcentajeActivos}%</td>
                             <td className="py-4 px-4 text-center">
-                              <Badge variant="outline" className={
-                                fondo.id === 'plus1' ? 'border-emerald-500 text-emerald-600' :
-                                fondo.id === 'plus2' ? 'border-yellow-500 text-yellow-600' :
-                                'border-orange-500 text-orange-600'
-                              }>
-                                {fondo.id === 'plus1' ? 'Conservador' : fondo.id === 'plus2' ? 'Balanceado' : 'Crecimiento'}
+                              <Badge className={comp.nivelRiesgoColor}>
+                                {comp.nivelRiesgo}
                               </Badge>
                             </td>
                           </tr>
@@ -521,38 +528,21 @@ const Portfolio = () => {
                   
                   <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div>
-                      <Label htmlFor="fondo">Fondo de Capital</Label>
+                      <Label htmlFor="compartimento">Compartimento</Label>
                       <Select
-                        value={formData.fondo}
-                        onValueChange={(value) => setFormData({...formData, fondo: value, compartimiento: ''})}
+                        value={formData.compartimento}
+                        onValueChange={(value) => setFormData({...formData, compartimento: value})}
                       >
                         <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Seleccione un fondo" />
+                          <SelectValue placeholder="Seleccione un compartimento" />
                         </SelectTrigger>
                         <SelectContent>
-                          {fondosCapital.map((fondo) => (
-                            <SelectItem key={fondo.id} value={fondo.id}>
-                              {fondo.name} - {fondo.rendimientoPromedio}
+                          {fondoAlternativosPlus.compartimentos.map((comp) => (
+                            <SelectItem key={comp.id} value={comp.id}>
+                              {comp.name} - Rent. {comp.rentabilidad.dia}% EA
                             </SelectItem>
                           ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="compartimiento">Compartimiento</Label>
-                      <Select
-                        value={formData.compartimiento}
-                        onValueChange={(value) => setFormData({...formData, compartimiento: value})}
-                        disabled={!formData.fondo}
-                      >
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Seleccione compartimiento" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="libranzas">Libranzas</SelectItem>
-                          <SelectItem value="factoring">Factoring</SelectItem>
-                          <SelectItem value="consumo">Cartera de Consumo</SelectItem>
-                          <SelectItem value="todos">Todos los compartimientos</SelectItem>
+                          <SelectItem value="todos">Todos los compartimentos</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -581,12 +571,22 @@ const Portfolio = () => {
                         </SelectContent>
                       </Select>
                     </div>
+                    <div>
+                      <Label htmlFor="retornoEsperado">Retorno Esperado</Label>
+                      <Input
+                        id="retornoEsperado"
+                        value={formData.retornoEsperado}
+                        onChange={(e) => setFormData({...formData, retornoEsperado: e.target.value})}
+                        className="mt-1"
+                        readOnly
+                      />
+                    </div>
                   </div>
 
                   {/* Beneficios */}
                   <div className="bg-muted/30 rounded-xl p-6 mb-8">
                     <h3 className="font-semibold text-foreground mb-4">
-                      Beneficios de los Fondos InnovaFin
+                      Beneficios del FCP Alternativos Plus
                     </h3>
                     <ul className="space-y-2">
                       {beneficios.map((beneficio, index) => (
