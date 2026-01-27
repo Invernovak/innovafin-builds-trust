@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const services = [
   {
@@ -55,18 +56,26 @@ const ServiceButton = ({ to }: { to: string }) => (
 
 const ServiceCard = ({ 
   service, 
-  className 
+  className,
+  delay = 0,
 }: { 
   service: typeof services[0]; 
   className?: string;
+  delay?: number;
 }) => {
   const Icon = service.icon;
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   
   return (
     <div 
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
       className={cn(
-        "group relative bg-card rounded-2xl border border-border/50 p-8 transition-all duration-500",
+        "group relative bg-card rounded-2xl border border-border/50 p-8 transition-all duration-700",
         "hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1",
+        isVisible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-8",
         className
       )}
     >
@@ -110,13 +119,18 @@ const ServiceCard = ({
 
 const FeaturedServiceCard = ({ service }: { service: typeof services[0] }) => {
   const Icon = service.icon;
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   
   return (
     <div 
+      ref={ref}
       className={cn(
-        "group relative bg-gradient-to-br from-primary/5 via-card to-card rounded-2xl border border-primary/20 p-10 transition-all duration-500",
+        "group relative bg-gradient-to-br from-primary/5 via-card to-card rounded-2xl border border-primary/20 p-10 transition-all duration-700",
         "hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1",
-        "overflow-hidden"
+        "overflow-hidden",
+        isVisible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-8"
       )}
     >
       {/* Background pattern */}
@@ -165,6 +179,7 @@ const FeaturedServiceCard = ({ service }: { service: typeof services[0] }) => {
 const ServicesSection = () => {
   const featuredService = services[0];
   const otherServices = services.slice(1);
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
   return (
     <section id="servicios" className="section-padding bg-background relative overflow-hidden">
@@ -176,7 +191,15 @@ const ServicesSection = () => {
 
       <div className="container-narrow mx-auto relative">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div 
+          ref={headerRef}
+          className={cn(
+            "text-center mb-16 transition-all duration-700",
+            headerVisible 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 translate-y-8"
+          )}
+        >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary text-sm font-semibold mb-6">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
             Nuestros Servicios
@@ -198,7 +221,7 @@ const ServicesSection = () => {
         {/* Other Services Grid */}
         <div className="grid md:grid-cols-2 gap-6">
           {otherServices.map((service, index) => (
-            <ServiceCard key={index} service={service} />
+            <ServiceCard key={index} service={service} delay={index * 100} />
           ))}
         </div>
 
