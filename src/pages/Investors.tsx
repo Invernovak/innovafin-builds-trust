@@ -208,7 +208,7 @@ const Investors = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Inversión Mínima</p>
-                    <p className="text-2xl font-bold">$50M COP</p>
+                    <p className="text-2xl font-bold">$10.000.000 COP</p>
                   </div>
                 </div>
               </CardContent>
