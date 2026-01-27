@@ -14,16 +14,138 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      invoice_documents: {
+        Row: {
+          created_at: string
+          file_name: string
+          file_type: string | null
+          file_url: string
+          id: string
+          request_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_name: string
+          file_type?: string | null
+          file_url: string
+          id?: string
+          request_id: string
+        }
+        Update: {
+          created_at?: string
+          file_name?: string
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_documents_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_requests: {
+        Row: {
+          calculated_discount: number
+          created_at: string
+          days_to_maturity: number
+          id: string
+          invoice_amount: number
+          invoice_number: string
+          monthly_rate: number
+          net_amount: number
+          payer_name: string
+          payer_nit: string
+          status: Database["public"]["Enums"]["invoice_request_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calculated_discount: number
+          created_at?: string
+          days_to_maturity?: number
+          id?: string
+          invoice_amount: number
+          invoice_number: string
+          monthly_rate?: number
+          net_amount: number
+          payer_name: string
+          payer_nit: string
+          status?: Database["public"]["Enums"]["invoice_request_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calculated_discount?: number
+          created_at?: string
+          days_to_maturity?: number
+          id?: string
+          invoice_amount?: number
+          invoice_number?: string
+          monthly_rate?: number
+          net_amount?: number
+          payer_name?: string
+          payer_nit?: string
+          status?: Database["public"]["Enums"]["invoice_request_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      request_history: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          request_id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          request_id: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          request_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "request_history_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_access_request: { Args: { req_id: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      invoice_request_status:
+        | "pending"
+        | "in_review"
+        | "approved"
+        | "rejected"
+        | "disbursed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +272,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      invoice_request_status: [
+        "pending",
+        "in_review",
+        "approved",
+        "rejected",
+        "disbursed",
+      ],
+    },
   },
 } as const
