@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { 
   FileText, Upload, CheckCircle, Clock, 
   DollarSign, Calculator, Send, Download, Eye, Filter,
-  CreditCard, AlertCircle, ArrowRight, X, TrendingUp
+  CreditCard, AlertCircle, ArrowRight, X, TrendingUp, LogIn, LogOut, User
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -11,55 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useInvoiceRequests, type InvoiceRequest } from '@/hooks/useInvoiceRequests';
+import { useAuth } from '@/hooks/useAuth';
+import { AuthModal } from '@/components/AuthModal';
 import { toast } from 'sonner';
-
-// Datos de ejemplo de facturas
-const invoicesData = [
-  {
-    id: 'FAC-2024-001',
-    client: 'Empresa XYZ SAS',
-    nit: '900123456-1',
-    amount: 45000000,
-    discountRate: 1.8,
-    netAmount: 44190000,
-    dueDate: '2024-02-15',
-    status: 'Aprobada',
-    createdAt: '2024-01-10',
-  },
-  {
-    id: 'FAC-2024-002',
-    client: 'Corporación ABC',
-    nit: '800987654-2',
-    amount: 120000000,
-    discountRate: 1.5,
-    netAmount: 118200000,
-    dueDate: '2024-02-28',
-    status: 'En Revisión',
-    createdAt: '2024-01-12',
-  },
-  {
-    id: 'FAC-2024-003',
-    client: 'Industrias DEF',
-    nit: '900456789-3',
-    amount: 75000000,
-    discountRate: 2.0,
-    netAmount: 73500000,
-    dueDate: '2024-03-10',
-    status: 'Pendiente',
-    createdAt: '2024-01-14',
-  },
-  {
-    id: 'FAC-2024-004',
-    client: 'Comercializadora GHI',
-    nit: '800111222-4',
-    amount: 28000000,
-    discountRate: 1.8,
-    netAmount: 27496000,
-    dueDate: '2024-02-20',
-    status: 'Desembolsada',
-    createdAt: '2024-01-08',
-  },
-];
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('es-CO', {
@@ -79,29 +34,30 @@ const parseNumber = (value: string) => {
   return parseInt(value.replace(/\./g, '')) || 0;
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: InvoiceRequest['status']) => {
   switch (status) {
-    case 'Aprobada': return 'bg-green-100 text-green-700 border-green-200';
-    case 'En Revisión': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-    case 'Pendiente': return 'bg-gray-100 text-gray-700 border-gray-200';
-    case 'Desembolsada': return 'bg-blue-100 text-blue-700 border-blue-200';
-    case 'Rechazada': return 'bg-red-100 text-red-700 border-red-200';
+    case 'approved': return 'bg-green-100 text-green-700 border-green-200';
+    case 'in_review': return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+    case 'pending': return 'bg-gray-100 text-gray-700 border-gray-200';
+    case 'disbursed': return 'bg-blue-100 text-blue-700 border-blue-200';
+    case 'rejected': return 'bg-red-100 text-red-700 border-red-200';
     default: return 'bg-gray-100 text-gray-700 border-gray-200';
   }
 };
 
-const getStatusIcon = (status: string) => {
+const getStatusIcon = (status: InvoiceRequest['status']) => {
   switch (status) {
-    case 'Aprobada': return <CheckCircle className="w-4 h-4" />;
-    case 'En Revisión': return <Clock className="w-4 h-4" />;
-    case 'Desembolsada': return <DollarSign className="w-4 h-4" />;
+    case 'approved': return <CheckCircle className="w-4 h-4" />;
+    case 'in_review': return <Clock className="w-4 h-4" />;
+    case 'disbursed': return <DollarSign className="w-4 h-4" />;
     default: return null;
   }
 };
 
 const FactoringWeb = () => {
   const [showNewInvoice, setShowNewInvoice] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<typeof invoicesData[0] | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceRequest | null>(null);
   const [activeTab, setActiveTab] = useState('calculadora');
   const [calculatorData, setCalculatorData] = useState({
     invoiceAmount: '',
@@ -118,6 +74,17 @@ const FactoringWeb = () => {
   });
   const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
 
+  // Auth and data hooks
+  const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
+  const { 
+    requests, 
+    loading: requestsLoading, 
+    stats, 
+    createRequest, 
+    fetchRequests,
+    getStatusLabel 
+  } = useInvoiceRequests();
+
   // Animation refs
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
@@ -128,10 +95,14 @@ const FactoringWeb = () => {
     if (hash === '#calculadora') setActiveTab('calculadora');
     else if (hash === '#solicitud') {
       setActiveTab('calculadora');
-      setShowNewInvoice(true);
+      if (isAuthenticated) {
+        setShowNewInvoice(true);
+      } else {
+        setShowAuthModal(true);
+      }
     }
     else if (hash === '#historial') setActiveTab('historial');
-  }, []);
+  }, [isAuthenticated]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -139,14 +110,41 @@ const FactoringWeb = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleNewInvoiceClick = () => {
+    if (isAuthenticated) {
+      setShowNewInvoice(true);
+    } else {
+      setShowAuthModal(true);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('El formulario se ha enviado con éxito', {
-      description: 'Recibirá una respuesta en las próximas 24 horas.',
+    
+    if (!isAuthenticated) {
+      toast.error('Debe iniciar sesión para crear una solicitud');
+      setShowAuthModal(true);
+      return;
+    }
+
+    const daysToMaturity = formData.dueDate 
+      ? Math.max(1, Math.ceil((new Date(formData.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+      : 30;
+
+    const result = await createRequest({
+      invoice_number: formData.invoiceNumber,
+      invoice_amount: parseNumber(formData.invoiceAmount),
+      payer_name: formData.clientName,
+      payer_nit: formData.clientNit,
+      days_to_maturity: daysToMaturity,
+      monthly_rate: 1.8,
     });
-    setShowNewInvoice(false);
-    setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '' });
-    setUploadedDocs([]);
+
+    if (result) {
+      setShowNewInvoice(false);
+      setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '' });
+      setUploadedDocs([]);
+    }
   };
 
   const handleCalculatorAmountChange = (value: string) => {
@@ -169,10 +167,11 @@ const FactoringWeb = () => {
 
   const calculation = calculateDiscount();
 
-  // Stats
-  const totalPending = invoicesData.filter(i => i.status === 'Pendiente' || i.status === 'En Revisión').reduce((sum, i) => sum + i.amount, 0);
-  const totalApproved = invoicesData.filter(i => i.status === 'Aprobada').reduce((sum, i) => sum + i.amount, 0);
-  const totalDisbursed = invoicesData.filter(i => i.status === 'Desembolsada').reduce((sum, i) => sum + i.amount, 0);
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success('Sesión cerrada exitosamente');
+    fetchRequests();
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -194,6 +193,30 @@ const FactoringWeb = () => {
               "text-center transition-all duration-700",
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
+              {/* Auth status badge */}
+              <div className="flex justify-center mb-4">
+                {isAuthenticated ? (
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 text-white text-sm font-medium">
+                    <User className="w-4 h-4" />
+                    {user?.email}
+                    <button 
+                      onClick={handleSignOut}
+                      className="ml-2 hover:text-secondary transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </span>
+                ) : (
+                  <button 
+                    onClick={() => setShowAuthModal(true)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium hover:bg-white/30 transition-colors"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    Iniciar Sesión
+                  </button>
+                )}
+              </div>
+
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-6">
                 <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                 Portal Factoring
@@ -208,7 +231,7 @@ const FactoringWeb = () => {
                 <Button 
                   size="lg" 
                   className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-8"
-                  onClick={() => setShowNewInvoice(true)}
+                  onClick={handleNewInvoiceClick}
                 >
                   <FileText className="w-5 h-5 mr-2" />
                   Nueva Solicitud
@@ -244,7 +267,7 @@ const FactoringWeb = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Total Facturas</p>
-                    <p className="text-2xl font-bold">{invoicesData.length}</p>
+                    <p className="text-2xl font-bold">{stats.totalCount}</p>
                   </div>
                 </div>
               </CardContent>
@@ -257,7 +280,7 @@ const FactoringWeb = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">En Proceso</p>
-                    <p className="text-xl font-bold">{formatCurrency(totalPending)}</p>
+                    <p className="text-xl font-bold">{formatCurrency(stats.totalPending)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -270,7 +293,7 @@ const FactoringWeb = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Aprobadas</p>
-                    <p className="text-xl font-bold">{formatCurrency(totalApproved)}</p>
+                    <p className="text-xl font-bold">{formatCurrency(stats.totalApproved)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -283,7 +306,7 @@ const FactoringWeb = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Desembolsado</p>
-                    <p className="text-xl font-bold">{formatCurrency(totalDisbursed)}</p>
+                    <p className="text-xl font-bold">{formatCurrency(stats.totalDisbursed)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -401,7 +424,7 @@ const FactoringWeb = () => {
                       <span className="text-3xl font-bold text-secondary">{formatCurrency(calculation.netAmount)}</span>
                     </div>
                     
-                    <Button className="w-full h-12 text-base rounded-xl" onClick={() => setShowNewInvoice(true)}>
+                    <Button className="w-full h-12 text-base rounded-xl" onClick={handleNewInvoiceClick}>
                       Solicitar Descuento
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
@@ -417,70 +440,107 @@ const FactoringWeb = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>Historial de Facturas</CardTitle>
-                      <CardDescription>Seguimiento de facturas enviadas para descuento</CardDescription>
+                      <CardDescription>
+                        {isAuthenticated 
+                          ? 'Seguimiento de facturas enviadas para descuento' 
+                          : 'Inicie sesión para ver su historial de facturas'}
+                      </CardDescription>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm">
-                        <Filter className="w-4 h-4 mr-2" />
-                        Filtrar
-                      </Button>
-                      <Button size="sm" onClick={() => setShowNewInvoice(true)}>
-                        <FileText className="w-4 h-4 mr-2" />
-                        Nueva
-                      </Button>
+                      {isAuthenticated && (
+                        <>
+                          <Button variant="outline" size="sm">
+                            <Filter className="w-4 h-4 mr-2" />
+                            Filtrar
+                          </Button>
+                          <Button size="sm" onClick={handleNewInvoiceClick}>
+                            <FileText className="w-4 h-4 mr-2" />
+                            Nueva
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-border">
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">ID</th>
-                          <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Pagador</th>
-                          <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Bruto</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Tasa</th>
-                          <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Neto</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Vencimiento</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Estado</th>
-                          <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {invoicesData.map((invoice) => (
-                          <tr key={invoice.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                            <td className="py-4 px-4 text-sm font-medium">{invoice.id}</td>
-                            <td className="py-4 px-4">
-                              <div>
-                                <p className="text-sm font-medium">{invoice.client}</p>
-                                <p className="text-xs text-muted-foreground">{invoice.nit}</p>
-                              </div>
-                            </td>
-                            <td className="py-4 px-4 text-sm text-right font-medium">{formatCurrency(invoice.amount)}</td>
-                            <td className="py-4 px-4 text-sm text-center">{invoice.discountRate}%</td>
-                            <td className="py-4 px-4 text-sm text-right font-bold text-secondary">{formatCurrency(invoice.netAmount)}</td>
-                            <td className="py-4 px-4 text-sm text-center">{new Date(invoice.dueDate).toLocaleDateString('es-CO')}</td>
-                            <td className="py-4 px-4 text-center">
-                              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(invoice.status)}`}>
-                                {getStatusIcon(invoice.status)}
-                                {invoice.status}
-                              </span>
-                            </td>
-                            <td className="py-4 px-4 text-center">
-                              <div className="flex items-center justify-center gap-1">
-                                <Button variant="ghost" size="sm" onClick={() => setSelectedInvoice(invoice)}>
-                                  <Eye className="w-4 h-4" />
-                                </Button>
-                                <Button variant="ghost" size="sm">
-                                  <Download className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </td>
+                  {!isAuthenticated ? (
+                    <div className="text-center py-12">
+                      <LogIn className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Acceso Requerido</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Inicie sesión para ver y gestionar sus solicitudes de factoring
+                      </p>
+                      <Button onClick={() => setShowAuthModal(true)}>
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Iniciar Sesión
+                      </Button>
+                    </div>
+                  ) : requestsLoading ? (
+                    <div className="text-center py-12">
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                      <p className="text-muted-foreground">Cargando solicitudes...</p>
+                    </div>
+                  ) : requests.length === 0 ? (
+                    <div className="text-center py-12">
+                      <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Sin Solicitudes</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Aún no tiene solicitudes de factoring. ¡Cree su primera solicitud!
+                      </p>
+                      <Button onClick={handleNewInvoiceClick}>
+                        <FileText className="w-4 h-4 mr-2" />
+                        Nueva Solicitud
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Factura</th>
+                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Pagador</th>
+                            <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Bruto</th>
+                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Tasa</th>
+                            <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Neto</th>
+                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Estado</th>
+                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Acciones</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {requests.map((invoice) => (
+                            <tr key={invoice.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
+                              <td className="py-4 px-4 text-sm font-medium">{invoice.invoice_number}</td>
+                              <td className="py-4 px-4">
+                                <div>
+                                  <p className="text-sm font-medium">{invoice.payer_name}</p>
+                                  <p className="text-xs text-muted-foreground">{invoice.payer_nit}</p>
+                                </div>
+                              </td>
+                              <td className="py-4 px-4 text-sm text-right font-medium">{formatCurrency(Number(invoice.invoice_amount))}</td>
+                              <td className="py-4 px-4 text-sm text-center">{invoice.monthly_rate}%</td>
+                              <td className="py-4 px-4 text-sm text-right font-bold text-secondary">{formatCurrency(Number(invoice.net_amount))}</td>
+                              <td className="py-4 px-4 text-center">
+                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(invoice.status)}`}>
+                                  {getStatusIcon(invoice.status)}
+                                  {getStatusLabel(invoice.status)}
+                                </span>
+                              </td>
+                              <td className="py-4 px-4 text-center">
+                                <div className="flex items-center justify-center gap-1">
+                                  <Button variant="ghost" size="sm" onClick={() => setSelectedInvoice(invoice)}>
+                                    <Eye className="w-4 h-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm">
+                                    <Download className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
@@ -735,39 +795,33 @@ const FactoringWeb = () => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {[
-                  { label: 'ID', value: selectedInvoice.id },
-                  { label: 'Pagador', value: selectedInvoice.client },
-                  { label: 'NIT', value: selectedInvoice.nit },
-                  { label: 'Valor Bruto', value: formatCurrency(selectedInvoice.amount) },
-                  { label: 'Tasa de Descuento', value: `${selectedInvoice.discountRate}%` },
+                  { label: 'Número de Factura', value: selectedInvoice.invoice_number },
+                  { label: 'Pagador', value: selectedInvoice.payer_name },
+                  { label: 'NIT', value: selectedInvoice.payer_nit },
+                  { label: 'Valor Bruto', value: formatCurrency(Number(selectedInvoice.invoice_amount)) },
+                  { label: 'Tasa Mensual', value: `${selectedInvoice.monthly_rate}%` },
+                  { label: 'Descuento', value: formatCurrency(Number(selectedInvoice.calculated_discount)) },
+                  { label: 'Valor Neto', value: formatCurrency(Number(selectedInvoice.net_amount)) },
+                  { label: 'Días al Vencimiento', value: `${selectedInvoice.days_to_maturity} días` },
+                  { label: 'Estado', value: getStatusLabel(selectedInvoice.status) },
+                  { label: 'Fecha de Solicitud', value: new Date(selectedInvoice.created_at).toLocaleDateString('es-CO') },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-muted/50 rounded-xl">
+                  <div key={i} className="flex justify-between py-2 border-b border-border/50 last:border-0">
                     <span className="text-muted-foreground">{item.label}</span>
                     <span className="font-medium">{item.value}</span>
                   </div>
                 ))}
-                <div className="flex items-center justify-between p-4 bg-secondary/10 rounded-xl">
-                  <span className="font-medium">Valor Neto</span>
-                  <span className="font-bold text-xl text-secondary">{formatCurrency(selectedInvoice.netAmount)}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-xl">
-                  <span className="text-muted-foreground">Vencimiento</span>
-                  <span className="font-medium">{new Date(selectedInvoice.dueDate).toLocaleDateString('es-CO')}</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-muted/50 rounded-xl">
-                  <span className="text-muted-foreground">Estado</span>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(selectedInvoice.status)}`}>
-                    {getStatusIcon(selectedInvoice.status)}
-                    {selectedInvoice.status}
-                  </span>
-                </div>
-                <Button className="w-full h-12 rounded-xl mt-4" onClick={() => setSelectedInvoice(null)}>
-                  Cerrar
-                </Button>
               </CardContent>
             </Card>
           </div>
         )}
+
+        {/* Auth Modal */}
+        <AuthModal 
+          isOpen={showAuthModal} 
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={fetchRequests}
+        />
       </main>
       
       <Footer />
