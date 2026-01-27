@@ -1,5 +1,7 @@
 import { Target, Rocket, Lightbulb, Shield, TrendingUp } from 'lucide-react';
 import logoInnovafin from '@/assets/logo-innovafin.png';
+import { cn } from '@/lib/utils';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const whyUsItems = [
   {
@@ -53,50 +55,60 @@ const teamMembers = [
 ];
 
 const AboutSection = () => {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: visionRef, isVisible: visionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+  const { ref: missionRef, isVisible: missionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
+  const { ref: teamHeaderRef, isVisible: teamHeaderVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: teamRef, isVisible: teamVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
   return (
     <section id="nosotros" className="section-padding bg-muted">
       <div className="container-narrow mx-auto">
-        {/* Why Innovafin - NEW BLOCK */}
+        {/* Why Innovafin */}
         <div id="por-que-nosotros" className="text-center mb-20 scroll-mt-24">
-          <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
-            Quiénes Somos
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            ¿Por qué <span className="text-primary">Innovafin</span> es su mejor opción?
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-12">
-            Diseñamos servicios financieros con innovación y excelencia para construir valor y confianza
-          </p>
+          <div 
+            ref={headerRef}
+            className={cn(
+              "transition-all duration-700",
+              headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              Quiénes Somos
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              ¿Por qué <span className="text-primary">Innovafin</span> es su mejor opción?
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-12">
+              Diseñamos servicios financieros con innovación y excelencia para construir valor y confianza
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {whyUsItems.map((item, index) => {
               const Icon = item.icon;
               return (
-                <div
-                  key={index}
-                  className="bento-card text-center group hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-8 h-8 text-primary" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
+                <WhyUsCard key={index} item={item} Icon={Icon} delay={index * 100} />
               );
             })}
           </div>
         </div>
 
-        {/* Vision & Mission - Professional Two Column Layout */}
+        {/* Vision & Mission */}
         <div className="grid md:grid-cols-2 gap-8 mb-20">
           {/* Vision Card */}
-          <div id="vision" className="scroll-mt-24">
-            <div className="bento-card h-full relative overflow-hidden border-2 border-secondary/20 bg-gradient-to-br from-background via-background to-secondary/5">
-              {/* Logo watermark */}
+          <div 
+            id="vision" 
+            className="scroll-mt-24"
+            ref={visionRef}
+          >
+            <div 
+              className={cn(
+                "bento-card h-full relative overflow-hidden border-2 border-secondary/20 bg-gradient-to-br from-background via-background to-secondary/5 transition-all duration-700",
+                visionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+            >
               <div className="absolute top-4 right-4 opacity-5">
                 <img src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
@@ -123,9 +135,17 @@ const AboutSection = () => {
           </div>
 
           {/* Mission Card */}
-          <div id="mision" className="scroll-mt-24">
-            <div className="bento-card h-full relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-background via-background to-primary/5">
-              {/* Logo watermark */}
+          <div 
+            id="mision" 
+            className="scroll-mt-24"
+            ref={missionRef}
+          >
+            <div 
+              className={cn(
+                "bento-card h-full relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-background via-background to-primary/5 transition-all duration-700 delay-100",
+                missionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+            >
               <div className="absolute top-4 right-4 opacity-5">
                 <img src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
@@ -152,7 +172,13 @@ const AboutSection = () => {
 
         {/* Team Section */}
         <div id="equipo" className="scroll-mt-24">
-          <div className="text-center mb-12">
+          <div 
+            ref={teamHeaderRef}
+            className={cn(
+              "text-center mb-12 transition-all duration-700",
+              teamHeaderVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
             <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
               Nuestro Equipo
             </h3>
@@ -161,13 +187,19 @@ const AboutSection = () => {
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8">
+          <div 
+            ref={teamRef}
+            className={cn(
+              "flex flex-wrap justify-center gap-8 transition-all duration-700 delay-100",
+              teamVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+          >
             {teamMembers.map((member, index) => (
               <div
                 key={index}
                 className="text-center group"
+                style={{ transitionDelay: `${index * 50}ms` }}
               >
-                {/* Circular Avatar */}
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-navy-light mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 ring-4 ring-white">
                   <span className="text-xl font-bold text-white">
                     {member.initials}
@@ -185,6 +217,40 @@ const AboutSection = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+// Extracted component for Why Us cards with individual animation
+const WhyUsCard = ({ 
+  item, 
+  Icon, 
+  delay 
+}: { 
+  item: typeof whyUsItems[0]; 
+  Icon: typeof Lightbulb;
+  delay: number;
+}) => {
+  const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
+  
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={cn(
+        "bento-card text-center group hover:shadow-lg transition-all duration-700",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      )}
+    >
+      <div className="w-16 h-16 rounded-2xl bg-primary/10 mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+        <Icon className="w-8 h-8 text-primary" strokeWidth={1.5} />
+      </div>
+      <h3 className="text-xl font-bold text-foreground mb-3">
+        {item.title}
+      </h3>
+      <p className="text-muted-foreground leading-relaxed">
+        {item.description}
+      </p>
+    </div>
   );
 };
 
