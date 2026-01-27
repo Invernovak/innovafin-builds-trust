@@ -57,8 +57,8 @@ const navItems: NavItem[] = [
   { label: 'Inicio', href: '#hero', isRoute: false },
   { label: 'Quiénes Somos', href: '#nosotros', isRoute: false, hasSubmenu: true, submenuItems: aboutItems },
   { label: 'Servicios', href: '#servicios', isRoute: false, hasSubmenu: true, submenuItems: serviceItems },
-  { label: 'Inversionistas', href: '/investors', isRoute: true, hasSubmenu: true, submenuItems: investorItems },
-  { label: 'Originadores', href: '/originators', isRoute: true, hasSubmenu: true, submenuItems: originatorItems },
+  { label: 'Inversionistas', href: '/investors', isRoute: true },
+  { label: 'Originadores', href: '/originators', isRoute: true },
   { label: 'Portafolio', href: '/portfolio', isRoute: true },
   { label: 'Dashboard', href: '#dashboard', isRoute: false, hasSubmenu: true, submenuItems: dashboardItems },
 ];
