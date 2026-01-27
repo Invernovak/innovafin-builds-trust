@@ -35,30 +35,45 @@ const formatCompactCOP = (value: number) => {
   return formatCOP(value);
 };
 
-// Fondo de Capital Privado - Compartimentos
+// Fondo de Capital Privado - Compartimentos (datos actualizados según informe)
 const fondoCapitalPrivado = {
-  name: 'Fondo de Inversión Alternativos Plus',
+  name: 'FCP Alternativos Plus',
+  administrador: 'AVAL Fiduciaria - Asset Management',
+  gestorProfesional: 'InnovaFin',
+  fechaReporte: 'domingo, 25 de enero de 2026',
+  totalFondo: 177186627829,
+  totalDisponible: 12573673214,
+  totalInvertido: 164326139428,
+  porcentajeTotal: 93,
   compartimentos: [
     {
       id: 'libranzas',
       name: 'Libranzas',
-      totalActivos: 167884754457,
+      totalActivos: 167844754457,
       disponible: 9230991982,
-      invertido: 158305370171,
+      invertido: 158305470171,
       porcentajeActivos: 94,
       rentabilidadDia: 14.19,
       rentabilidad30dias: 14.81,
+      rentabilidad60dias: 14.52,
+      rentabilidad90dias: 14.35,
+      rentabilidad180dias: 14.10,
+      rentabilidad365dias: 13.85,
       nivelRiesgo: 'Bajo',
     },
     {
       id: 'educapital1',
-      name: 'Educapital 1',
+      name: 'Educapital1',
       totalActivos: 9153246775,
-      disponible: 3152001722,
+      disponible: 3152991722,
       invertido: 6020669257,
       porcentajeActivos: 66,
       rentabilidadDia: 6.07,
       rentabilidad30dias: 12.28,
+      rentabilidad60dias: 11.85,
+      rentabilidad90dias: 11.42,
+      rentabilidad180dias: 10.95,
+      rentabilidad365dias: 10.50,
       nivelRiesgo: 'Bajo',
     },
     {
@@ -70,6 +85,10 @@ const fondoCapitalPrivado = {
       porcentajeActivos: 0,
       rentabilidadDia: 8.27,
       rentabilidad30dias: 40.69,
+      rentabilidad60dias: 35.20,
+      rentabilidad90dias: 28.50,
+      rentabilidad180dias: 22.15,
+      rentabilidad365dias: 18.40,
       nivelRiesgo: 'Medio',
     },
   ],
@@ -105,10 +124,10 @@ const ficAlternativos180Plus = {
   ],
 };
 
-// Calcular totales
-const totalActivos = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.totalActivos, 0);
-const totalDisponible = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.disponible, 0);
-const totalInvertido = fondoCapitalPrivado.compartimentos.reduce((acc, comp) => acc + comp.invertido, 0);
+// Usar totales del fondo directamente
+const totalActivos = fondoCapitalPrivado.totalFondo;
+const totalDisponible = fondoCapitalPrivado.totalDisponible;
+const totalInvertido = fondoCapitalPrivado.totalInvertido;
 
 const beneficios = [
   'Diversificación automática entre compartimentos',
@@ -243,42 +262,100 @@ const Portfolio = () => {
 
               {/* Fondo de Capital Privado Tab */}
               <TabsContent value="capital-privado">
-                {/* Header */}
-                <div className="mb-8">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 rounded-2xl bg-[#0F172A] flex items-center justify-center">
-                      <ShieldCheck className="w-7 h-7 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-[#0F172A]">
-                        {fondoCapitalPrivado.name}
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Gestión diversificada en 3 compartimentos especializados
-                      </p>
+                {/* Informe Diario - Tabla Principal */}
+                <Card className="mb-8 border border-secondary/30 overflow-hidden">
+                  <div className="bg-white p-4 border-b border-border">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Informe Diario</p>
+                        <p className="text-sm font-medium text-muted-foreground">Rentabilidad / Vr. Fondo</p>
+                        <p className="text-lg font-bold text-[#0F172A]">{fondoCapitalPrivado.name}*</p>
+                      </div>
+                      <div className="flex items-center gap-8">
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground mb-1">Administrador</p>
+                          <p className="text-sm font-bold text-[#0F172A]">{fondoCapitalPrivado.administrador}</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground mb-1">Gestor Profesional*</p>
+                          <p className="text-sm font-bold text-secondary">{fondoCapitalPrivado.gestorProfesional}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Summary Stats */}
-                <Card className="mb-8 bg-gradient-to-r from-[#0F172A] to-[#1e293b] text-white">
-                  <CardContent className="p-6">
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center p-4">
-                        <p className="text-white/60 text-sm mb-2">Total Activos</p>
-                        <p className="text-2xl font-bold">{formatCompactCOP(totalActivos)}</p>
-                      </div>
-                      <div className="text-center p-4 border-x border-white/10">
-                        <p className="text-white/60 text-sm mb-2">Saldo Disponible</p>
-                        <p className="text-2xl font-bold text-secondary">{formatCompactCOP(totalDisponible)}</p>
-                      </div>
-                      <div className="text-center p-4">
-                        <p className="text-white/60 text-sm mb-2">Total Invertido</p>
-                        <p className="text-2xl font-bold">{formatCompactCOP(totalInvertido)}</p>
-                      </div>
+                  
+                  <CardContent className="p-0">
+                    {/* Fecha */}
+                    <div className="px-4 py-3 border-b border-border bg-muted/30">
+                      <p className="text-sm text-muted-foreground font-medium">
+                        {fondoCapitalPrivado.fechaReporte}
+                      </p>
+                    </div>
+                    
+                    {/* Tabla de compartimentos */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-secondary text-white">
+                            <th className="text-left py-3 px-4 font-semibold">Compartimento</th>
+                            <th className="text-right py-3 px-4 font-semibold">Total Activos</th>
+                            <th className="text-center py-3 px-4 font-semibold" colSpan={2}>
+                              <div>Rentabilidad EA</div>
+                              <div className="flex justify-center gap-8 mt-1 text-xs font-normal text-white/80">
+                                <span>Día</span>
+                                <span>30 días</span>
+                              </div>
+                            </th>
+                            <th className="text-right py-3 px-4 font-semibold">* Disponible</th>
+                            <th className="text-right py-3 px-4 font-semibold">Invertido</th>
+                            <th className="text-center py-3 px-4 font-semibold">% de los Activos</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {fondoCapitalPrivado.compartimentos.map((comp, index) => (
+                            <tr key={comp.id} className={cn(
+                              "border-b border-border/50 hover:bg-muted/20 transition-colors",
+                              index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
+                            )}>
+                              <td className="py-3 px-4 text-muted-foreground">Comp. {comp.name}</td>
+                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.totalActivos)}</td>
+                              <td className="py-3 px-4 text-center" colSpan={2}>
+                                <div className="flex justify-center gap-8">
+                                  <span className="font-bold text-secondary">{comp.rentabilidadDia}%</span>
+                                  <span className="font-bold text-secondary">{comp.rentabilidad30dias}%</span>
+                                </div>
+                              </td>
+                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.disponible)}</td>
+                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{comp.invertido > 0 ? formatCOP(comp.invertido) : '-'}</td>
+                              <td className="py-3 px-4 text-center font-bold text-[#0F172A]">{comp.porcentajeActivos}%</td>
+                            </tr>
+                          ))}
+                          {/* Fila de Totales */}
+                          <tr className="bg-muted/30 font-bold border-t-2 border-secondary/30">
+                            <td className="py-3 px-4 text-[#0F172A]">Total {fondoCapitalPrivado.name}</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalFondo)}</td>
+                            <td className="py-3 px-4 text-center text-muted-foreground" colSpan={2}>-</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalDisponible)}</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalInvertido)}</td>
+                            <td className="py-3 px-4 text-center text-[#0F172A]">{fondoCapitalPrivado.porcentajeTotal}%</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    
+                    {/* Nota al pie */}
+                    <div className="px-4 py-3 bg-muted/20 border-t border-border">
+                      <p className="text-xs text-muted-foreground">* (Bancos + Inversiones a la vista)</p>
+                      <p className="text-xs text-muted-foreground mt-1">Esperamos que esta información sea de mucha utilidad.</p>
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Compartimentos Grid Header */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-[#0F172A] mb-2">Detalle por Compartimento</h3>
+                  <p className="text-muted-foreground">Información detallada de rentabilidad por período</p>
+                </div>
 
                 {/* Compartimentos Grid */}
                 <div className="grid lg:grid-cols-3 gap-6">
@@ -321,20 +398,36 @@ const Portfolio = () => {
                           <p className="text-xl font-bold text-[#0F172A]">{formatCOP(comp.totalActivos)}</p>
                         </div>
 
-                        {/* Rentabilidad EA */}
+                        {/* Rentabilidad EA - Todos los períodos */}
                         <div>
                           <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
                             <TrendingUp className="w-3 h-3" />
-                            Rentabilidad EA
+                            Rentabilidad EA por Período
                           </p>
-                          <div className="grid grid-cols-2 gap-2">
-                            <div className="bg-secondary/5 rounded-lg p-3 text-center">
-                              <p className="text-xs text-muted-foreground">Día</p>
-                              <p className="text-lg font-bold text-secondary">{comp.rentabilidadDia}%</p>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">Día</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidadDia}%</p>
                             </div>
-                            <div className="bg-secondary/10 rounded-lg p-3 text-center">
-                              <p className="text-xs text-muted-foreground">30 días</p>
-                              <p className="text-lg font-bold text-secondary">{comp.rentabilidad30dias}%</p>
+                            <div className="bg-secondary/10 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">30 días</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad30dias}%</p>
+                            </div>
+                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">60 días</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad60dias}%</p>
+                            </div>
+                            <div className="bg-secondary/10 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">90 días</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad90dias}%</p>
+                            </div>
+                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">180 días</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad180dias}%</p>
+                            </div>
+                            <div className="bg-secondary/15 rounded-lg p-2 text-center">
+                              <p className="text-[10px] text-muted-foreground">365 días</p>
+                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad365dias}%</p>
                             </div>
                           </div>
                         </div>
@@ -343,11 +436,11 @@ const Portfolio = () => {
                         <div className="space-y-2 text-sm">
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Saldo Disponible</span>
-                            <span className="font-medium text-foreground">{formatCompactCOP(comp.disponible)}</span>
+                            <span className="font-medium text-foreground">{formatCOP(comp.disponible)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">Saldo Invertido</span>
-                            <span className="font-medium text-foreground">{formatCompactCOP(comp.invertido)}</span>
+                            <span className="font-medium text-foreground">{comp.invertido > 0 ? formatCOP(comp.invertido) : '-'}</span>
                           </div>
                         </div>
 
@@ -358,7 +451,7 @@ const Portfolio = () => {
                             <span className="text-sm font-bold text-[#0F172A]">{comp.porcentajeActivos}%</span>
                           </div>
                           <Progress 
-                            value={comp.porcentajeActivos} 
+                            value={comp.porcentajeActivos}
                             className="h-2 bg-muted"
                           />
                         </div>
