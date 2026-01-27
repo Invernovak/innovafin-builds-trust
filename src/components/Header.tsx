@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Shield } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -68,6 +69,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
   const location = useLocation();
+  const { isAdmin } = useIsAdmin();
 
   // Check if we're on a page with white background (not the homepage)
   const isInternalPage = location.pathname !== '/';
@@ -212,6 +214,19 @@ const Header = () => {
                 </button>
               )
             )}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${
+                  showSolidHeader
+                    ? 'text-primary hover:text-primary/80 hover:bg-primary/10'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5" />
+                Admin
+              </Link>
+            )}
             <Button
               onClick={scrollToContact}
               size="sm"
@@ -296,6 +311,16 @@ const Header = () => {
                   {item.label}
                 </button>
               )
+            )}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="px-4 py-3 text-sm font-medium text-primary hover:bg-primary/10 rounded-xl transition-colors text-left flex items-center gap-2"
+              >
+                <Shield className="w-4 h-4" />
+                Panel Admin
+              </Link>
             )}
             <Button
               onClick={() => {
