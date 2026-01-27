@@ -387,6 +387,71 @@ const Portfolio = () => {
                   </div>
                 </div>
 
+                {/* Informe Diario - Datos del Fondo */}
+                <Card className="mb-8 border border-[#0F172A]/20 overflow-hidden">
+                  <div className="bg-[#0F172A] text-white p-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div>
+                        <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Informe Diario</p>
+                        <p className="text-sm font-medium">Rentabilidad / Vr. Fondo</p>
+                        <p className="text-lg font-bold">{ficAlternativos180Plus.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Administrador</p>
+                        <p className="text-sm font-bold">{ficAlternativos180Plus.administrador}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-0">
+                    {/* Fecha */}
+                    <div className="px-4 py-3 border-b border-border bg-muted/30">
+                      <p className="text-sm text-muted-foreground font-medium">
+                        {ficAlternativos180Plus.fechaReporte}
+                      </p>
+                    </div>
+                    
+                    {/* Tabla de datos */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="bg-[#0F172A] text-white">
+                            <th className="text-left py-3 px-4 font-semibold">Fondo</th>
+                            <th className="text-right py-3 px-4 font-semibold">Saldo (pesos)</th>
+                            <th className="text-center py-3 px-4 font-semibold" colSpan={2}>
+                              <div>Rentabilidad EA</div>
+                              <div className="flex justify-center gap-8 mt-1 text-xs font-normal text-white/80">
+                                <span>30 días</span>
+                                <span>365 días</span>
+                              </div>
+                            </th>
+                            <th className="text-center py-3 px-4 font-semibold">Último Llamado</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                            <td className="py-4 px-4 font-medium text-[#0F172A]">{ficAlternativos180Plus.name}</td>
+                            <td className="py-4 px-4 text-right font-bold text-[#0F172A]">{formatCOP(ficAlternativos180Plus.saldo)}</td>
+                            <td className="py-4 px-4 text-center">
+                              <div className="flex justify-center gap-8">
+                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</span>
+                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA365dias}%</span>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4 text-center text-muted-foreground">NA</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Tipos de Participación Header */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-bold text-[#0F172A] mb-2">Tipos de Participación</h3>
+                  <p className="text-muted-foreground">Seleccione el tipo de participación que mejor se adapte a su perfil de inversión</p>
+                </div>
+
                 {/* Comparison Cards */}
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   {ficAlternativos180Plus.tiposParticipacion.map((tipo, index) => (
