@@ -69,6 +69,9 @@ const Header = () => {
   const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
   const location = useLocation();
 
+  // Check if we're on a page with white background (not the homepage)
+  const isInternalPage = location.pathname !== '/';
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -76,6 +79,9 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Force "scrolled" style on internal pages or when actually scrolled
+  const showSolidHeader = isScrolled || isInternalPage;
 
   const scrollToSection = (href: string) => {
     const isHashLink = href.includes('#');
@@ -119,8 +125,8 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? 'bg-white/90 backdrop-blur-xl shadow-md border-b border-border/50'
+        showSolidHeader
+          ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50'
           : 'bg-transparent'
       }`}
     >
@@ -130,7 +136,7 @@ const Header = () => {
           <div className="flex items-center">
             <div
               className={`transition-all duration-300 rounded-xl ${
-                isScrolled ? '' : 'bg-white/95 px-4 py-2'
+                showSolidHeader ? '' : 'bg-white/95 px-4 py-2'
               }`}
             >
               <img
@@ -149,7 +155,7 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
                     <button
                       className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${
-                        isScrolled
+                        showSolidHeader
                           ? 'text-foreground hover:text-primary hover:bg-muted'
                           : 'text-white/90 hover:text-white hover:bg-white/10'
                       }`}
@@ -185,7 +191,7 @@ const Header = () => {
                   key={item.label}
                   to={item.href}
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
-                    isScrolled
+                    showSolidHeader
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
@@ -197,7 +203,7 @@ const Header = () => {
                   key={item.label}
                   onClick={() => scrollToSection(item.href)}
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
-                    isScrolled
+                    showSolidHeader
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
@@ -220,7 +226,7 @@ const Header = () => {
             variant="ghost"
             size="icon"
             className={`md:hidden rounded-full ${
-              isScrolled ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
+              showSolidHeader ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
             }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
