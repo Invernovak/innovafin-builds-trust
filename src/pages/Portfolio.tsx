@@ -1,13 +1,10 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
@@ -137,12 +134,6 @@ const beneficios = [
 ];
 
 const Portfolio = () => {
-  const [formData, setFormData] = useState({
-    compartimento: '',
-    tipoParticipacion: '',
-    montoInversion: '',
-  });
-
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
@@ -239,7 +230,7 @@ const Portfolio = () => {
         <section className="py-12">
           <div className="container mx-auto px-4 max-w-7xl">
             <Tabs defaultValue="capital-privado" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-2xl mx-auto">
+              <TabsList className="grid w-full grid-cols-2 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-xl mx-auto">
                 <TabsTrigger 
                   value="capital-privado" 
                   className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
@@ -251,12 +242,6 @@ const Portfolio = () => {
                   className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
                   FIC 180 Plus
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="invertir"
-                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
-                >
-                  Invertir
                 </TabsTrigger>
               </TabsList>
 
@@ -458,6 +443,16 @@ const Portfolio = () => {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+
+                {/* CTA Invertir */}
+                <div className="text-center mt-8">
+                  <Link to="/investors#vinculacion">
+                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
+                      Quiero Invertir
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
                 </div>
               </TabsContent>
 
@@ -666,104 +661,16 @@ const Portfolio = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
 
-              {/* Invertir Tab */}
-              <TabsContent value="invertir">
-                <Card className="border-border/50">
-                  <CardContent className="p-6 md:p-8">
-                    <div className="flex items-center gap-3 mb-8">
-                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center">
-                        <TrendingUp className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-[#0F172A]">
-                          Solicitud de Inversión
-                        </h2>
-                        <p className="text-muted-foreground">Complete el formulario para iniciar su inversión</p>
-                      </div>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 gap-6 mb-8">
-                      <div>
-                        <Label htmlFor="fondo">Seleccione Fondo</Label>
-                        <Select>
-                          <SelectTrigger className="mt-2">
-                            <SelectValue placeholder="Seleccione un fondo" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="capital-privado">Fondo de Inversión Alternativos Plus</SelectItem>
-                            <SelectItem value="fic-180">FIC Alternativos 180 Plus</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="compartimento">Compartimento</Label>
-                        <Select
-                          value={formData.compartimento}
-                          onValueChange={(value) => setFormData({...formData, compartimento: value})}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue placeholder="Seleccione compartimento" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {fondoCapitalPrivado.compartimentos.map((comp) => (
-                              <SelectItem key={comp.id} value={comp.id}>
-                                {comp.name} - Rent. {comp.rentabilidadDia}% EA
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="tipo">Tipo de Participación</Label>
-                        <Select
-                          value={formData.tipoParticipacion}
-                          onValueChange={(value) => setFormData({...formData, tipoParticipacion: value})}
-                        >
-                          <SelectTrigger className="mt-2">
-                            <SelectValue placeholder="Seleccione tipo" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="tp1">TP1 - Inversión desde $10M</SelectItem>
-                            <SelectItem value="tp2">TP2 - Inversión desde $1.000M</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label htmlFor="montoInversion">Monto de Inversión</Label>
-                        <Input
-                          id="montoInversion"
-                          placeholder="$100.000.000"
-                          value={formData.montoInversion}
-                          onChange={(e) => setFormData({...formData, montoInversion: e.target.value})}
-                          className="mt-2"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Beneficios */}
-                    <div className="bg-muted/30 rounded-xl p-6 mb-8">
-                      <h3 className="font-semibold text-[#0F172A] mb-4 flex items-center gap-2">
-                        <ShieldCheck className="w-5 h-5 text-secondary" />
-                        Beneficios de Invertir con InnovaFin
-                      </h3>
-                      <ul className="grid md:grid-cols-2 gap-3">
-                        {beneficios.map((beneficio, index) => (
-                          <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="w-4 h-4 text-secondary flex-shrink-0" />
-                            {beneficio}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <Button className="bg-secondary hover:bg-secondary/90 text-white">
-                      Enviar Solicitud de Inversión
-                      <ArrowRight className="w-4 h-4 ml-2" />
+                {/* CTA Invertir */}
+                <div className="text-center mt-8">
+                  <Link to="/investors#vinculacion">
+                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
+                      Quiero Invertir
+                      <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
-                  </CardContent>
-                </Card>
+                  </Link>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
