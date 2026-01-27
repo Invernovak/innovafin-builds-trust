@@ -38,11 +38,11 @@ const investorItems = [
   { label: 'Portal Inversionistas', href: '/investors', isRoute: true },
 ];
 
-const dashboardItems = [
-  { label: 'Resumen', href: '#dashboard', isSection: true },
-  { label: 'Métricas', href: '#dashboard-metricas', isSection: true },
-  { label: 'Reportes', href: '#dashboard-reportes', isSection: true },
-  { label: 'Portafolio', href: '/portfolio', isRoute: true },
+const factoringItems = [
+  { label: 'Portal Factoring', href: '/factoring', isRoute: true },
+  { label: 'Calculadora', href: '/factoring#calculadora', isSection: true },
+  { label: 'Solicitar Descuento', href: '/factoring#solicitud', isSection: true },
+  { label: 'Historial', href: '/factoring#historial', isSection: true },
 ];
 
 interface NavItem {
@@ -60,7 +60,7 @@ const navItems: NavItem[] = [
   { label: 'Inversionistas', href: '/investors', isRoute: true },
   { label: 'Originadores', href: '/originators', isRoute: true },
   { label: 'Portafolio', href: '/portfolio', isRoute: true },
-  { label: 'Dashboard', href: '#dashboard', isRoute: false, hasSubmenu: true, submenuItems: dashboardItems },
+  { label: 'Factoring', href: '#factoring', isRoute: false, hasSubmenu: true, submenuItems: factoringItems },
 ];
 
 const Header = () => {
