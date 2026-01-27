@@ -56,6 +56,57 @@ const getStatusLabel = (status: InvoiceRequest['status']): string => {
   return labels[status];
 };
 
+// Upload files to storage and return document records
+async function uploadDocuments(
+  files: File[],
+  requestId: string,
+  userId: string
+): Promise<InvoiceDocument[]> {
+  const uploadedDocs: InvoiceDocument[] = [];
+
+  for (const file of files) {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `${userId}/${requestId}/${fileName}`;
+
+    // Upload to storage
+    const { error: uploadError } = await supabase.storage
+      .from('invoice-documents')
+      .upload(filePath, file);
+
+    if (uploadError) {
+      console.error('Error uploading file:', uploadError);
+      continue;
+    }
+
+    // Get public URL
+    const { data: urlData } = supabase.storage
+      .from('invoice-documents')
+      .getPublicUrl(filePath);
+
+    // Create document record in database
+    const { data: docData, error: docError } = await supabase
+      .from('invoice_documents')
+      .insert({
+        request_id: requestId,
+        file_name: file.name,
+        file_url: urlData.publicUrl,
+        file_type: file.type || null,
+      })
+      .select()
+      .single();
+
+    if (docError) {
+      console.error('Error creating document record:', docError);
+      continue;
+    }
+
+    uploadedDocs.push(docData);
+  }
+
+  return uploadedDocs;
+}
+
 export function useInvoiceRequests() {
   const [requests, setRequests] = useState<InvoiceRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +131,10 @@ export function useInvoiceRequests() {
     }
   }, []);
 
-  const createRequest = async (data: CreateInvoiceRequest): Promise<InvoiceRequest | null> => {
+  const createRequest = async (
+    data: CreateInvoiceRequest,
+    files?: File[]
+  ): Promise<InvoiceRequest | null> => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -117,6 +171,14 @@ export function useInvoiceRequests() {
         action: 'created',
         details: { invoice_number: data.invoice_number },
       });
+
+      // Upload documents if provided
+      if (files && files.length > 0) {
+        const uploadedDocs = await uploadDocuments(files, newRequest.id, user.id);
+        if (uploadedDocs.length > 0) {
+          toast.success(`${uploadedDocs.length} documento(s) cargado(s) exitosamente`);
+        }
+      }
 
       setRequests(prev => [newRequest, ...prev]);
       toast.success('El formulario se ha enviado con éxito', {

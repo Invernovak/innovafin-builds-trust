@@ -118,6 +118,8 @@ const FactoringWeb = () => {
     }
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -127,23 +129,32 @@ const FactoringWeb = () => {
       return;
     }
 
-    const daysToMaturity = formData.dueDate 
-      ? Math.max(1, Math.ceil((new Date(formData.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-      : 30;
+    setIsSubmitting(true);
 
-    const result = await createRequest({
-      invoice_number: formData.invoiceNumber,
-      invoice_amount: parseNumber(formData.invoiceAmount),
-      payer_name: formData.clientName,
-      payer_nit: formData.clientNit,
-      days_to_maturity: daysToMaturity,
-      monthly_rate: 1.8,
-    });
+    try {
+      const daysToMaturity = formData.dueDate 
+        ? Math.max(1, Math.ceil((new Date(formData.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+        : 30;
 
-    if (result) {
-      setShowNewInvoice(false);
-      setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '' });
-      setUploadedDocs([]);
+      const result = await createRequest(
+        {
+          invoice_number: formData.invoiceNumber,
+          invoice_amount: parseNumber(formData.invoiceAmount),
+          payer_name: formData.clientName,
+          payer_nit: formData.clientNit,
+          days_to_maturity: daysToMaturity,
+          monthly_rate: 1.8,
+        },
+        uploadedDocs
+      );
+
+      if (result) {
+        setShowNewInvoice(false);
+        setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '' });
+        setUploadedDocs([]);
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -767,12 +778,21 @@ const FactoringWeb = () => {
                   </div>
 
                   <div className="flex gap-4 pt-4">
-                    <Button type="button" variant="outline" onClick={() => setShowNewInvoice(false)} className="flex-1 h-12 rounded-xl">
+                    <Button type="button" variant="outline" onClick={() => setShowNewInvoice(false)} className="flex-1 h-12 rounded-xl" disabled={isSubmitting}>
                       Cancelar
                     </Button>
-                    <Button type="submit" className="flex-1 h-12 rounded-xl">
-                      <Send className="w-4 h-4 mr-2" />
-                      Enviar Solicitud
+                    <Button type="submit" className="flex-1 h-12 rounded-xl" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <>
+                          <Clock className="w-4 h-4 mr-2 animate-spin" />
+                          Subiendo documentos...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4 mr-2" />
+                          Enviar Solicitud
+                        </>
+                      )}
                     </Button>
                   </div>
                 </form>
