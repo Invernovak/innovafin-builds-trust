@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
@@ -42,6 +42,7 @@ import {
   ShieldAlert,
   Eye,
   History,
+  Briefcase,
 } from 'lucide-react';
 import { AuthModal } from '@/components/AuthModal';
 
@@ -186,13 +187,21 @@ export default function Admin() {
       <main className="min-h-screen pt-24 pb-16 bg-muted/30">
         <div className="container mx-auto px-4">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground">
-              Panel de Administración
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Gestión de solicitudes de factoring
-            </p>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">
+                Panel de Administración
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Gestión de solicitudes de factoring
+              </p>
+            </div>
+            <Link to="/admin/portfolio">
+              <Button variant="outline" className="gap-2">
+                <Briefcase className="w-4 h-4" />
+                Admin Portafolio
+              </Button>
+            </Link>
           </div>
 
           {/* Stats Cards */}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent } from 'lucide-react';
+import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -9,6 +9,13 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import {
+  useCapitalPrivado,
+  useCompartimentos,
+  useFIC,
+  useFICTipos,
+  useFICHistorico,
+} from '@/hooks/usePortfolioData';
 
 // Formato para números grandes en COP
 const formatCOP = (value: number) => {
@@ -162,6 +169,82 @@ const Portfolio = () => {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
+  // Fetch data from database
+  const { data: dbCapitalPrivado, isLoading: cpLoading } = useCapitalPrivado();
+  const { data: dbCompartimentos } = useCompartimentos(dbCapitalPrivado?.id);
+  const { data: dbFIC, isLoading: ficLoading } = useFIC();
+  const { data: dbFICTipos } = useFICTipos(dbFIC?.id);
+  const { data: dbFICHistorico } = useFICHistorico(dbFIC?.id);
+
+  // Use database data if available, otherwise fall back to static data
+  const capitalPrivadoData = dbCapitalPrivado ? {
+    name: dbCapitalPrivado.name,
+    administrador: dbCapitalPrivado.administrador,
+    gestorProfesional: dbCapitalPrivado.gestor_profesional,
+    fechaReporte: new Date(dbCapitalPrivado.fecha_reporte).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+    totalFondo: Number(dbCapitalPrivado.total_fondo),
+    totalDisponible: Number(dbCapitalPrivado.total_disponible),
+    totalInvertido: Number(dbCapitalPrivado.total_invertido),
+    porcentajeTotal: Number(dbCapitalPrivado.porcentaje_total),
+  } : fondoCapitalPrivado;
+
+  const compartimentosData = dbCompartimentos && dbCompartimentos.length > 0 
+    ? dbCompartimentos.map(c => ({
+        id: c.id,
+        name: c.name,
+        totalActivos: Number(c.total_activos),
+        disponible: Number(c.disponible),
+        invertido: Number(c.invertido),
+        porcentajeActivos: Number(c.porcentaje_activos),
+        rentabilidadDia: Number(c.rentabilidad_dia),
+        rentabilidad30dias: Number(c.rentabilidad_30dias),
+        rentabilidad60dias: Number(c.rentabilidad_60dias),
+        rentabilidad90dias: Number(c.rentabilidad_90dias),
+        rentabilidad180dias: Number(c.rentabilidad_180dias),
+        rentabilidad365dias: Number(c.rentabilidad_365dias),
+      }))
+    : fondoCapitalPrivado.compartimentos;
+
+  const ficData = dbFIC ? {
+    name: dbFIC.name,
+    administrador: dbFIC.administrador,
+    fechaReporte: new Date(dbFIC.fecha_reporte).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
+    valorUnidad: Number(dbFIC.valor_unidad),
+    valorFondo: Number(dbFIC.valor_fondo),
+    saldo: Number(dbFIC.valor_fondo),
+    rentabilidadEA30dias: Number(dbFIC.rentabilidad_ea_30dias),
+    rentabilidadEA365dias: Number(dbFIC.rentabilidad_ea_365dias),
+  } : ficAlternativos180Plus;
+
+  const ficTiposData = dbFICTipos && dbFICTipos.length > 0
+    ? dbFICTipos.map(t => ({
+        id: t.id,
+        nombre: t.nombre,
+        inversionMinimaInicial: Number(t.inversion_minima),
+        comisionAdministracion: Number(t.comision_administracion),
+        pactoPermanencia: t.pacto_permanencia,
+        remuneracionEfectiva: Number(t.remuneracion_efectiva),
+        descripcion: t.descripcion || '',
+      }))
+    : ficAlternativos180Plus.tiposParticipacion;
+
+  const ficHistoricoData = dbFICHistorico && dbFICHistorico.length > 0
+    ? dbFICHistorico.map(h => ({
+        id: h.id,
+        nombre: h.nombre,
+        anoCorridoEA: h.ano_corrido_ea ? Number(h.ano_corrido_ea) : null,
+        diariaEA: h.diaria_ea ? Number(h.diaria_ea) : null,
+        dias30EA: h.dias_30_ea ? Number(h.dias_30_ea) : null,
+        dias180EA: h.dias_180_ea ? Number(h.dias_180_ea) : null,
+        ano1EA: h.ano_1_ea ? Number(h.ano_1_ea) : null,
+        ano2EA: h.ano_2_ea ? Number(h.ano_2_ea) : null,
+        ano3EA: h.ano_3_ea ? Number(h.ano_3_ea) : null,
+      }))
+    : ficAlternativos180Plus.comportamientoHistorico;
+
+  // Calculate total portfolio
+  const portafolioTotal = capitalPrivadoData.totalFondo + ficData.saldo;
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -214,12 +297,12 @@ const Portfolio = () => {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Portafolio Total Administrado</p>
-                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(portafolioTotalAdministrado)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(portafolioTotal)}</p>
                     </div>
                   </div>
                   <Badge variant="outline" className="bg-muted text-muted-foreground hidden md:flex">
                     <Calendar className="w-4 h-4 mr-2" />
-                    {ficAlternativos180Plus.fechaReporte}
+                    {ficData.fechaReporte}
                   </Badge>
                 </div>
 
@@ -229,21 +312,21 @@ const Portfolio = () => {
                       <TrendingUp className="w-4 h-4 text-secondary" />
                       <p className="text-sm text-muted-foreground">Rent. EA 30 días</p>
                     </div>
-                    <p className="text-2xl font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</p>
+                    <p className="text-2xl font-bold text-secondary">{ficData.rentabilidadEA30dias}%</p>
                   </div>
                   <div className="p-4 bg-secondary/10 rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <TrendingUp className="w-4 h-4 text-secondary" />
                       <p className="text-sm text-muted-foreground">Rent. EA 365 días</p>
                     </div>
-                    <p className="text-2xl font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA365dias}%</p>
+                    <p className="text-2xl font-bold text-secondary">{ficData.rentabilidadEA365dias}%</p>
                   </div>
                   <div className="p-4 bg-muted rounded-xl">
                     <div className="flex items-center gap-2 mb-2">
                       <Briefcase className="w-4 h-4 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">Compartimentos</p>
                     </div>
-                    <p className="text-2xl font-bold text-foreground">3 Activos</p>
+                    <p className="text-2xl font-bold text-foreground">{compartimentosData.length} Activos</p>
                   </div>
                 </div>
               </CardContent>
@@ -279,16 +362,16 @@ const Portfolio = () => {
                       <div>
                         <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Informe Diario</p>
                         <p className="text-sm font-medium text-muted-foreground">Rentabilidad / Vr. Fondo</p>
-                        <p className="text-lg font-bold text-[#0F172A]">{fondoCapitalPrivado.name}*</p>
+                        <p className="text-lg font-bold text-[#0F172A]">{capitalPrivadoData.name}*</p>
                       </div>
                       <div className="flex items-center gap-8">
                         <div className="text-center">
                           <p className="text-xs text-muted-foreground mb-1">Administrador</p>
-                          <p className="text-sm font-bold text-[#0F172A]">{fondoCapitalPrivado.administrador}</p>
+                          <p className="text-sm font-bold text-[#0F172A]">{capitalPrivadoData.administrador}</p>
                         </div>
                         <div className="text-center">
                           <p className="text-xs text-muted-foreground mb-1">Gestor Profesional*</p>
-                          <p className="text-sm font-bold text-secondary">{fondoCapitalPrivado.gestorProfesional}</p>
+                          <p className="text-sm font-bold text-secondary">{capitalPrivadoData.gestorProfesional}</p>
                         </div>
                       </div>
                     </div>
@@ -298,7 +381,7 @@ const Portfolio = () => {
                     {/* Fecha */}
                     <div className="px-4 py-3 border-b border-border bg-muted/30">
                       <p className="text-sm text-muted-foreground font-medium">
-                        {fondoCapitalPrivado.fechaReporte}
+                        {capitalPrivadoData.fechaReporte}
                       </p>
                     </div>
                     
@@ -322,7 +405,7 @@ const Portfolio = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {fondoCapitalPrivado.compartimentos.map((comp, index) => (
+                          {compartimentosData.map((comp, index) => (
                             <tr key={comp.id} className={cn(
                               "border-b border-border/50 hover:bg-muted/20 transition-colors",
                               index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
@@ -342,12 +425,12 @@ const Portfolio = () => {
                           ))}
                           {/* Fila de Totales */}
                           <tr className="bg-muted/30 font-bold border-t-2 border-secondary/30">
-                            <td className="py-3 px-4 text-[#0F172A]">Total {fondoCapitalPrivado.name}</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalFondo)}</td>
+                            <td className="py-3 px-4 text-[#0F172A]">Total {capitalPrivadoData.name}</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalFondo)}</td>
                             <td className="py-3 px-4 text-center text-muted-foreground" colSpan={2}>-</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalDisponible)}</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(fondoCapitalPrivado.totalInvertido)}</td>
-                            <td className="py-3 px-4 text-center text-[#0F172A]">{fondoCapitalPrivado.porcentajeTotal}%</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalDisponible)}</td>
+                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalInvertido)}</td>
+                            <td className="py-3 px-4 text-center text-[#0F172A]">{capitalPrivadoData.porcentajeTotal}%</td>
                           </tr>
                         </tbody>
                       </table>
@@ -369,7 +452,7 @@ const Portfolio = () => {
 
                 {/* Compartimentos Grid */}
                 <div className="grid lg:grid-cols-3 gap-6">
-                  {fondoCapitalPrivado.compartimentos.map((comp) => (
+                  {compartimentosData.map((comp, idx) => (
                     <Card 
                       key={comp.id} 
                       className="border border-border/50 hover:border-[#0F172A]/30 hover:shadow-lg transition-all duration-300"
@@ -379,8 +462,8 @@ const Portfolio = () => {
                           <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
                           <div className={cn(
                             "w-3 h-3 rounded-full",
-                            comp.id === 'libranzas' ? 'bg-[#0F172A]' : 
-                            comp.id === 'educapital1' ? 'bg-secondary' : 'bg-amber-500'
+                            idx === 0 ? 'bg-[#0F172A]' : 
+                            idx === 1 ? 'bg-secondary' : 'bg-amber-500'
                           )} />
                         </div>
                       </CardHeader>
@@ -477,7 +560,7 @@ const Portfolio = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-[#0F172A]">
-                        {ficAlternativos180Plus.name}
+                        {ficData.name}
                       </h2>
                       <p className="text-muted-foreground">
                         Fondo de Inversión Colectiva - Compare tipos de participación
@@ -493,11 +576,11 @@ const Portfolio = () => {
                       <div>
                         <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Informe Diario</p>
                         <p className="text-sm font-medium">Rentabilidad / Vr. Fondo</p>
-                        <p className="text-lg font-bold">{ficAlternativos180Plus.name}</p>
+                        <p className="text-lg font-bold">{ficData.name}</p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Administrador</p>
-                        <p className="text-sm font-bold">{ficAlternativos180Plus.administrador}</p>
+                        <p className="text-sm font-bold">{ficData.administrador}</p>
                       </div>
                     </div>
                   </div>
@@ -506,7 +589,7 @@ const Portfolio = () => {
                     {/* Fecha */}
                     <div className="px-4 py-3 border-b border-border bg-muted/30">
                       <p className="text-sm text-muted-foreground font-medium">
-                        {ficAlternativos180Plus.fechaReporte}
+                        {ficData.fechaReporte}
                       </p>
                     </div>
                     
@@ -529,12 +612,12 @@ const Portfolio = () => {
                         </thead>
                         <tbody>
                           <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                            <td className="py-4 px-4 font-medium text-[#0F172A]">{ficAlternativos180Plus.name}</td>
-                            <td className="py-4 px-4 text-right font-bold text-[#0F172A]">{formatCOP(ficAlternativos180Plus.saldo)}</td>
+                            <td className="py-4 px-4 font-medium text-[#0F172A]">{ficData.name}</td>
+                            <td className="py-4 px-4 text-right font-bold text-[#0F172A]">{formatCOP(ficData.saldo)}</td>
                             <td className="py-4 px-4 text-center">
                               <div className="flex justify-center gap-8">
-                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</span>
-                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA365dias}%</span>
+                                <span className="font-bold text-secondary">{ficData.rentabilidadEA30dias}%</span>
+                                <span className="font-bold text-secondary">{ficData.rentabilidadEA365dias}%</span>
                               </div>
                             </td>
                             <td className="py-4 px-4 text-center text-muted-foreground">NA</td>
@@ -553,7 +636,7 @@ const Portfolio = () => {
                     </div>
                     <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
                       <span className="text-xl font-bold">
-                        {ficAlternativos180Plus.valorUnidad.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                        {ficData.valorUnidad.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
                       </span>
                       <Wallet className="w-5 h-5 text-white/60" />
                     </div>
@@ -564,7 +647,7 @@ const Portfolio = () => {
                     </div>
                     <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
                       <span className="text-xl font-bold">
-                        {ficAlternativos180Plus.valorFondo.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        {ficData.valorFondo.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                       <Briefcase className="w-5 h-5 text-white/60" />
                     </div>
@@ -574,7 +657,7 @@ const Portfolio = () => {
                       <p className="text-sm font-medium text-muted-foreground text-center">Información al</p>
                     </div>
                     <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
-                      <span className="text-xl font-bold">{ficAlternativos180Plus.fechaReporte}</span>
+                      <span className="text-xl font-bold">{ficData.fechaReporte}</span>
                       <Calendar className="w-5 h-5 text-white/60" />
                     </div>
                   </div>
@@ -601,7 +684,7 @@ const Portfolio = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {ficAlternativos180Plus.comportamientoHistorico.map((item, index) => (
+                          {ficHistoricoData.map((item, index) => (
                             <tr key={item.id} className={cn(
                               "border-b border-border/50 hover:bg-muted/20 transition-colors",
                               index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
@@ -630,7 +713,7 @@ const Portfolio = () => {
 
                 {/* Comparison Cards */}
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
-                  {ficAlternativos180Plus.tiposParticipacion.map((tipo, index) => (
+                  {ficTiposData.map((tipo, index) => (
                     <Card 
                       key={tipo.id}
                       className={cn(
