@@ -89,19 +89,33 @@ const FactoringWeb = () => {
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
-  // Handle URL hash on mount
+  // Handle URL hash on mount and changes
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash === '#calculadora') setActiveTab('calculadora');
-    else if (hash === '#solicitud') {
-      setActiveTab('calculadora');
-      if (isAuthenticated) {
-        setShowNewInvoice(true);
-      } else {
-        setShowAuthModal(true);
+    const handleHash = () => {
+      const hash = window.location.hash;
+      if (hash === '#calculadora') {
+        setActiveTab('calculadora');
+        setTimeout(() => {
+          document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else if (hash === '#solicitud') {
+        setActiveTab('calculadora');
+        if (isAuthenticated) {
+          setShowNewInvoice(true);
+        } else {
+          setShowAuthModal(true);
+        }
+      } else if (hash === '#historial') {
+        setActiveTab('historial');
+        setTimeout(() => {
+          document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       }
-    }
-    else if (hash === '#historial') setActiveTab('historial');
+    };
+    
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
   }, [isAuthenticated]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -326,14 +340,14 @@ const FactoringWeb = () => {
         </section>
 
         {/* Main Content */}
-        <section className="container-narrow mx-auto px-4 py-12">
+        <section id="calculadora" className="container-narrow mx-auto px-4 py-12">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
             <TabsList className="grid w-full max-w-lg mx-auto grid-cols-3 h-12">
               <TabsTrigger value="calculadora" className="text-sm">
                 <Calculator className="w-4 h-4 mr-2" />
                 Calculadora
               </TabsTrigger>
-              <TabsTrigger value="historial" className="text-sm">
+              <TabsTrigger value="historial" id="historial" className="text-sm">
                 <FileText className="w-4 h-4 mr-2" />
                 Historial
               </TabsTrigger>
