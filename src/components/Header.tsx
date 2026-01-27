@@ -19,8 +19,8 @@ const serviceItems = [
 
 const aboutItems = [
   { label: '¿Por qué nosotros?', href: '#por-que-nosotros', isSection: true },
-  { label: 'Misión', href: '#mision', isSection: true },
   { label: 'Visión', href: '#vision', isSection: true },
+  { label: 'Misión', href: '#mision', isSection: true },
   { label: 'Equipo', href: '#equipo', isSection: true },
 ];
 
