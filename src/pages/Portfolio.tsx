@@ -95,8 +95,10 @@ const fondoCapitalPrivado = {
 const ficAlternativos180Plus = {
   name: 'FIC Alternativos 180 Plus',
   administrador: 'AVAL Fiduciaria - Asset Management',
-  fechaReporte: 'domingo, 25 de enero de 2026',
-  saldo: 186988400000,
+  fechaReporte: '26 de enero de 2026',
+  valorUnidad: 14363.9,
+  valorFondo: 188573057841.61,
+  saldo: 188573057841.61,
   rentabilidadEA30dias: 11.88,
   rentabilidadEA365dias: 12.41,
   tiposParticipacion: [
@@ -117,6 +119,31 @@ const ficAlternativos180Plus = {
       pactoPermanencia: 180,
       remuneracionEfectiva: 1.75,
       descripcion: 'Diseñado para inversores institucionales y de alto patrimonio.',
+    },
+  ],
+  // Comportamiento Histórico
+  comportamientoHistorico: [
+    {
+      id: 'tp1',
+      nombre: 'Alternativo 180 plus - tp1',
+      anoCorridoEA: 11.96,
+      diariaEA: 9.67,
+      dias30EA: 11.52,
+      dias180EA: 11.7,
+      ano1EA: 12.19,
+      ano2EA: 12.81,
+      ano3EA: 11.55,
+    },
+    {
+      id: 'tp2',
+      nombre: 'Alternativo 180 plus - tp2',
+      anoCorridoEA: 12.52,
+      diariaEA: 10.22,
+      dias30EA: 12.08,
+      dias180EA: 12.13,
+      ano1EA: 12.69,
+      ano2EA: null,
+      ano3EA: null,
     },
   ],
 };
@@ -459,59 +486,77 @@ const Portfolio = () => {
                   </div>
                 </div>
 
-                {/* Informe Diario - Datos del Fondo */}
-                <Card className="mb-8 border border-[#0F172A]/20 overflow-hidden">
-                  <div className="bg-[#0F172A] text-white p-4">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                      <div>
-                        <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Informe Diario</p>
-                        <p className="text-sm font-medium">Rentabilidad / Vr. Fondo</p>
-                        <p className="text-lg font-bold">{ficAlternativos180Plus.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Administrador</p>
-                        <p className="text-sm font-bold">{ficAlternativos180Plus.administrador}</p>
-                      </div>
+                {/* Valor Unidad, Valor Fondo, Información al */}
+                <div className="grid md:grid-cols-3 gap-4 mb-8">
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 bg-muted/50 border-b border-border">
+                      <p className="text-sm font-medium text-muted-foreground text-center">Valor unidad</p>
+                    </div>
+                    <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
+                      <span className="text-xl font-bold">
+                        {ficAlternativos180Plus.valorUnidad.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+                      </span>
+                      <Wallet className="w-5 h-5 text-white/60" />
                     </div>
                   </div>
-                  
-                  <CardContent className="p-0">
-                    {/* Fecha */}
-                    <div className="px-4 py-3 border-b border-border bg-muted/30">
-                      <p className="text-sm text-muted-foreground font-medium">
-                        {ficAlternativos180Plus.fechaReporte}
-                      </p>
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 bg-muted/50 border-b border-border">
+                      <p className="text-sm font-medium text-muted-foreground text-center">Valor Fondo</p>
                     </div>
-                    
-                    {/* Tabla de datos */}
+                    <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
+                      <span className="text-xl font-bold">
+                        {ficAlternativos180Plus.valorFondo.toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                      <Briefcase className="w-5 h-5 text-white/60" />
+                    </div>
+                  </div>
+                  <div className="bg-card border border-border rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 bg-muted/50 border-b border-border">
+                      <p className="text-sm font-medium text-muted-foreground text-center">Información al</p>
+                    </div>
+                    <div className="px-4 py-4 bg-[#0F172A] text-white flex items-center justify-between">
+                      <span className="text-xl font-bold">{ficAlternativos180Plus.fechaReporte}</span>
+                      <Calendar className="w-5 h-5 text-white/60" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Comportamiento Histórico */}
+                <Card className="mb-8 border border-[#0F172A]/20 overflow-hidden">
+                  <CardHeader className="bg-card border-b border-border">
+                    <CardTitle className="text-xl text-[#0F172A] text-center">Comportamiento Histórico</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="bg-[#0F172A] text-white">
-                            <th className="text-left py-3 px-4 font-semibold">Fondo</th>
-                            <th className="text-right py-3 px-4 font-semibold">Saldo (pesos)</th>
-                            <th className="text-center py-3 px-4 font-semibold" colSpan={2}>
-                              <div>Rentabilidad EA</div>
-                              <div className="flex justify-center gap-8 mt-1 text-xs font-normal text-white/80">
-                                <span>30 días</span>
-                                <span>365 días</span>
-                              </div>
-                            </th>
-                            <th className="text-center py-3 px-4 font-semibold">Último Llamado</th>
+                          <tr className="bg-muted/50">
+                            <th className="text-left py-4 px-4 font-semibold text-muted-foreground">Tipo de participación</th>
+                            <th className="text-center py-4 px-4 font-semibold text-muted-foreground">Año corrido<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-muted-foreground">Diaria<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-muted-foreground">30 días<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-muted-foreground">180 días<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-[#0F172A] bg-muted/80">1º año<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-[#0F172A] bg-muted/80">2º año<br />% E.A</th>
+                            <th className="text-center py-4 px-4 font-semibold text-[#0F172A] bg-muted/80">3º año<br />% E.A</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                            <td className="py-4 px-4 font-medium text-[#0F172A]">{ficAlternativos180Plus.name}</td>
-                            <td className="py-4 px-4 text-right font-bold text-[#0F172A]">{formatCOP(ficAlternativos180Plus.saldo)}</td>
-                            <td className="py-4 px-4 text-center">
-                              <div className="flex justify-center gap-8">
-                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA30dias}%</span>
-                                <span className="font-bold text-secondary">{ficAlternativos180Plus.rentabilidadEA365dias}%</span>
-                              </div>
-                            </td>
-                            <td className="py-4 px-4 text-center text-muted-foreground">NA</td>
-                          </tr>
+                          {ficAlternativos180Plus.comportamientoHistorico.map((item, index) => (
+                            <tr key={item.id} className={cn(
+                              "border-b border-border/50 hover:bg-muted/20 transition-colors",
+                              index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
+                            )}>
+                              <td className="py-4 px-4 text-muted-foreground">{item.nombre}</td>
+                              <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.anoCorridoEA}</td>
+                              <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.diariaEA}</td>
+                              <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.dias30EA}</td>
+                              <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.dias180EA}</td>
+                              <td className="py-4 px-4 text-center font-bold text-secondary bg-secondary/5">{item.ano1EA}</td>
+                              <td className="py-4 px-4 text-center font-bold text-secondary bg-secondary/5">{item.ano2EA ?? '-'}</td>
+                              <td className="py-4 px-4 text-center font-bold text-secondary bg-secondary/5">{item.ano3EA ?? '-'}</td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
