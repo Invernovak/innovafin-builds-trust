@@ -97,6 +97,258 @@ export type Database = {
         }
         Relationships: []
       }
+      portfolio_capital_privado: {
+        Row: {
+          administrador: string
+          created_at: string
+          fecha_reporte: string
+          gestor_profesional: string
+          id: string
+          name: string
+          porcentaje_total: number
+          total_disponible: number
+          total_fondo: number
+          total_invertido: number
+          updated_at: string
+        }
+        Insert: {
+          administrador?: string
+          created_at?: string
+          fecha_reporte?: string
+          gestor_profesional?: string
+          id?: string
+          name?: string
+          porcentaje_total?: number
+          total_disponible?: number
+          total_fondo?: number
+          total_invertido?: number
+          updated_at?: string
+        }
+        Update: {
+          administrador?: string
+          created_at?: string
+          fecha_reporte?: string
+          gestor_profesional?: string
+          id?: string
+          name?: string
+          porcentaje_total?: number
+          total_disponible?: number
+          total_fondo?: number
+          total_invertido?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      portfolio_compartimentos: {
+        Row: {
+          capital_privado_id: string | null
+          created_at: string
+          disponible: number
+          id: string
+          invertido: number
+          name: string
+          orden: number
+          porcentaje_activos: number
+          rentabilidad_180dias: number
+          rentabilidad_30dias: number
+          rentabilidad_365dias: number
+          rentabilidad_60dias: number
+          rentabilidad_90dias: number
+          rentabilidad_dia: number
+          total_activos: number
+          updated_at: string
+        }
+        Insert: {
+          capital_privado_id?: string | null
+          created_at?: string
+          disponible?: number
+          id?: string
+          invertido?: number
+          name: string
+          orden?: number
+          porcentaje_activos?: number
+          rentabilidad_180dias?: number
+          rentabilidad_30dias?: number
+          rentabilidad_365dias?: number
+          rentabilidad_60dias?: number
+          rentabilidad_90dias?: number
+          rentabilidad_dia?: number
+          total_activos?: number
+          updated_at?: string
+        }
+        Update: {
+          capital_privado_id?: string | null
+          created_at?: string
+          disponible?: number
+          id?: string
+          invertido?: number
+          name?: string
+          orden?: number
+          porcentaje_activos?: number
+          rentabilidad_180dias?: number
+          rentabilidad_30dias?: number
+          rentabilidad_365dias?: number
+          rentabilidad_60dias?: number
+          rentabilidad_90dias?: number
+          rentabilidad_dia?: number
+          total_activos?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_compartimentos_capital_privado_id_fkey"
+            columns: ["capital_privado_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_capital_privado"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_fic: {
+        Row: {
+          administrador: string
+          created_at: string
+          fecha_reporte: string
+          id: string
+          name: string
+          rentabilidad_ea_30dias: number
+          rentabilidad_ea_365dias: number
+          updated_at: string
+          valor_fondo: number
+          valor_unidad: number
+        }
+        Insert: {
+          administrador?: string
+          created_at?: string
+          fecha_reporte?: string
+          id?: string
+          name?: string
+          rentabilidad_ea_30dias?: number
+          rentabilidad_ea_365dias?: number
+          updated_at?: string
+          valor_fondo?: number
+          valor_unidad?: number
+        }
+        Update: {
+          administrador?: string
+          created_at?: string
+          fecha_reporte?: string
+          id?: string
+          name?: string
+          rentabilidad_ea_30dias?: number
+          rentabilidad_ea_365dias?: number
+          updated_at?: string
+          valor_fondo?: number
+          valor_unidad?: number
+        }
+        Relationships: []
+      }
+      portfolio_fic_historico: {
+        Row: {
+          ano_1_ea: number | null
+          ano_2_ea: number | null
+          ano_3_ea: number | null
+          ano_corrido_ea: number | null
+          created_at: string
+          diaria_ea: number | null
+          dias_180_ea: number | null
+          dias_30_ea: number | null
+          fic_id: string | null
+          id: string
+          nombre: string
+          orden: number
+          updated_at: string
+        }
+        Insert: {
+          ano_1_ea?: number | null
+          ano_2_ea?: number | null
+          ano_3_ea?: number | null
+          ano_corrido_ea?: number | null
+          created_at?: string
+          diaria_ea?: number | null
+          dias_180_ea?: number | null
+          dias_30_ea?: number | null
+          fic_id?: string | null
+          id?: string
+          nombre: string
+          orden?: number
+          updated_at?: string
+        }
+        Update: {
+          ano_1_ea?: number | null
+          ano_2_ea?: number | null
+          ano_3_ea?: number | null
+          ano_corrido_ea?: number | null
+          created_at?: string
+          diaria_ea?: number | null
+          dias_180_ea?: number | null
+          dias_30_ea?: number | null
+          fic_id?: string | null
+          id?: string
+          nombre?: string
+          orden?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_fic_historico_fic_id_fkey"
+            columns: ["fic_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_fic"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      portfolio_fic_tipos: {
+        Row: {
+          comision_administracion: number
+          created_at: string
+          descripcion: string | null
+          fic_id: string | null
+          id: string
+          inversion_minima: number
+          nombre: string
+          orden: number
+          pacto_permanencia: number
+          remuneracion_efectiva: number
+          updated_at: string
+        }
+        Insert: {
+          comision_administracion?: number
+          created_at?: string
+          descripcion?: string | null
+          fic_id?: string | null
+          id?: string
+          inversion_minima?: number
+          nombre: string
+          orden?: number
+          pacto_permanencia?: number
+          remuneracion_efectiva?: number
+          updated_at?: string
+        }
+        Update: {
+          comision_administracion?: number
+          created_at?: string
+          descripcion?: string | null
+          fic_id?: string | null
+          id?: string
+          inversion_minima?: number
+          nombre?: string
+          orden?: number
+          pacto_permanencia?: number
+          remuneracion_efectiva?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_fic_tipos_fic_id_fkey"
+            columns: ["fic_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_fic"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       request_history: {
         Row: {
           action: string
