@@ -39,12 +39,7 @@ const investorItems = [
   { label: 'Portal Inversionistas', href: '/investors', isRoute: true },
 ];
 
-const factoringItems = [
-  { label: 'Portal Factoring', href: '/factoring', isRoute: true },
-  { label: 'Calculadora', href: '/factoring#calculadora', isRoute: false },
-  { label: 'Solicitar Descuento', href: '/factoring#solicitud', isRoute: false },
-  { label: 'Historial', href: '/factoring#historial', isRoute: false },
-];
+// Factoring items removed - no submenu for Factoring
 
 interface NavItem {
   label: string;
@@ -61,7 +56,7 @@ const navItems: NavItem[] = [
   { label: 'Inversionistas', href: '/investors', isRoute: true },
   { label: 'Originadores', href: '/originators', isRoute: true },
   { label: 'Portafolio', href: '/portfolio', isRoute: true },
-  { label: 'Factoring', href: '#factoring', isRoute: false, hasSubmenu: true, submenuItems: factoringItems },
+  { label: 'Factoring', href: '/factoring', isRoute: true },
 ];
 
 const Header = () => {
