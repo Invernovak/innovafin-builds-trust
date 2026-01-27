@@ -18,10 +18,10 @@ const serviceItems = [
 ];
 
 const aboutItems = [
-  { label: 'Historia', href: '#nosotros-historia', isSection: true },
-  { label: 'Equipo', href: '#nosotros-equipo', isSection: true },
-  { label: 'Misión/Visión', href: '#nosotros-mision', isSection: true },
-  { label: 'Valores', href: '#nosotros-valores', isSection: true },
+  { label: '¿Por qué nosotros?', href: '#por-que-nosotros', isSection: true },
+  { label: 'Misión', href: '#mision', isSection: true },
+  { label: 'Visión', href: '#vision', isSection: true },
+  { label: 'Equipo', href: '#equipo', isSection: true },
 ];
 
 const originatorItems = [
