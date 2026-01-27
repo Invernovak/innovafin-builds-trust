@@ -67,40 +67,43 @@ const ServiceCard = ({
       className={cn(
         "group relative bg-card rounded-2xl border border-border/50 p-8 transition-all duration-500",
         "hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1",
-        "before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-primary/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-500",
-        "hover:before:opacity-100",
         className
       )}
     >
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      
       {/* Trust indicator */}
-      <div className="absolute top-6 right-6 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="absolute top-6 right-6 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
         <span className="text-xs text-muted-foreground font-medium">Expertos</span>
       </div>
 
       {/* Icon container */}
-      <div className="relative mb-6">
+      <div className="relative mb-6 z-10">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-primary/20">
           <Icon className="w-8 h-8 text-primary" strokeWidth={1.5} />
         </div>
         {/* Decorative ring */}
-        <div className="absolute inset-0 w-16 h-16 rounded-2xl border-2 border-primary/20 scale-100 opacity-0 group-hover:scale-125 group-hover:opacity-100 transition-all duration-500" />
+        <div className="absolute inset-0 w-16 h-16 rounded-2xl border-2 border-primary/20 scale-100 opacity-0 group-hover:scale-125 group-hover:opacity-100 transition-all duration-500 pointer-events-none" />
       </div>
 
       {/* Content */}
-      <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
-        {service.title}
-      </h3>
-      
-      <p className="text-muted-foreground leading-relaxed mb-6 text-sm">
-        {service.description}
-      </p>
+      <div className="relative z-10">
+        <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors duration-300">
+          {service.title}
+        </h3>
+        
+        <p className="text-muted-foreground leading-relaxed mb-6 text-sm">
+          {service.description}
+        </p>
 
-      {/* Button */}
-      <ServiceButton to={service.route} />
+        {/* Button */}
+        <ServiceButton to={service.route} />
+      </div>
 
       {/* Bottom accent line */}
-      <div className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+      <div className="absolute bottom-0 left-8 right-8 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 pointer-events-none" />
     </div>
   );
 };
