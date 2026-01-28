@@ -242,8 +242,8 @@ const Portfolio = () => {
       }))
     : ficAlternativos180Plus.comportamientoHistorico;
 
-  // Calculate total portfolio
-  const portafolioTotal = capitalPrivadoData.totalFondo + ficData.saldo;
+  // Calculate total portfolio (solo Capital Privado)
+  const portafolioTotal = capitalPrivadoData.totalFondo;
 
   return (
     <div className="min-h-screen bg-background">
