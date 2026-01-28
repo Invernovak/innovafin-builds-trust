@@ -104,12 +104,12 @@ function validateInput(data: OriginatorLeadInput): { valid: boolean; error?: str
     return { valid: false, error: 'Horario de contacto inválido' };
   }
   
-  if (!data.descripcion_negocio || data.descripcion_negocio.length < 10 || data.descripcion_negocio.length > 2000) {
-    return { valid: false, error: 'Descripción del negocio inválida' };
+  if (!data.descripcion_negocio || data.descripcion_negocio.length < 3 || data.descripcion_negocio.length > 2000) {
+    return { valid: false, error: 'Descripción del negocio inválida (mínimo 3 caracteres)' };
   }
   
-  if (!data.necesidades_financiacion || data.necesidades_financiacion.length < 10 || data.necesidades_financiacion.length > 2000) {
-    return { valid: false, error: 'Necesidades de financiación inválidas' };
+  if (!data.necesidades_financiacion || data.necesidades_financiacion.length < 3 || data.necesidades_financiacion.length > 2000) {
+    return { valid: false, error: 'Necesidades de financiación inválidas (mínimo 3 caracteres)' };
   }
   
   if (data.acepta_habeas_data !== true) {
