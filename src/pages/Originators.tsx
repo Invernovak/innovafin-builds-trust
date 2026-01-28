@@ -17,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
 import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
+import { supabase } from '@/integrations/supabase/client';
 
 // Tipos de originación
 const originationTypes = [
@@ -172,25 +173,56 @@ const Originators = () => {
     
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
-    setFormData({
-      companyName: '',
-      nit: '',
-      contactName: '',
-      email: '',
-      phone: '',
-      originationType: '',
-      departamento: '',
-      ciudad: '',
-      horarioContacto: '',
-      businessDescription: '',
-      financingNeeds: '',
-      aceptaHabeasData: false,
-    });
-    setIsSubmitting(false);
+    try {
+      // Use edge function for server-side validation and external database insert
+      const response = await supabase.functions.invoke('submit-originator-lead', {
+        body: {
+          razon_social: formData.companyName,
+          nit: formData.nit,
+          nombre_contacto: formData.contactName,
+          correo_electronico: formData.email,
+          telefono: formData.phone,
+          tipo_originacion: formData.originationType,
+          departamento: formData.departamento,
+          ciudad: formData.ciudad,
+          horario_contacto: formData.horarioContacto,
+          descripcion_negocio: formData.businessDescription,
+          necesidades_financiacion: formData.financingNeeds,
+          acepta_habeas_data: formData.aceptaHabeasData
+        }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message || 'Error al enviar el formulario');
+      }
+
+      const data = response.data;
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
+
+      toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
+      setFormData({
+        companyName: '',
+        nit: '',
+        contactName: '',
+        email: '',
+        phone: '',
+        originationType: '',
+        departamento: '',
+        ciudad: '',
+        horarioContacto: '',
+        businessDescription: '',
+        financingNeeds: '',
+        aceptaHabeasData: false,
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error('Hubo un error al enviar el formulario. Por favor, intente nuevamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -198,10 +230,10 @@ const Originators = () => {
       <Header />
       
       <main className="pt-20">
-        {/* Hero Section */}
+        {/* Hero Section - Reduced padding */}
         <section 
           ref={heroRef}
-          className="bg-gradient-to-br from-secondary to-secondary/80 py-16 relative overflow-hidden"
+          className="bg-gradient-to-br from-secondary to-secondary/80 py-8 md:py-10 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -213,32 +245,32 @@ const Originators = () => {
               "text-center transition-all duration-700",
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-6">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-semibold mb-4">
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 Portal de Originadores
               </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
                 Impulsa tu Empresa con <span className="text-white/90">Financiamiento Alternativo</span>
               </h1>
-              <p className="text-white/80 text-lg max-w-2xl mx-auto mb-8">
+              <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-5">
                 Conectamos empresas con potencial de crecimiento con capital estratégico para impulsar su expansión.
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-3">
                 <Button 
-                  size="lg" 
-                  className="bg-white text-secondary hover:bg-white/90 rounded-full px-8"
+                  size="default" 
+                  className="bg-white text-secondary hover:bg-white/90 rounded-full px-6"
                   onClick={() => setActiveTab('vinculacion')}
                 >
-                  <Briefcase className="w-5 h-5 mr-2" />
+                  <Briefcase className="w-4 h-4 mr-2" />
                   Vincularse Ahora
                 </Button>
                 <Button 
-                  size="lg" 
+                  size="default" 
                   variant="outline" 
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-6"
                   onClick={() => setActiveTab('originadores-activos')}
                 >
-                  <Building2 className="w-5 h-5 mr-2" />
+                  <Building2 className="w-4 h-4 mr-2" />
                   Ver Originadores
                 </Button>
               </div>
@@ -246,8 +278,8 @@ const Originators = () => {
           </div>
         </section>
 
-        {/* Stats Cards */}
-        <section className="container-narrow mx-auto px-4 -mt-8 relative z-10">
+        {/* Stats Cards with hover effects */}
+        <section className="container-narrow mx-auto px-4 -mt-6 relative z-10">
           <div 
             ref={statsRef}
             className={cn(
@@ -255,41 +287,41 @@ const Originators = () => {
               statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
+            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
+              <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
-                    <Building2 className="w-6 h-6 text-secondary" />
+                  <div className="w-11 h-11 rounded-xl bg-secondary/10 flex items-center justify-center">
+                    <Building2 className="w-5 h-5 text-secondary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Originadores Activos</p>
-                    <p className="text-2xl font-bold text-secondary">{originatorsData.length}</p>
+                    <p className="text-xs text-muted-foreground">Originadores Activos</p>
+                    <p className="text-xl font-bold text-secondary">{originatorsData.length}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
+            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
+              <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Banknote className="w-6 h-6 text-primary" />
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Banknote className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Financiamiento Total</p>
-                    <p className="text-2xl font-bold">$10.1M USD</p>
+                    <p className="text-xs text-muted-foreground">Financiamiento Total</p>
+                    <p className="text-xl font-bold">$10.1M USD</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
+            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
+              <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-green-600" />
+                  <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Crecimiento Promedio</p>
-                    <p className="text-2xl font-bold text-green-600">+42%</p>
+                    <p className="text-xs text-muted-foreground">Crecimiento Promedio</p>
+                    <p className="text-xl font-bold text-green-600">+42%</p>
                   </div>
                 </div>
               </CardContent>
@@ -298,44 +330,44 @@ const Originators = () => {
         </section>
 
         {/* Main Tabs Section */}
-        <section className="container-narrow mx-auto px-4 py-12">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-3 h-12">
-              <TabsTrigger value="como-vincularse" className="text-sm">
-                <ArrowRight className="w-4 h-4 mr-2" />
+        <section className="container-narrow mx-auto px-4 py-10">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-3 h-11">
+              <TabsTrigger value="como-vincularse" className="text-xs md:text-sm">
+                <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
                 Cómo Vincularse
               </TabsTrigger>
-              <TabsTrigger value="vinculacion" className="text-sm">
-                <ClipboardList className="w-4 h-4 mr-2" />
+              <TabsTrigger value="vinculacion" className="text-xs md:text-sm">
+                <ClipboardList className="w-4 h-4 mr-1 md:mr-2" />
                 Vinculación
               </TabsTrigger>
-              <TabsTrigger value="originadores-activos" className="text-sm">
-                <Building2 className="w-4 h-4 mr-2" />
+              <TabsTrigger value="originadores-activos" className="text-xs md:text-sm">
+                <Building2 className="w-4 h-4 mr-1 md:mr-2" />
                 Originadores
               </TabsTrigger>
             </TabsList>
 
             {/* Cómo Vincularse Tab */}
-            <TabsContent value="como-vincularse" className="space-y-8">
+            <TabsContent value="como-vincularse" className="space-y-6">
               <Card className="border-2 border-secondary/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-2xl">
-                    <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
-                      <ArrowRight className="w-5 h-5 text-secondary" />
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <div className="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center">
+                      <ArrowRight className="w-4 h-4 text-secondary" />
                     </div>
                     Proceso de Vinculación
                   </CardTitle>
-                  <CardDescription>Sigue estos pasos para convertirte en originador de InnovaFin</CardDescription>
+                  <CardDescription>Siga estos pasos para convertirse en originador de InnovaFin</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-5">
                   {processSteps.map((step, index) => (
-                    <div key={index} className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
-                        <step.icon className="w-6 h-6 text-secondary-foreground" />
+                    <div key={index} className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+                        <step.icon className="w-5 h-5 text-secondary-foreground" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-foreground">{step.title}</h3>
-                        <p className="text-sm text-muted-foreground">{step.description}</p>
+                        <h3 className="font-bold text-foreground text-sm">{step.title}</h3>
+                        <p className="text-xs text-muted-foreground">{step.description}</p>
                       </div>
                     </div>
                   ))}
@@ -344,17 +376,17 @@ const Originators = () => {
 
               {/* Documentos Requeridos */}
               <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Upload className="w-5 h-5 text-secondary" />
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Upload className="w-4 h-4 text-secondary" />
                     Documentos Requeridos
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid md:grid-cols-2 gap-3">
+                  <div className="grid md:grid-cols-2 gap-2">
                     {requiredDocuments.map((doc, index) => (
-                      <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="w-4 h-4 text-secondary flex-shrink-0" />
+                      <div key={index} className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <CheckCircle className="w-3.5 h-3.5 text-secondary flex-shrink-0" />
                         {doc}
                       </div>
                     ))}
@@ -364,12 +396,12 @@ const Originators = () => {
 
               <div className="text-center">
                 <Button 
-                  size="lg"
-                  className="bg-secondary hover:bg-secondary/90 rounded-full px-8"
+                  size="default"
+                  className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
                   onClick={() => setActiveTab('vinculacion')}
                 >
                   Comenzar Vinculación
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </TabsContent>
@@ -377,10 +409,10 @@ const Originators = () => {
             {/* Vinculación Tab */}
             <TabsContent value="vinculacion">
               <Card className="border-2 border-secondary/10">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-2xl">
-                    <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
-                      <ClipboardList className="w-5 h-5 text-secondary" />
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <div className="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center">
+                      <ClipboardList className="w-4 h-4 text-secondary" />
                     </div>
                     Formulario de Vinculación de Originadores
                   </CardTitle>
@@ -394,7 +426,7 @@ const Originators = () => {
                       {/* Nombre de la Empresa */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                          Nombre de la Empresa *
+                          Razón Social *
                         </label>
                         <input
                           type="text"
@@ -727,53 +759,50 @@ const Originators = () => {
             </TabsContent>
 
             {/* Originadores Activos Tab */}
-            <TabsContent value="originadores-activos" className="space-y-8">
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Originadores Activos</h2>
-                <p className="text-muted-foreground">Empresas que actualmente forman parte de la red InnovaFin</p>
+            <TabsContent value="originadores-activos" className="space-y-6">
+              <div className="text-center mb-6">
+                <h2 className="text-xl font-bold text-foreground mb-2">Originadores Activos</h2>
+                <p className="text-sm text-muted-foreground">Empresas que actualmente forman parte de la red InnovaFin</p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 {originatorsData.map((originator) => (
-                  <Card key={originator.id} className="border-border/50 hover:shadow-lg transition-all hover:border-secondary/30">
-                    <CardContent className="p-6">
+                  <Card key={originator.id} className="border-border/50 hover:shadow-lg transition-all duration-300 hover:border-secondary/30">
+                    <CardContent className="p-5">
                       <div className="flex items-start gap-4">
                         {/* Logo placeholder */}
-                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center flex-shrink-0">
-                          <span className="text-xl font-bold text-white">{originator.logo}</span>
+                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center flex-shrink-0">
+                          <span className="text-lg font-bold text-white">{originator.logo}</span>
                         </div>
                         
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="text-lg font-bold text-foreground">{originator.name}</h3>
-                              <p className="text-sm text-muted-foreground">{originator.sector}</p>
+                              <h3 className="text-base font-bold text-foreground">{originator.name}</h3>
+                              <p className="text-xs text-muted-foreground">{originator.sector}</p>
                             </div>
-                            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+                            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs">
                               {originator.status}
                             </Badge>
                           </div>
 
-                          <p className="text-sm text-muted-foreground mb-4">
+                          <p className="text-xs text-muted-foreground mb-3">
                             {originator.description}
                           </p>
 
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-                            <MapPin className="w-4 h-4" />
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                            <MapPin className="w-3.5 h-3.5" />
                             {originator.location}
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
+                          <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1">Financiación Recibida</p>
-                              <p className="text-lg font-bold text-foreground">{originator.financingReceived}</p>
+                              <p className="text-xs text-muted-foreground mb-0.5">Financiación Recibida</p>
+                              <p className="text-base font-bold text-foreground">{originator.financingReceived}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1">Crecimiento</p>
-                              <p className="text-lg font-bold text-emerald-600 flex items-center gap-1">
-                                <TrendingUp className="w-4 h-4" />
-                                {originator.growth}
-                              </p>
+                              <p className="text-xs text-muted-foreground mb-0.5">Crecimiento</p>
+                              <p className="text-base font-bold text-green-600">{originator.growth}</p>
                             </div>
                           </div>
                         </div>
@@ -783,24 +812,16 @@ const Originators = () => {
                 ))}
               </div>
 
-              <Card className="border-2 border-secondary/20 bg-gradient-to-br from-secondary/5 to-primary/5">
-                <CardContent className="p-8 text-center">
-                  <h3 className="text-2xl font-bold text-secondary mb-4">
-                    ¿Quieres ser parte de nuestra red?
-                  </h3>
-                  <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-                    Únete a empresas exitosas que ya están creciendo con el apoyo de InnovaFin.
-                  </p>
-                  <Button 
-                    size="lg"
-                    className="bg-secondary hover:bg-secondary/90 rounded-full px-8"
-                    onClick={() => setActiveTab('vinculacion')}
-                  >
-                    Aplicar Ahora
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="text-center pt-4">
+                <Button 
+                  size="default"
+                  className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
+                  onClick={() => setActiveTab('vinculacion')}
+                >
+                  Únete a la Red
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
             </TabsContent>
           </Tabs>
         </section>
