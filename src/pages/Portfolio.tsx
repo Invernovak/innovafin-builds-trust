@@ -105,7 +105,7 @@ const ficAlternativos180Plus = {
   fechaReporte: '26 de enero de 2026',
   valorUnidad: 14363.9,
   valorFondo: 188573057841.61,
-  saldo: 188573057841.61,
+  saldo: 0,
   rentabilidadEA30dias: 11.88,
   rentabilidadEA365dias: 12.41,
   tiposParticipacion: [
