@@ -742,7 +742,7 @@ const Originators = () => {
                       type="submit" 
                       size="lg"
                       className="w-full bg-secondary hover:bg-secondary/90 rounded-xl"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !formData.aceptaHabeasData}
                     >
                       {isSubmitting ? (
                         <>Enviando...</>
