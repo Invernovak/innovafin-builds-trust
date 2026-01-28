@@ -326,7 +326,7 @@ const Portfolio = () => {
                       <Briefcase className="w-4 h-4 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">Compartimentos</p>
                     </div>
-                    <p className="text-2xl font-bold text-foreground">{compartimentosData.length} Activos</p>
+                    <p className="text-2xl font-bold text-foreground">{compartimentosData.length}</p>
                   </div>
                 </div>
               </CardContent>
