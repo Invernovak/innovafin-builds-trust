@@ -221,7 +221,7 @@ const Investors = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Rentabilidad EA</p>
-                    <p className="text-xl font-bold text-primary">Hasta 14%</p>
+                    <p className="text-xl font-bold text-primary">Desde el 11%</p>
                   </div>
                 </div>
               </CardContent>
