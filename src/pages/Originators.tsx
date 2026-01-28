@@ -1,17 +1,33 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { 
   Briefcase, CheckCircle, ClipboardList, Users, Search, 
-  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, TrendingUp, User
+  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, TrendingUp, Check, ChevronsUpDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
+import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
+
+// Tipos de originación
+const originationTypes = [
+  { value: 'libranza-publica', label: 'Libranza Pública 🏛️' },
+  { value: 'libranza-privada', label: 'Libranza Privada 🏢' },
+  { value: 'libranza-vehiculo', label: 'Libranza Vehículo 🚗' },
+  { value: 'libranza-educacion', label: 'Libranza Educación 🎓' },
+  { value: 'credito-consumo', label: 'Crédito de Consumo Ordinario / Educativo 🏦' },
+  { value: 'microcredito', label: 'Microcrédito 📈' },
+  { value: 'credito-vivienda', label: 'Crédito de Vivienda / Hipotecario 🏠' },
+];
 
 // Datos de originadores activos
 const originatorsData = [
@@ -106,17 +122,54 @@ const Originators = () => {
     contactName: '',
     email: '',
     phone: '',
-    sector: '',
+    originationType: '',
+    departamento: '',
+    ciudad: '',
+    horarioContacto: '',
     businessDescription: '',
     financingNeeds: '',
+    aceptaHabeasData: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [departamentoOpen, setDepartamentoOpen] = useState(false);
+  const [ciudadOpen, setCiudadOpen] = useState(false);
 
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
+  // Get cities based on selected department
+  const availableCities = useMemo(() => {
+    if (!formData.departamento) return [];
+    const department = colombiaDepartments.find(d => d.name === formData.departamento);
+    return department ? department.cities : [];
+  }, [formData.departamento]);
+
+  const handleDepartmentChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      departamento: value,
+      ciudad: '', // Reset city when department changes
+    }));
+    setDepartamentoOpen(false);
+  };
+
+  const handleCityChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      ciudad: value,
+    }));
+    setCiudadOpen(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Additional validation for checkbox
+    if (!formData.aceptaHabeasData) {
+      toast.error('Debe aceptar la política de tratamiento de datos personales');
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate form submission
@@ -129,9 +182,13 @@ const Originators = () => {
       contactName: '',
       email: '',
       phone: '',
-      sector: '',
+      originationType: '',
+      departamento: '',
+      ciudad: '',
+      horarioContacto: '',
       businessDescription: '',
       financingNeeds: '',
+      aceptaHabeasData: false,
     });
     setIsSubmitting(false);
   };
@@ -334,6 +391,7 @@ const Originators = () => {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
+                      {/* Nombre de la Empresa */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Nombre de la Empresa *
@@ -347,6 +405,8 @@ const Originators = () => {
                           required
                         />
                       </div>
+                      
+                      {/* NIT */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           NIT *
@@ -360,6 +420,8 @@ const Originators = () => {
                           required
                         />
                       </div>
+                      
+                      {/* Nombre de Contacto */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Nombre de Contacto *
@@ -373,6 +435,8 @@ const Originators = () => {
                           required
                         />
                       </div>
+                      
+                      {/* Correo Electrónico */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Correo Electrónico *
@@ -386,6 +450,8 @@ const Originators = () => {
                           required
                         />
                       </div>
+                      
+                      {/* Teléfono */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Teléfono *
@@ -399,28 +465,186 @@ const Originators = () => {
                           required
                         />
                       </div>
+                      
+                      {/* Tipo de Originación */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                          Sector *
+                          Tipo de Originación *
                         </label>
-                        <select
-                          className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
-                          value={formData.sector}
-                          onChange={(e) => setFormData({...formData, sector: e.target.value})}
+                        <Select
+                          value={formData.originationType}
+                          onValueChange={(value) => setFormData({...formData, originationType: value})}
                           required
                         >
-                          <option value="">Seleccione un sector</option>
-                          <option value="tecnologia">Tecnología</option>
-                          <option value="agroindustria">Agroindustria</option>
-                          <option value="energia">Energía</option>
-                          <option value="salud">Salud</option>
-                          <option value="manufactura">Manufactura</option>
-                          <option value="servicios">Servicios</option>
-                          <option value="otro">Otro</option>
-                        </select>
+                          <SelectTrigger className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary">
+                            <SelectValue placeholder="Seleccione tipo de originación" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white z-50">
+                            {originationTypes.map((type) => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {/* Hidden input for HTML5 validation */}
+                        <input
+                          type="text"
+                          value={formData.originationType}
+                          onChange={() => {}}
+                          required
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      
+                      {/* Departamento */}
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                          Departamento *
+                        </label>
+                        <Popover open={departamentoOpen} onOpenChange={setDepartamentoOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={departamentoOpen}
+                              className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white hover:bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary justify-between font-normal"
+                            >
+                              {formData.departamento || "Seleccione departamento"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0 bg-white z-50" align="start">
+                            <Command>
+                              <CommandInput placeholder="Buscar departamento..." />
+                              <CommandList>
+                                <CommandEmpty>No se encontró el departamento.</CommandEmpty>
+                                <CommandGroup className="max-h-64 overflow-y-auto">
+                                  {colombiaDepartments.map((dept) => (
+                                    <CommandItem
+                                      key={dept.name}
+                                      value={dept.name}
+                                      onSelect={handleDepartmentChange}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          formData.departamento === dept.name ? "opacity-100" : "opacity-0"
+                                        )}
+                                      />
+                                      {dept.name}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        {/* Hidden input for HTML5 validation */}
+                        <input
+                          type="text"
+                          value={formData.departamento}
+                          onChange={() => {}}
+                          required
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      
+                      {/* Ciudad */}
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                          Ciudad *
+                        </label>
+                        <Popover open={ciudadOpen} onOpenChange={setCiudadOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={ciudadOpen}
+                              className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white hover:bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary justify-between font-normal"
+                              disabled={!formData.departamento}
+                            >
+                              {formData.ciudad || (formData.departamento ? "Seleccione ciudad" : "Primero seleccione departamento")}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0 bg-white z-50" align="start">
+                            <Command>
+                              <CommandInput placeholder="Buscar ciudad..." />
+                              <CommandList>
+                                <CommandEmpty>No se encontró la ciudad.</CommandEmpty>
+                                <CommandGroup className="max-h-64 overflow-y-auto">
+                                  {availableCities.map((city) => (
+                                    <CommandItem
+                                      key={city}
+                                      value={city}
+                                      onSelect={handleCityChange}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          formData.ciudad === city ? "opacity-100" : "opacity-0"
+                                        )}
+                                      />
+                                      {city}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        {/* Hidden input for HTML5 validation */}
+                        <input
+                          type="text"
+                          value={formData.ciudad}
+                          onChange={() => {}}
+                          required
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
+                      </div>
+                      
+                      {/* Horario de Contacto */}
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground mb-2 block">
+                          Horario de Contacto ⏰ *
+                        </label>
+                        <Select
+                          value={formData.horarioContacto}
+                          onValueChange={(value) => setFormData({...formData, horarioContacto: value})}
+                          required
+                        >
+                          <SelectTrigger className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary">
+                            <SelectValue placeholder="Seleccione horario preferido" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white z-50">
+                            {contactTimeSlots.map((slot) => (
+                              <SelectItem key={slot} value={slot}>
+                                {slot}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {/* Hidden input for HTML5 validation */}
+                        <input
+                          type="text"
+                          value={formData.horarioContacto}
+                          onChange={() => {}}
+                          required
+                          className="sr-only"
+                          tabIndex={-1}
+                          aria-hidden="true"
+                        />
                       </div>
                     </div>
 
+                    {/* Descripción del Negocio */}
                     <div>
                       <label className="text-sm font-medium text-muted-foreground mb-2 block">
                         Descripción del Negocio *
@@ -434,6 +658,7 @@ const Originators = () => {
                       />
                     </div>
 
+                    {/* Necesidades de Financiación */}
                     <div>
                       <label className="text-sm font-medium text-muted-foreground mb-2 block">
                         Necesidades de Financiación *
@@ -447,10 +672,38 @@ const Originators = () => {
                       />
                     </div>
 
-                    <div className="bg-muted/30 rounded-xl p-4">
-                      <p className="text-sm text-muted-foreground">
-                        Al enviar este formulario, acepta que un asesor de InnovaFin se ponga en contacto para continuar con el proceso de vinculación como originador.
-                      </p>
+                    {/* Habeas Data Checkbox */}
+                    <div className="bg-muted/30 rounded-xl p-4 space-y-4">
+                      <div className="flex items-start gap-3">
+                        <Checkbox
+                          id="habeas-data"
+                          checked={formData.aceptaHabeasData}
+                          onCheckedChange={(checked) => 
+                            setFormData({...formData, aceptaHabeasData: checked === true})
+                          }
+                          className="mt-1"
+                          required
+                        />
+                        <label 
+                          htmlFor="habeas-data" 
+                          className="text-sm text-muted-foreground cursor-pointer leading-relaxed"
+                        >
+                          Autorizo de manera previa, expresa e informada a InnovaFin para el tratamiento de mis datos personales, de acuerdo con su{' '}
+                          <a href="#" className="text-secondary underline hover:text-secondary/80">
+                            Política de Tratamiento de Datos Personales
+                          </a>. *
+                        </label>
+                      </div>
+                      {/* Hidden input for HTML5 validation */}
+                      <input
+                        type="checkbox"
+                        checked={formData.aceptaHabeasData}
+                        onChange={() => {}}
+                        required
+                        className="sr-only"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                      />
                     </div>
 
                     <Button 
