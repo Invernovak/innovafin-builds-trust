@@ -118,7 +118,7 @@ const Investors = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from('inversionistas_leads').insert({
+      const { error } = await supabase.from('inversionistas_leads' as any).insert({
         tipo_persona: tipoPersona,
         nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : null,
         numero_identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : null,
@@ -133,7 +133,7 @@ const Investors = () => {
         monto_inversion: formData.montoInversion || null,
         mensaje: formData.mensaje || null,
         acepta_habeas_data: formData.aceptaHabeasData
-      });
+      } as any);
 
       if (error) throw error;
 
@@ -231,8 +231,8 @@ const Investors = () => {
             <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
               <CardContent className="pt-5 pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-green-600" />
+                  <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-accent-foreground" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Plazos</p>
