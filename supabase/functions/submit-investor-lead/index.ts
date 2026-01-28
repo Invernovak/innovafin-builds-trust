@@ -171,11 +171,23 @@ serve(async (req) => {
       acepta_habeas_data: true,
     };
 
-    // Create Supabase client with service role for insert
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    // Create Supabase client pointing to EXTERNAL Supabase project (InnovaFin)
+    const externalUrl = Deno.env.get('EXTERNAL_SUPABASE_URL');
+    const externalKey = Deno.env.get('EXTERNAL_SUPABASE_SERVICE_KEY');
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    if (!externalUrl || !externalKey) {
+      console.error('External Supabase credentials not configured');
+      return new Response(
+        JSON.stringify({ error: 'Configuración de base de datos externa incompleta' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+    
+    // Connect directly to external Supabase - NO data stored in Lovable Cloud
+    const supabase = createClient(externalUrl, externalKey);
 
     // Insert into database
     const { data, error } = await supabase
