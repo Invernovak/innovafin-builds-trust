@@ -35,7 +35,7 @@ const beneficios = [{
 const processSteps = [{
   icon: ClipboardList,
   title: '1. Registro',
-  description: 'Complete el formulario de vinculación con su información personal o empresarial'
+  description: 'Complete el formulario de la ventana de vinculación con su información personal o empresarial'
 }, {
   icon: FileText,
   title: '2. Documentación',
