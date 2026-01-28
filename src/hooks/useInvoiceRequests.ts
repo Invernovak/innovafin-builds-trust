@@ -79,10 +79,15 @@ async function uploadDocuments(
       continue;
     }
 
-    // Get public URL
-    const { data: urlData } = supabase.storage
+    // Get signed URL (expires in 1 hour for security)
+    const { data: urlData, error: urlError } = await supabase.storage
       .from('invoice-documents')
-      .getPublicUrl(filePath);
+      .createSignedUrl(filePath, 3600);
+
+    if (urlError || !urlData?.signedUrl) {
+      console.error('Error creating signed URL:', urlError);
+      continue;
+    }
 
     // Create document record in database
     const { data: docData, error: docError } = await supabase
@@ -90,7 +95,7 @@ async function uploadDocuments(
       .insert({
         request_id: requestId,
         file_name: file.name,
-        file_url: urlData.publicUrl,
+        file_url: urlData.signedUrl,
         file_type: file.type || null,
       })
       .select()

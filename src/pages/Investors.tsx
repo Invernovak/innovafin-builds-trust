@@ -118,24 +118,35 @@ const Investors = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from('inversionistas_leads' as any).insert({
-        tipo_persona: tipoPersona,
-        nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : null,
-        numero_identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : null,
-        razon_social: tipoPersona === 'juridica' ? formData.razonSocial : null,
-        nit: tipoPersona === 'juridica' ? formData.nit : null,
-        representante_legal: tipoPersona === 'juridica' ? formData.representanteLegal : null,
-        correo_electronico: formData.correoElectronico,
-        telefono: formData.telefono,
-        departamento: formData.departamento,
-        ciudad: formData.ciudad,
-        horario_contacto: formData.horarioContacto,
-        monto_inversion: formData.montoInversion || null,
-        mensaje: formData.mensaje || null,
-        acepta_habeas_data: formData.aceptaHabeasData
-      } as any);
+      // Use edge function for server-side validation and rate limiting
+      const response = await supabase.functions.invoke('submit-investor-lead', {
+        body: {
+          tipo_persona: tipoPersona,
+          nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : null,
+          numero_identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : null,
+          razon_social: tipoPersona === 'juridica' ? formData.razonSocial : null,
+          nit: tipoPersona === 'juridica' ? formData.nit : null,
+          representante_legal: tipoPersona === 'juridica' ? formData.representanteLegal : null,
+          correo_electronico: formData.correoElectronico,
+          telefono: formData.telefono,
+          departamento: formData.departamento,
+          ciudad: formData.ciudad,
+          horario_contacto: formData.horarioContacto,
+          monto_inversion: formData.montoInversion || null,
+          mensaje: formData.mensaje || null,
+          acepta_habeas_data: formData.aceptaHabeasData
+        }
+      });
 
-      if (error) throw error;
+      if (response.error) {
+        throw new Error(response.error.message || 'Error al enviar el formulario');
+      }
+
+      const data = response.data;
+      if (data?.error) {
+        toast.error(data.error);
+        return;
+      }
 
       toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
       setFormData({
