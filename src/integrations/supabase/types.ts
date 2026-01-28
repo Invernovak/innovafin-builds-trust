@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      inversionistas_leads: {
+        Row: {
+          acepta_habeas_data: boolean
+          ciudad: string
+          correo_electronico: string
+          created_at: string
+          departamento: string
+          horario_contacto: string
+          id: string
+          mensaje: string | null
+          monto_inversion: string | null
+          nit: string | null
+          nombre_completo: string | null
+          numero_identificacion: string | null
+          razon_social: string | null
+          representante_legal: string | null
+          telefono: string
+          tipo_persona: string
+          updated_at: string
+        }
+        Insert: {
+          acepta_habeas_data?: boolean
+          ciudad: string
+          correo_electronico: string
+          created_at?: string
+          departamento: string
+          horario_contacto: string
+          id?: string
+          mensaje?: string | null
+          monto_inversion?: string | null
+          nit?: string | null
+          nombre_completo?: string | null
+          numero_identificacion?: string | null
+          razon_social?: string | null
+          representante_legal?: string | null
+          telefono: string
+          tipo_persona: string
+          updated_at?: string
+        }
+        Update: {
+          acepta_habeas_data?: boolean
+          ciudad?: string
+          correo_electronico?: string
+          created_at?: string
+          departamento?: string
+          horario_contacto?: string
+          id?: string
+          mensaje?: string | null
+          monto_inversion?: string | null
+          nit?: string | null
+          nombre_completo?: string | null
+          numero_identificacion?: string | null
+          razon_social?: string | null
+          representante_legal?: string | null
+          telefono?: string
+          tipo_persona?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       invoice_documents: {
         Row: {
           created_at: string
