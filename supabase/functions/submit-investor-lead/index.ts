@@ -36,7 +36,8 @@ function isValidEmail(email: string): boolean {
 
 function isValidPhone(phone: string): boolean {
   // Allow digits, spaces, dashes, parentheses, plus sign
-  const phoneRegex = /^[\d\s\-\(\)\+]{7,20}$/;
+  // Minimum 6 digits for flexibility with Colombian landlines
+  const phoneRegex = /^[\d\s\-\(\)\+]{6,20}$/;
   return phoneRegex.test(phone);
 }
 
