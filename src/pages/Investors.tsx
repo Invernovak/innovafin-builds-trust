@@ -109,7 +109,7 @@ const Investors = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.aceptaHabeasData) {
       toast.error('Debe aceptar la política de tratamiento de datos personales.');
       return;
@@ -175,7 +175,7 @@ const Investors = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
         <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 py-8 md:py-10 relative overflow-hidden">
@@ -183,7 +183,7 @@ const Investors = () => {
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
           </div>
-          
+
           <div className="container-narrow mx-auto px-4 relative">
             <div className={cn("text-center transition-all duration-700", heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8")}>
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-semibold mb-4">

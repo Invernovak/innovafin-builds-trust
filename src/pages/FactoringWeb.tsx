@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { 
-  FileText, Upload, CheckCircle, Clock, 
+import {
+  FileText, Upload, CheckCircle, Clock,
   DollarSign, Calculator, Send, Download, Eye, Filter,
   CreditCard, AlertCircle, ArrowRight, X, TrendingUp, LogIn, LogOut, User
 } from 'lucide-react';
@@ -76,13 +76,13 @@ const FactoringWeb = () => {
 
   // Auth and data hooks
   const { user, isAuthenticated, signOut, loading: authLoading } = useAuth();
-  const { 
-    requests, 
-    loading: requestsLoading, 
-    stats, 
-    createRequest, 
+  const {
+    requests,
+    loading: requestsLoading,
+    stats,
+    createRequest,
     fetchRequests,
-    getStatusLabel 
+    getStatusLabel
   } = useInvoiceRequests();
 
   // Animation refs
@@ -112,7 +112,7 @@ const FactoringWeb = () => {
         }, 100);
       }
     };
-    
+
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
@@ -136,7 +136,7 @@ const FactoringWeb = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!isAuthenticated) {
       toast.error('Debe iniciar sesión para crear una solicitud');
       setShowAuthModal(true);
@@ -146,7 +146,7 @@ const FactoringWeb = () => {
     setIsSubmitting(true);
 
     try {
-      const daysToMaturity = formData.dueDate 
+      const daysToMaturity = formData.dueDate
         ? Math.max(1, Math.ceil((new Date(formData.dueDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
         : 30;
 
@@ -201,18 +201,18 @@ const FactoringWeb = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <section
           ref={heroRef}
-          className="bg-gradient-to-br from-primary to-primary/80 py-16 relative overflow-hidden"
+          className="bg-gradient-to-br from-primary to-primary/80 py-8 md:py-10 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
           </div>
-          
+
           <div className="container-narrow mx-auto px-4 relative">
             <div className={cn(
               "text-center transition-all duration-700",
@@ -221,53 +221,53 @@ const FactoringWeb = () => {
               {/* Auth status badge */}
               <div className="flex justify-center mb-4">
                 {isAuthenticated ? (
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 text-white text-sm font-medium">
-                    <User className="w-4 h-4" />
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/20 border border-secondary/30 text-white text-xs font-medium">
+                    <User className="w-3 h-3" />
                     {user?.email}
-                    <button 
+                    <button
                       onClick={handleSignOut}
                       className="ml-2 hover:text-secondary transition-colors"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="w-3 h-3" />
                     </button>
                   </span>
                 ) : (
-                  <button 
+                  <button
                     onClick={() => setShowAuthModal(true)}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-medium hover:bg-white/30 transition-colors"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-medium hover:bg-white/30 transition-colors"
                   >
-                    <LogIn className="w-4 h-4" />
+                    <LogIn className="w-3 h-3" />
                     Iniciar Sesión
                   </button>
                 )}
               </div>
 
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-6">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-semibold mb-4">
                 <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                 Portal Factoring
               </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
                 Convierte tus <span className="text-secondary">Facturas</span> en Liquidez
               </h1>
-              <p className="text-white/80 text-lg max-w-2xl mx-auto mb-8">
+              <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-5">
                 Obtén capital de trabajo inmediato descontando tus facturas por cobrar con las mejores condiciones del mercado.
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-8"
+              <div className="flex flex-wrap justify-center gap-3">
+                <Button
+                  size="default"
+                  className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-6"
                   onClick={handleNewInvoiceClick}
                 >
-                  <FileText className="w-5 h-5 mr-2" />
+                  <FileText className="w-4 h-4 mr-2" />
                   Nueva Solicitud
                 </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8"
+                <Button
+                  size="default"
+                  variant="outline"
+                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-6"
                   onClick={() => setActiveTab('calculadora')}
                 >
-                  <Calculator className="w-5 h-5 mr-2" />
+                  <Calculator className="w-4 h-4 mr-2" />
                   Simular Descuento
                 </Button>
               </div>
@@ -276,8 +276,8 @@ const FactoringWeb = () => {
         </section>
 
         {/* Stats Cards */}
-        <section className="container-narrow mx-auto px-4 -mt-8 relative z-10">
-          <div 
+        <section className="container-narrow mx-auto px-4 -mt-6 relative z-10">
+          <div
             ref={statsRef}
             className={cn(
               "grid md:grid-cols-4 gap-4 transition-all duration-700",
@@ -390,7 +390,7 @@ const FactoringWeb = () => {
                         <select
                           className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                           value={calculatorData.daysToMaturity}
-                          onChange={(e) => setCalculatorData({...calculatorData, daysToMaturity: e.target.value})}
+                          onChange={(e) => setCalculatorData({ ...calculatorData, daysToMaturity: e.target.value })}
                         >
                           <option value="30">30 días</option>
                           <option value="45">45 días</option>
@@ -404,7 +404,7 @@ const FactoringWeb = () => {
                         <select
                           className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                           value={calculatorData.rate}
-                          onChange={(e) => setCalculatorData({...calculatorData, rate: e.target.value})}
+                          onChange={(e) => setCalculatorData({ ...calculatorData, rate: e.target.value })}
                         >
                           <option value="1.2">1.2%</option>
                           <option value="1.5">1.5%</option>
@@ -431,14 +431,14 @@ const FactoringWeb = () => {
                       </div>
                       <span className="text-2xl font-bold">{formatCurrency(calculation.grossAmount)}</span>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl p-4 shadow-sm">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-sm text-muted-foreground">Costo del Descuento ({calculation.effectiveRate}%)</span>
                       </div>
                       <span className="text-2xl font-bold text-red-500">- {formatCurrency(calculation.discount)}</span>
                     </div>
-                    
+
                     <div className="bg-gradient-to-r from-secondary/20 to-secondary/10 rounded-xl p-5 border-2 border-secondary/30">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-semibold text-foreground">Valor a Recibir</span>
@@ -448,7 +448,7 @@ const FactoringWeb = () => {
                       </div>
                       <span className="text-3xl font-bold text-secondary">{formatCurrency(calculation.netAmount)}</span>
                     </div>
-                    
+
                     <Button className="w-full h-12 text-base rounded-xl" onClick={handleNewInvoiceClick}>
                       Solicitar Descuento
                       <ArrowRight className="w-5 h-5 ml-2" />
@@ -466,8 +466,8 @@ const FactoringWeb = () => {
                     <div>
                       <CardTitle>Historial de Facturas</CardTitle>
                       <CardDescription>
-                        {isAuthenticated 
-                          ? 'Seguimiento de facturas enviadas para descuento' 
+                        {isAuthenticated
+                          ? 'Seguimiento de facturas enviadas para descuento'
                           : 'Inicie sesión para ver su historial de facturas'}
                       </CardDescription>
                     </div>
@@ -685,7 +685,7 @@ const FactoringWeb = () => {
                         type="text"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.clientName}
-                        onChange={(e) => setFormData({...formData, clientName: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, clientName: e.target.value })}
                         placeholder="Nombre de la empresa pagadora"
                         required
                       />
@@ -696,7 +696,7 @@ const FactoringWeb = () => {
                         type="text"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.clientNit}
-                        onChange={(e) => setFormData({...formData, clientNit: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, clientNit: e.target.value })}
                         placeholder="900123456-1"
                         required
                       />
@@ -707,7 +707,7 @@ const FactoringWeb = () => {
                         type="text"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.invoiceNumber}
-                        onChange={(e) => setFormData({...formData, invoiceNumber: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, invoiceNumber: e.target.value })}
                         placeholder="FAC-001"
                         required
                       />
@@ -718,7 +718,7 @@ const FactoringWeb = () => {
                         type="text"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.invoiceAmount}
-                        onChange={(e) => setFormData({...formData, invoiceAmount: formatNumber(e.target.value)})}
+                        onChange={(e) => setFormData({ ...formData, invoiceAmount: formatNumber(e.target.value) })}
                         placeholder="50.000.000"
                         required
                       />
@@ -729,7 +729,7 @@ const FactoringWeb = () => {
                         type="date"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.dueDate}
-                        onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                         required
                       />
                     </div>
@@ -739,7 +739,7 @@ const FactoringWeb = () => {
                         type="text"
                         className="w-full px-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                         value={formData.description}
-                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         placeholder="Bienes o servicios facturados"
                       />
                     </div>
@@ -769,10 +769,10 @@ const FactoringWeb = () => {
                       <p className="text-sm text-muted-foreground mb-2">Arrastre sus documentos aquí o</p>
                       <label className="cursor-pointer">
                         <span className="text-primary hover:underline font-medium">seleccione archivos</span>
-                        <input 
-                          type="file" 
-                          multiple 
-                          className="hidden" 
+                        <input
+                          type="file"
+                          multiple
+                          className="hidden"
                           onChange={handleFileUpload}
                           accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png"
                         />
@@ -851,13 +851,13 @@ const FactoringWeb = () => {
         )}
 
         {/* Auth Modal */}
-        <AuthModal 
-          isOpen={showAuthModal} 
+        <AuthModal
+          isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
           onSuccess={fetchRequests}
         />
       </main>
-      
+
       <Footer />
     </div>
   );

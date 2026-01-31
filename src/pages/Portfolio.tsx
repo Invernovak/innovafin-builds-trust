@@ -188,21 +188,21 @@ const Portfolio = () => {
     porcentajeTotal: Number(dbCapitalPrivado.porcentaje_total),
   } : fondoCapitalPrivado;
 
-  const compartimentosData = dbCompartimentos && dbCompartimentos.length > 0 
+  const compartimentosData = dbCompartimentos && dbCompartimentos.length > 0
     ? dbCompartimentos.map(c => ({
-        id: c.id,
-        name: c.name,
-        totalActivos: Number(c.total_activos),
-        disponible: Number(c.disponible),
-        invertido: Number(c.invertido),
-        porcentajeActivos: Number(c.porcentaje_activos),
-        rentabilidadDia: Number(c.rentabilidad_dia),
-        rentabilidad30dias: Number(c.rentabilidad_30dias),
-        rentabilidad60dias: Number(c.rentabilidad_60dias),
-        rentabilidad90dias: Number(c.rentabilidad_90dias),
-        rentabilidad180dias: Number(c.rentabilidad_180dias),
-        rentabilidad365dias: Number(c.rentabilidad_365dias),
-      }))
+      id: c.id,
+      name: c.name,
+      totalActivos: Number(c.total_activos),
+      disponible: Number(c.disponible),
+      invertido: Number(c.invertido),
+      porcentajeActivos: Number(c.porcentaje_activos),
+      rentabilidadDia: Number(c.rentabilidad_dia),
+      rentabilidad30dias: Number(c.rentabilidad_30dias),
+      rentabilidad60dias: Number(c.rentabilidad_60dias),
+      rentabilidad90dias: Number(c.rentabilidad_90dias),
+      rentabilidad180dias: Number(c.rentabilidad_180dias),
+      rentabilidad365dias: Number(c.rentabilidad_365dias),
+    }))
     : fondoCapitalPrivado.compartimentos;
 
   const ficData = dbFIC ? {
@@ -218,28 +218,28 @@ const Portfolio = () => {
 
   const ficTiposData = dbFICTipos && dbFICTipos.length > 0
     ? dbFICTipos.map(t => ({
-        id: t.id,
-        nombre: t.nombre,
-        inversionMinimaInicial: Number(t.inversion_minima),
-        comisionAdministracion: Number(t.comision_administracion),
-        pactoPermanencia: t.pacto_permanencia,
-        remuneracionEfectiva: Number(t.remuneracion_efectiva),
-        descripcion: t.descripcion || '',
-      }))
+      id: t.id,
+      nombre: t.nombre,
+      inversionMinimaInicial: Number(t.inversion_minima),
+      comisionAdministracion: Number(t.comision_administracion),
+      pactoPermanencia: t.pacto_permanencia,
+      remuneracionEfectiva: Number(t.remuneracion_efectiva),
+      descripcion: t.descripcion || '',
+    }))
     : ficAlternativos180Plus.tiposParticipacion;
 
   const ficHistoricoData = dbFICHistorico && dbFICHistorico.length > 0
     ? dbFICHistorico.map(h => ({
-        id: h.id,
-        nombre: h.nombre,
-        anoCorridoEA: h.ano_corrido_ea ? Number(h.ano_corrido_ea) : null,
-        diariaEA: h.diaria_ea ? Number(h.diaria_ea) : null,
-        dias30EA: h.dias_30_ea ? Number(h.dias_30_ea) : null,
-        dias180EA: h.dias_180_ea ? Number(h.dias_180_ea) : null,
-        ano1EA: h.ano_1_ea ? Number(h.ano_1_ea) : null,
-        ano2EA: h.ano_2_ea ? Number(h.ano_2_ea) : null,
-        ano3EA: h.ano_3_ea ? Number(h.ano_3_ea) : null,
-      }))
+      id: h.id,
+      nombre: h.nombre,
+      anoCorridoEA: h.ano_corrido_ea ? Number(h.ano_corrido_ea) : null,
+      diariaEA: h.diaria_ea ? Number(h.diaria_ea) : null,
+      dias30EA: h.dias_30_ea ? Number(h.dias_30_ea) : null,
+      dias180EA: h.dias_180_ea ? Number(h.dias_180_ea) : null,
+      ano1EA: h.ano_1_ea ? Number(h.ano_1_ea) : null,
+      ano2EA: h.ano_2_ea ? Number(h.ano_2_ea) : null,
+      ano3EA: h.ano_3_ea ? Number(h.ano_3_ea) : null,
+    }))
     : ficAlternativos180Plus.comportamientoHistorico;
 
   // Calculate total portfolio (solo Capital Privado)
@@ -251,7 +251,7 @@ const Portfolio = () => {
 
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <section
           ref={heroRef}
           className="bg-[#0F172A] py-16 relative overflow-hidden"
         >
@@ -259,7 +259,7 @@ const Portfolio = () => {
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
           </div>
-          
+
           <div className="container-narrow mx-auto px-4 relative">
             <div className={cn(
               "text-center transition-all duration-700",
@@ -281,7 +281,7 @@ const Portfolio = () => {
 
         {/* Stats Cards */}
         <section className="container-narrow mx-auto px-4 -mt-8 relative z-10">
-          <div 
+          <div
             ref={statsRef}
             className={cn(
               "transition-all duration-700",
@@ -339,13 +339,13 @@ const Portfolio = () => {
           <div className="container mx-auto px-4 max-w-7xl">
             <Tabs defaultValue="capital-privado" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-xl mx-auto">
-                <TabsTrigger 
-                  value="capital-privado" 
+                <TabsTrigger
+                  value="capital-privado"
                   className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
                   Capital Privado
                 </TabsTrigger>
-                <TabsTrigger 
+                <TabsTrigger
                   value="fic"
                   className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
@@ -376,7 +376,7 @@ const Portfolio = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <CardContent className="p-0">
                     {/* Fecha */}
                     <div className="px-4 py-3 border-b border-border bg-muted/30">
@@ -384,7 +384,7 @@ const Portfolio = () => {
                         {capitalPrivadoData.fechaReporte}
                       </p>
                     </div>
-                    
+
                     {/* Tabla de compartimentos */}
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
@@ -435,7 +435,7 @@ const Portfolio = () => {
                         </tbody>
                       </table>
                     </div>
-                    
+
                     {/* Nota al pie */}
                     <div className="px-4 py-3 bg-muted/20 border-t border-border">
                       <p className="text-xs text-muted-foreground">* (Bancos + Inversiones a la vista)</p>
@@ -453,8 +453,8 @@ const Portfolio = () => {
                 {/* Compartimentos Grid */}
                 <div className="grid lg:grid-cols-3 gap-6">
                   {compartimentosData.map((comp, idx) => (
-                    <Card 
-                      key={comp.id} 
+                    <Card
+                      key={comp.id}
                       className="border border-border/50 hover:border-[#0F172A]/30 hover:shadow-lg transition-all duration-300"
                     >
                       <CardHeader className="pb-4">
@@ -462,8 +462,8 @@ const Portfolio = () => {
                           <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
                           <div className={cn(
                             "w-3 h-3 rounded-full",
-                            idx === 0 ? 'bg-[#0F172A]' : 
-                            idx === 1 ? 'bg-secondary' : 'bg-amber-500'
+                            idx === 0 ? 'bg-[#0F172A]' :
+                              idx === 1 ? 'bg-secondary' : 'bg-amber-500'
                           )} />
                         </div>
                       </CardHeader>
@@ -529,7 +529,7 @@ const Portfolio = () => {
                             <span className="text-xs text-muted-foreground">% de Activos Invertidos</span>
                             <span className="text-sm font-bold text-[#0F172A]">{comp.porcentajeActivos}%</span>
                           </div>
-                          <Progress 
+                          <Progress
                             value={comp.porcentajeActivos}
                             className="h-2 bg-muted"
                           />
@@ -543,7 +543,7 @@ const Portfolio = () => {
                 <div className="text-center mt-8">
                   <Link to="/investors#vinculacion">
                     <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
-                      Quiero Invertir
+                      Empezar Ahora
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>
@@ -584,7 +584,7 @@ const Portfolio = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <CardContent className="p-0">
                     {/* Fecha */}
                     <div className="px-4 py-3 border-b border-border bg-muted/30">
@@ -592,7 +592,7 @@ const Portfolio = () => {
                         {ficData.fechaReporte}
                       </p>
                     </div>
-                    
+
                     {/* Tabla de datos */}
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
@@ -714,12 +714,12 @@ const Portfolio = () => {
                 {/* Comparison Cards */}
                 <div className="grid md:grid-cols-2 gap-6 mb-8">
                   {ficTiposData.map((tipo, index) => (
-                    <Card 
+                    <Card
                       key={tipo.id}
                       className={cn(
                         "relative overflow-hidden border-2 transition-all duration-300",
-                        index === 1 
-                          ? "border-secondary bg-gradient-to-br from-secondary/5 to-secondary/10" 
+                        index === 1
+                          ? "border-secondary bg-gradient-to-br from-secondary/5 to-secondary/10"
                           : "border-border hover:border-[#0F172A]/30"
                       )}
                     >
@@ -776,11 +776,11 @@ const Portfolio = () => {
                         </div>
 
                         <Link to="/investors#vinculacion">
-                          <Button 
+                          <Button
                             className={cn(
                               "w-full",
-                              index === 1 
-                                ? "bg-secondary hover:bg-secondary/90 text-white" 
+                              index === 1
+                                ? "bg-secondary hover:bg-secondary/90 text-white"
                                 : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
                             )}
                           >
