@@ -225,8 +225,15 @@ const Portfolio = () => {
       pactoPermanencia: t.pacto_permanencia,
       remuneracionEfectiva: Number(t.remuneracion_efectiva),
       descripcion: t.descripcion || '',
+      // Find matching historical data to get 1 year EA
+      rentabilidadEstimada: dbFICHistorico?.find(h =>
+        (h.nombre.toLowerCase().includes(t.nombre.toLowerCase()))
+      )?.ano_1_ea || (t.nombre === 'TP1' ? 12.19 : 12.69),
     }))
-    : ficAlternativos180Plus.tiposParticipacion;
+    : ficAlternativos180Plus.tiposParticipacion.map(t => ({
+      ...t,
+      rentabilidadEstimada: t.nombre === 'TP1' ? 12.19 : 12.69
+    }));
 
   const ficHistoricoData = dbFICHistorico && dbFICHistorico.length > 0
     ? dbFICHistorico.map(h => ({
@@ -343,7 +350,7 @@ const Portfolio = () => {
                   value="capital-privado"
                   className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
                 >
-                  Capital Privado
+                  FCP Alternativos Plus
                 </TabsTrigger>
                 <TabsTrigger
                   value="fic"
@@ -392,11 +399,12 @@ const Portfolio = () => {
                           <tr className="bg-secondary text-white">
                             <th className="text-left py-3 px-4 font-semibold">Compartimento</th>
                             <th className="text-right py-3 px-4 font-semibold">Total Activos</th>
-                            <th className="text-center py-3 px-4 font-semibold" colSpan={2}>
+                            <th className="text-center py-3 px-4 font-semibold" colSpan={3}>
                               <div>Rentabilidad EA</div>
-                              <div className="flex justify-center gap-8 mt-1 text-xs font-normal text-white/80">
-                                <span>Día</span>
+                              <div className="flex justify-center gap-4 mt-1 text-xs font-normal text-white/80">
                                 <span>30 días</span>
+                                <span>90 días</span>
+                                <span>365 días</span>
                               </div>
                             </th>
                             <th className="text-right py-3 px-4 font-semibold">* Disponible</th>
@@ -412,10 +420,11 @@ const Portfolio = () => {
                             )}>
                               <td className="py-3 px-4 text-muted-foreground">Comp. {comp.name}</td>
                               <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.totalActivos)}</td>
-                              <td className="py-3 px-4 text-center" colSpan={2}>
-                                <div className="flex justify-center gap-8">
-                                  <span className="font-bold text-secondary">{comp.rentabilidadDia}%</span>
+                              <td className="py-3 px-4 text-center" colSpan={3}>
+                                <div className="flex justify-center gap-4">
                                   <span className="font-bold text-secondary">{comp.rentabilidad30dias}%</span>
+                                  <span className="font-bold text-secondary">{comp.rentabilidad90dias}%</span>
+                                  <span className="font-bold text-secondary">{comp.rentabilidad365dias}%</span>
                                 </div>
                               </td>
                               <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.disponible)}</td>
@@ -427,7 +436,7 @@ const Portfolio = () => {
                           <tr className="bg-muted/30 font-bold border-t-2 border-secondary/30">
                             <td className="py-3 px-4 text-[#0F172A]">Total {capitalPrivadoData.name}</td>
                             <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalFondo)}</td>
-                            <td className="py-3 px-4 text-center text-muted-foreground" colSpan={2}>-</td>
+                            <td className="py-3 px-4 text-center text-muted-foreground" colSpan={3}>-</td>
                             <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalDisponible)}</td>
                             <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalInvertido)}</td>
                             <td className="py-3 px-4 text-center text-[#0F172A]">{capitalPrivadoData.porcentajeTotal}%</td>
@@ -439,7 +448,6 @@ const Portfolio = () => {
                     {/* Nota al pie */}
                     <div className="px-4 py-3 bg-muted/20 border-t border-border">
                       <p className="text-xs text-muted-foreground">* (Bancos + Inversiones a la vista)</p>
-                      <p className="text-xs text-muted-foreground mt-1">Esperamos que esta información sea de mucha utilidad.</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -484,10 +492,7 @@ const Portfolio = () => {
                             Rentabilidad EA por Período
                           </p>
                           <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">Día</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidadDia}%</p>
-                            </div>
+
                             <div className="bg-secondary/10 rounded-lg p-2 text-center">
                               <p className="text-[10px] text-muted-foreground">30 días</p>
                               <p className="text-sm font-bold text-secondary">{comp.rentabilidad30dias}%</p>
@@ -718,12 +723,12 @@ const Portfolio = () => {
                       key={tipo.id}
                       className={cn(
                         "relative overflow-hidden border-2 transition-all duration-300",
-                        index === 1
+                        index === 0
                           ? "border-secondary bg-gradient-to-br from-secondary/5 to-secondary/10"
                           : "border-border hover:border-[#0F172A]/30"
                       )}
                     >
-                      {index === 1 && (
+                      {index === 0 && (
                         <div className="absolute top-4 right-4">
                           <Badge className="bg-secondary text-white">
                             Recomendado
@@ -766,25 +771,25 @@ const Portfolio = () => {
                           </div>
                         </div>
 
-                        {/* Remuneración */}
+                        {/* Rentabilidad Estimada */}
                         <div className="p-4 bg-secondary/10 rounded-xl">
                           <div className="flex items-center gap-2 mb-2">
                             <TrendingUp className="w-4 h-4 text-secondary" />
-                            <p className="text-sm text-muted-foreground">Remuneración Efectiva Cobrada</p>
+                            <p className="text-sm text-muted-foreground">Rentabilidad Estimada</p>
                           </div>
-                          <p className="text-2xl font-bold text-secondary">{tipo.remuneracionEfectiva}% E.A.</p>
+                          <p className="text-2xl font-bold text-secondary">{tipo.rentabilidadEstimada}% E.A.</p>
                         </div>
 
                         <Link to="/investors#vinculacion">
                           <Button
                             className={cn(
                               "w-full",
-                              index === 1
+                              index === 0
                                 ? "bg-secondary hover:bg-secondary/90 text-white"
                                 : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
                             )}
                           >
-                            Invertir en {tipo.nombre}
+                            Me Interesa {tipo.nombre}
                             <ArrowRight className="w-4 h-4 ml-2" />
                           </Button>
                         </Link>
@@ -820,17 +825,18 @@ const Portfolio = () => {
                             <td className="py-4 px-4 text-center font-medium text-secondary">1.75%</td>
                           </tr>
                           <tr className="border-b border-border/50">
-                            <td className="py-4 px-4 text-muted-foreground">Pacto de Permanencia</td>
+                            <td className="py-4 px-4 text-muted-foreground rounded-bl-lg">Pacto de Permanencia</td>
                             <td className="py-4 px-4 text-center font-medium">180 días</td>
-                            <td className="py-4 px-4 text-center font-medium">180 días</td>
+                            <td className="py-4 px-4 text-center font-medium rounded-br-lg">180 días</td>
                           </tr>
-                          <tr className="bg-muted/20">
-                            <td className="py-4 px-4 text-muted-foreground rounded-bl-lg">Remuneración Efectiva</td>
-                            <td className="py-4 px-4 text-center font-medium">2.25% E.A.</td>
-                            <td className="py-4 px-4 text-center font-bold text-secondary rounded-br-lg">1.75% E.A.</td>
-                          </tr>
+
                         </tbody>
                       </table>
+                    </div>
+                    <div className="mt-4 px-4">
+                      <p className="text-xs text-muted-foreground italic text-center">
+                        Fuente de esta información: Fiduciaria Aval Vigilada Superfinanciera
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -839,7 +845,7 @@ const Portfolio = () => {
                 <div className="text-center mt-8">
                   <Link to="/investors#vinculacion">
                     <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
-                      Quiero Invertir
+                      Me Interesa
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>

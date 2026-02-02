@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { 
-  Briefcase, CheckCircle, ClipboardList, Users, Search, 
-  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, TrendingUp, Check, ChevronsUpDown
+import {
+  Briefcase, CheckCircle, ClipboardList, Users, Search,
+  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, Check, ChevronsUpDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -30,53 +30,7 @@ const originationTypes = [
   { value: 'credito-vivienda', label: 'Crédito de Vivienda / Hipotecario 🏠' },
 ];
 
-// Datos de originadores activos
-const originatorsData = [
-  {
-    id: 1,
-    name: 'Tech Solutions S.A.S',
-    sector: 'Tecnología',
-    status: 'Activo',
-    description: 'Empresa líder en soluciones de software empresarial con presencia en 5 países.',
-    location: 'Bogotá, Colombia',
-    logo: 'TS',
-    financingReceived: '$2.5M',
-    growth: '+45%',
-  },
-  {
-    id: 2,
-    name: 'AgroExport Colombia',
-    sector: 'Agroindustria',
-    status: 'Activo',
-    description: 'Exportador de productos agrícolas orgánicos certificados a mercados internacionales.',
-    location: 'Medellín, Colombia',
-    logo: 'AE',
-    financingReceived: '$1.8M',
-    growth: '+32%',
-  },
-  {
-    id: 3,
-    name: 'Energía Verde S.A',
-    sector: 'Energías Renovables',
-    status: 'Activo',
-    description: 'Desarrollo y operación de proyectos de energía solar y eólica.',
-    location: 'Cali, Colombia',
-    logo: 'EV',
-    financingReceived: '$5M',
-    growth: '+28%',
-  },
-  {
-    id: 4,
-    name: 'Salud Digital',
-    sector: 'Salud',
-    status: 'Activo',
-    description: 'Plataforma de telemedicina con más de 50,000 usuarios activos.',
-    location: 'Barranquilla, Colombia',
-    logo: 'SD',
-    financingReceived: '$800K',
-    growth: '+65%',
-  },
-];
+
 
 const processSteps = [
   {
@@ -99,11 +53,7 @@ const processSteps = [
     title: '4. Aprobación',
     description: 'Decisión del comité de inversión y estructuración del financiamiento',
   },
-  {
-    icon: Banknote,
-    title: '5. Desembolso',
-    description: 'Firma de documentos y desembolso de los fondos',
-  },
+
 ];
 
 const requiredDocuments = [
@@ -164,15 +114,15 @@ const Originators = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Additional validation for checkbox
     if (!formData.aceptaHabeasData) {
       toast.error('Debe aceptar la política de tratamiento de datos personales');
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       // Use edge function for server-side validation and external database insert
       const response = await supabase.functions.invoke('submit-originator-lead', {
@@ -228,10 +178,10 @@ const Originators = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
-        <section 
+        <section
           ref={heroRef}
           className="bg-gradient-to-br from-secondary to-secondary/80 py-8 md:py-10 relative overflow-hidden"
         >
@@ -239,7 +189,7 @@ const Originators = () => {
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-primary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
           </div>
-          
+
           <div className="container-narrow mx-auto px-4 relative">
             <div className={cn(
               "text-center transition-all duration-700",
@@ -256,23 +206,15 @@ const Originators = () => {
                 Conectamos empresas con potencial de crecimiento con capital estratégico para impulsar su expansión.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Button 
-                  size="default" 
+                <Button
+                  size="default"
                   className="bg-white text-secondary hover:bg-white/90 rounded-full px-6"
                   onClick={() => setActiveTab('vinculacion')}
                 >
                   <Briefcase className="w-4 h-4 mr-2" />
                   Vincularse Ahora
                 </Button>
-                <Button 
-                  size="default" 
-                  variant="outline" 
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-6"
-                  onClick={() => setActiveTab('originadores-activos')}
-                >
-                  <Building2 className="w-4 h-4 mr-2" />
-                  Ver Originadores
-                </Button>
+
               </div>
             </div>
           </div>
@@ -280,10 +222,10 @@ const Originators = () => {
 
         {/* Stats Cards with hover effects */}
         <section className="container-narrow mx-auto px-4 -mt-6 relative z-10">
-          <div 
+          <div
             ref={statsRef}
             className={cn(
-              "grid md:grid-cols-3 gap-4 transition-all duration-700",
+              "grid md:grid-cols-2 gap-4 max-w-3xl mx-auto transition-all duration-700",
               statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
@@ -295,7 +237,7 @@ const Originators = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Originadores Activos</p>
-                    <p className="text-xl font-bold text-secondary">{originatorsData.length}</p>
+                    <p className="text-xl font-bold text-secondary">4</p>
                   </div>
                 </div>
               </CardContent>
@@ -313,26 +255,14 @@ const Originators = () => {
                 </div>
               </CardContent>
             </Card>
-            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="pt-5 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Crecimiento Promedio</p>
-                    <p className="text-xl font-bold text-green-600">+42%</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+
           </div>
         </section>
 
         {/* Main Tabs Section */}
         <section className="container-narrow mx-auto px-4 py-10">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-3 h-11">
+            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-2 h-11">
               <TabsTrigger value="como-vincularse" className="text-xs md:text-sm">
                 <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
                 Cómo Vincularse
@@ -341,10 +271,7 @@ const Originators = () => {
                 <ClipboardList className="w-4 h-4 mr-1 md:mr-2" />
                 Vinculación
               </TabsTrigger>
-              <TabsTrigger value="originadores-activos" className="text-xs md:text-sm">
-                <Building2 className="w-4 h-4 mr-1 md:mr-2" />
-                Originadores
-              </TabsTrigger>
+
             </TabsList>
 
             {/* Cómo Vincularse Tab */}
@@ -395,12 +322,12 @@ const Originators = () => {
               </Card>
 
               <div className="text-center">
-                <Button 
+                <Button
                   size="default"
                   className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
                   onClick={() => setActiveTab('vinculacion')}
                 >
-                  Comenzar Vinculación
+                  Me Interesa
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
@@ -433,11 +360,11 @@ const Originators = () => {
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="Empresa S.A.S"
                           value={formData.companyName}
-                          onChange={(e) => setFormData({...formData, companyName: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                           required
                         />
                       </div>
-                      
+
                       {/* NIT */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -448,11 +375,11 @@ const Originators = () => {
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="900.123.456-7"
                           value={formData.nit}
-                          onChange={(e) => setFormData({...formData, nit: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, nit: e.target.value })}
                           required
                         />
                       </div>
-                      
+
                       {/* Nombre de Contacto */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -463,11 +390,11 @@ const Originators = () => {
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="Juan Pérez"
                           value={formData.contactName}
-                          onChange={(e) => setFormData({...formData, contactName: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
                           required
                         />
                       </div>
-                      
+
                       {/* Correo Electrónico */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -478,11 +405,11 @@ const Originators = () => {
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="contacto@empresa.com"
                           value={formData.email}
-                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           required
                         />
                       </div>
-                      
+
                       {/* Teléfono */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -493,11 +420,11 @@ const Originators = () => {
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="+57 300 123 4567"
                           value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           required
                         />
                       </div>
-                      
+
                       {/* Tipo de Originación */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -505,7 +432,7 @@ const Originators = () => {
                         </label>
                         <Select
                           value={formData.originationType}
-                          onValueChange={(value) => setFormData({...formData, originationType: value})}
+                          onValueChange={(value) => setFormData({ ...formData, originationType: value })}
                           required
                         >
                           <SelectTrigger className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary">
@@ -523,14 +450,14 @@ const Originators = () => {
                         <input
                           type="text"
                           value={formData.originationType}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           required
                           className="sr-only"
                           tabIndex={-1}
                           aria-hidden="true"
                         />
                       </div>
-                      
+
                       {/* Departamento */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -578,14 +505,14 @@ const Originators = () => {
                         <input
                           type="text"
                           value={formData.departamento}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           required
                           className="sr-only"
                           tabIndex={-1}
                           aria-hidden="true"
                         />
                       </div>
-                      
+
                       {/* Ciudad */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -634,14 +561,14 @@ const Originators = () => {
                         <input
                           type="text"
                           value={formData.ciudad}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           required
                           className="sr-only"
                           tabIndex={-1}
                           aria-hidden="true"
                         />
                       </div>
-                      
+
                       {/* Horario de Contacto */}
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -649,7 +576,7 @@ const Originators = () => {
                         </label>
                         <Select
                           value={formData.horarioContacto}
-                          onValueChange={(value) => setFormData({...formData, horarioContacto: value})}
+                          onValueChange={(value) => setFormData({ ...formData, horarioContacto: value })}
                           required
                         >
                           <SelectTrigger className="w-full h-12 px-4 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary">
@@ -667,7 +594,7 @@ const Originators = () => {
                         <input
                           type="text"
                           value={formData.horarioContacto}
-                          onChange={() => {}}
+                          onChange={() => { }}
                           required
                           className="sr-only"
                           tabIndex={-1}
@@ -685,7 +612,7 @@ const Originators = () => {
                         className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all resize-y min-h-[100px]"
                         placeholder="Describa brevemente su modelo de negocio y propuesta de valor..."
                         value={formData.businessDescription}
-                        onChange={(e) => setFormData({...formData, businessDescription: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, businessDescription: e.target.value })}
                         required
                       />
                     </div>
@@ -699,7 +626,7 @@ const Originators = () => {
                         className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all resize-y min-h-[100px]"
                         placeholder="Monto requerido y uso de los fondos..."
                         value={formData.financingNeeds}
-                        onChange={(e) => setFormData({...formData, financingNeeds: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, financingNeeds: e.target.value })}
                         required
                       />
                     </div>
@@ -710,14 +637,14 @@ const Originators = () => {
                         <Checkbox
                           id="habeas-data"
                           checked={formData.aceptaHabeasData}
-                          onCheckedChange={(checked) => 
-                            setFormData({...formData, aceptaHabeasData: checked === true})
+                          onCheckedChange={(checked) =>
+                            setFormData({ ...formData, aceptaHabeasData: checked === true })
                           }
                           className="mt-1"
                           required
                         />
-                        <label 
-                          htmlFor="habeas-data" 
+                        <label
+                          htmlFor="habeas-data"
                           className="text-sm text-muted-foreground cursor-pointer leading-relaxed"
                         >
                           Autorizo de manera previa, expresa e informada a InnovaFin para el tratamiento de mis datos personales, de acuerdo con su{' '}
@@ -730,7 +657,7 @@ const Originators = () => {
                       <input
                         type="checkbox"
                         checked={formData.aceptaHabeasData}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         required
                         className="sr-only"
                         tabIndex={-1}
@@ -738,8 +665,8 @@ const Originators = () => {
                       />
                     </div>
 
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       size="lg"
                       className="w-full bg-secondary hover:bg-secondary/90 rounded-xl"
                       disabled={isSubmitting || !formData.aceptaHabeasData}
@@ -758,71 +685,7 @@ const Originators = () => {
               </Card>
             </TabsContent>
 
-            {/* Originadores Activos Tab */}
-            <TabsContent value="originadores-activos" className="space-y-6">
-              <div className="text-center mb-6">
-                <h2 className="text-xl font-bold text-foreground mb-2">Originadores Activos</h2>
-                <p className="text-sm text-muted-foreground">Empresas que actualmente forman parte de la red InnovaFin</p>
-              </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                {originatorsData.map((originator) => (
-                  <Card key={originator.id} className="border-border/50 hover:shadow-lg transition-all duration-300 hover:border-secondary/30">
-                    <CardContent className="p-5">
-                      <div className="flex items-start gap-4">
-                        {/* Logo placeholder */}
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-secondary to-primary flex items-center justify-center flex-shrink-0">
-                          <span className="text-lg font-bold text-white">{originator.logo}</span>
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h3 className="text-base font-bold text-foreground">{originator.name}</h3>
-                              <p className="text-xs text-muted-foreground">{originator.sector}</p>
-                            </div>
-                            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 text-xs">
-                              {originator.status}
-                            </Badge>
-                          </div>
-
-                          <p className="text-xs text-muted-foreground mb-3">
-                            {originator.description}
-                          </p>
-
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                            <MapPin className="w-3.5 h-3.5" />
-                            {originator.location}
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-0.5">Financiación Recibida</p>
-                              <p className="text-base font-bold text-foreground">{originator.financingReceived}</p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground mb-0.5">Crecimiento</p>
-                              <p className="text-base font-bold text-green-600">{originator.growth}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              <div className="text-center pt-4">
-                <Button 
-                  size="default"
-                  className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
-                  onClick={() => setActiveTab('vinculacion')}
-                >
-                  Únete a la Red
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            </TabsContent>
           </Tabs>
         </section>
       </main>
