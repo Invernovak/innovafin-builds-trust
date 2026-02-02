@@ -58,7 +58,7 @@ const PortfolioSection = () => {
             Nuestro Portafolio
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Fondo de Capital Privado <span className="text-primary">InnovaFin</span>
+            Fondo de Capital Privado <span className="text-primary">Alternativos Plus</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Estructura diversificada con compartimientos especializados para maximizar rendimientos y gestionar riesgos.
@@ -74,8 +74,8 @@ const PortfolioSection = () => {
           <div className="grid md:grid-cols-3 gap-6">
             {currentCompartments.map((compartment, index) => (
               <div key={index} className="bento-card text-center group hover:shadow-lg transition-all duration-300">
-                <div 
-                  className="w-4 h-4 rounded-full mx-auto mb-4" 
+                <div
+                  className="w-4 h-4 rounded-full mx-auto mb-4"
                   style={{ backgroundColor: compartment.color }}
                 />
                 <h4 className="text-lg font-semibold text-foreground mb-2">
@@ -117,7 +117,7 @@ const PortfolioSection = () => {
           <h3 className="text-2xl font-bold text-foreground mb-8 text-center">
             Dashboard de Rendimiento
           </h3>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Bar Chart - Desembolsos y Aprobaciones */}
             <div className="md:col-span-2 bg-muted/30 rounded-2xl p-6">
@@ -129,9 +129,9 @@ const PortfolioSection = () => {
                   <BarChart data={performanceData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                     <XAxis dataKey="name" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
                       }}
@@ -166,9 +166,9 @@ const PortfolioSection = () => {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'hsl(var(--card))', 
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'hsl(var(--card))',
                         border: '1px solid hsl(var(--border))',
                         borderRadius: '8px'
                       }}
@@ -183,15 +183,15 @@ const PortfolioSection = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Distribution by Compartment */}
               <div className="mt-6">
                 <h5 className="text-xs font-semibold text-muted-foreground mb-3">Distribución por Compartimento</h5>
                 <div className="space-y-2">
                   {currentCompartments.map((comp, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full flex-shrink-0" 
+                      <div
+                        className="w-3 h-3 rounded-full flex-shrink-0"
                         style={{ backgroundColor: comp.color }}
                       />
                       <span className="text-xs text-foreground flex-1">{comp.name}</span>
@@ -244,7 +244,7 @@ const PortfolioSection = () => {
           </Link>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 

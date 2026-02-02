@@ -21,52 +21,20 @@ const whyUsItems = [
   },
 ];
 
-const teamMembers = [
-  {
-    name: 'María Teresa González',
-    role: 'Socia Fundadora',
-    initials: 'MTG',
-  },
-  {
-    name: 'Edison Cerón',
-    role: 'Socio Fundador',
-    initials: 'EC',
-  },
-  {
-    name: 'Gustavo Guerra Galvez',
-    role: 'Director de Riesgos',
-    initials: 'GGG',
-  },
-  {
-    name: 'Nathalia Sandoval Herrera',
-    role: 'Directora FCP',
-    initials: 'NSH',
-  },
-  {
-    name: 'Paola Andrea García',
-    role: 'Directora Administrativa',
-    initials: 'PAG',
-  },
-  {
-    name: 'Víctor Arango',
-    role: 'Asesor Legal',
-    initials: 'VA',
-  },
-];
+
 
 const AboutSection = () => {
   const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
   const { ref: visionRef, isVisible: visionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
   const { ref: missionRef, isVisible: missionVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.15 });
-  const { ref: teamHeaderRef, isVisible: teamHeaderVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
-  const { ref: teamRef, isVisible: teamVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
+
 
   return (
     <section id="nosotros" className="section-padding bg-muted">
       <div className="container-narrow mx-auto">
         {/* Why Innovafin */}
         <div id="por-que-nosotros" className="text-center mb-20 scroll-mt-24">
-          <div 
+          <div
             ref={headerRef}
             className={cn(
               "transition-all duration-700",
@@ -98,12 +66,12 @@ const AboutSection = () => {
         {/* Vision & Mission */}
         <div className="grid md:grid-cols-2 gap-8 mb-20">
           {/* Vision Card */}
-          <div 
-            id="vision" 
+          <div
+            id="vision"
             className="scroll-mt-24"
             ref={visionRef}
           >
-            <div 
+            <div
               className={cn(
                 "bento-card h-full relative overflow-hidden border-2 border-secondary/20 bg-gradient-to-br from-background via-background to-secondary/5 transition-all duration-700",
                 visionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -112,7 +80,7 @@ const AboutSection = () => {
               <div className="absolute top-4 right-4 opacity-5">
                 <img src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
-              
+
               <div className="flex items-start gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary/20 to-secondary/10 flex-shrink-0 flex items-center justify-center">
                   <Rocket className="w-7 h-7 text-secondary" strokeWidth={1.5} />
@@ -135,12 +103,12 @@ const AboutSection = () => {
           </div>
 
           {/* Mission Card */}
-          <div 
-            id="mision" 
+          <div
+            id="mision"
             className="scroll-mt-24"
             ref={missionRef}
           >
-            <div 
+            <div
               className={cn(
                 "bento-card h-full relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-background via-background to-primary/5 transition-all duration-700 delay-100",
                 missionVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -149,7 +117,7 @@ const AboutSection = () => {
               <div className="absolute top-4 right-4 opacity-5">
                 <img src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
-              
+
               <div className="flex items-start gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex-shrink-0 flex items-center justify-center">
                   <Target className="w-7 h-7 text-primary" strokeWidth={1.5} />
@@ -170,68 +138,24 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* Team Section */}
-        <div id="equipo" className="scroll-mt-24">
-          <div 
-            ref={teamHeaderRef}
-            className={cn(
-              "text-center mb-12 transition-all duration-700",
-              teamHeaderVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            )}
-          >
-            <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Nuestro Equipo
-            </h3>
-            <p className="text-muted-foreground text-lg">
-              Profesionales con amplia experiencia en el sector financiero colombiano
-            </p>
-          </div>
 
-          <div 
-            ref={teamRef}
-            className={cn(
-              "flex flex-wrap justify-center gap-8 transition-all duration-700 delay-100",
-              teamVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            )}
-          >
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="text-center group"
-                style={{ transitionDelay: `${index * 50}ms` }}
-              >
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-navy-light mx-auto mb-4 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300 ring-4 ring-white">
-                  <span className="text-xl font-bold text-white">
-                    {member.initials}
-                  </span>
-                </div>
-                <h4 className="font-semibold text-foreground text-sm mb-1">
-                  {member.name}
-                </h4>
-                <p className="text-muted-foreground text-xs">
-                  {member.role}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
 };
 
 // Extracted component for Why Us cards with individual animation
-const WhyUsCard = ({ 
-  item, 
-  Icon, 
-  delay 
-}: { 
-  item: typeof whyUsItems[0]; 
+const WhyUsCard = ({
+  item,
+  Icon,
+  delay
+}: {
+  item: typeof whyUsItems[0];
   Icon: typeof Lightbulb;
   delay: number;
 }) => {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
-  
+
   return (
     <div
       ref={ref}

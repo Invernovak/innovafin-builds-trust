@@ -104,8 +104,8 @@ const ficAlternativos180Plus = {
   administrador: 'AVAL Fiduciaria - Asset Management',
   fechaReporte: '26 de enero de 2026',
   valorUnidad: 14363.9,
-  valorFondo: 188573057841.61,
-  saldo: 0,
+  valorFondo: 188573100000,
+  saldo: 188573100000,
   rentabilidadEA30dias: 11.88,
   rentabilidadEA365dias: 12.41,
   tiposParticipacion: [
@@ -604,28 +604,28 @@ const Portfolio = () => {
                         <thead>
                           <tr className="bg-[#0F172A] text-white">
                             <th className="text-left py-3 px-4 font-semibold">Fondo</th>
-                            <th className="text-right py-3 px-4 font-semibold">Saldo (pesos)</th>
-                            <th className="text-center py-3 px-4 font-semibold" colSpan={2}>
+                            <th className="text-left py-3 px-4 font-semibold">Saldo (pesos)</th>
+                            <th className="text-left py-3 px-4 font-semibold">
                               <div>Rentabilidad EA</div>
-                              <div className="flex justify-center gap-8 mt-1 text-xs font-normal text-white/80">
+                              <div className="flex justify-start gap-8 mt-1 text-xs font-normal text-white/80">
                                 <span>30 días</span>
                                 <span>365 días</span>
                               </div>
                             </th>
-                            <th className="text-center py-3 px-4 font-semibold">Último Llamado</th>
+
                           </tr>
                         </thead>
                         <tbody>
                           <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                             <td className="py-4 px-4 font-medium text-[#0F172A]">{ficData.name}</td>
-                            <td className="py-4 px-4 text-right font-bold text-[#0F172A]">{formatCOP(ficData.saldo)}</td>
-                            <td className="py-4 px-4 text-center">
-                              <div className="flex justify-center gap-8">
+                            <td className="py-4 px-4 text-left font-bold text-[#0F172A]">{formatCOP(ficData.saldo)}</td>
+                            <td className="py-4 px-4 text-left">
+                              <div className="flex justify-start gap-8">
                                 <span className="font-bold text-secondary">{ficData.rentabilidadEA30dias}%</span>
                                 <span className="font-bold text-secondary">{ficData.rentabilidadEA365dias}%</span>
                               </div>
                             </td>
-                            <td className="py-4 px-4 text-center text-muted-foreground">NA</td>
+
                           </tr>
                         </tbody>
                       </table>

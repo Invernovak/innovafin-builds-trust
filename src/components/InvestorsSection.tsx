@@ -34,7 +34,7 @@ const InvestorsSection = () => {
       </div>
 
       <div className="container-narrow mx-auto relative">
-        <div 
+        <div
           ref={headerRef}
           className={cn(
             "text-center mb-16 transition-all duration-700",
@@ -49,7 +49,7 @@ const InvestorsSection = () => {
             Haz Crecer tu Capital con <span className="text-primary">InnovaFin</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Únete a nuestra comunidad de inversionistas y accede a oportunidades únicas en el mercado de financiamiento alternativo.
+            Únete a nuestra comunidad y accede a oportunidades únicas en el mercado de financiamiento alternativo.
           </p>
         </div>
 
@@ -59,14 +59,14 @@ const InvestorsSection = () => {
           ))}
         </div>
 
-        <div 
+        <div
           ref={ctaRef}
           className={cn(
             "text-center transition-all duration-700 delay-200",
             ctaVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}
         >
-          <Link 
+          <Link
             to="/investors"
             className="group inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-primary-foreground font-medium transition-all duration-300 hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/25 hover:-translate-y-0.5"
           >
@@ -79,18 +79,18 @@ const InvestorsSection = () => {
   );
 };
 
-const BenefitCard = ({ 
-  benefit, 
-  delay 
-}: { 
-  benefit: typeof benefits[0]; 
+const BenefitCard = ({
+  benefit,
+  delay
+}: {
+  benefit: typeof benefits[0];
   delay: number;
 }) => {
   const { ref, isVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
   const Icon = benefit.icon;
-  
+
   return (
-    <div 
+    <div
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
