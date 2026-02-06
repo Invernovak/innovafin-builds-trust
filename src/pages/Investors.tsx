@@ -39,19 +39,19 @@ const processSteps = [{
 }, {
   icon: FileText,
   title: '2. Documentación',
-  description: 'Envíe los documentos requeridos para validar su perfil como inversionista'
+  description: 'Un comercial lo contactara para asesorarlo y solicitarle los documentos requeridos para validar su perfil como inversionista'
 }, {
   icon: Users,
   title: '3. Análisis',
-  description: 'Nuestro equipo revisa su aplicación y valida su perfil de inversionista'
+  description: 'Nuestro equipo revisará y le ayudará con su aplicación para que cumpla con los requisitos como inversionista'
 }, {
   icon: CheckCircle,
   title: '4. Aprobación',
-  description: 'Una vez aprobado, recibirá acceso a las oportunidades de inversión disponibles'
+  description: 'Una vez aprobado, recibirá acceso a las oportunidades de inversión disponibles por medio de nuestros aliados'
 }, {
   icon: DollarSign,
   title: '5. Inversión',
-  description: 'Seleccione el compartimento de su preferencia y realice su primera inversión'
+  description: 'Seleccione el vehículo de inversión de su preferencia y realice su primera inversión'
 }];
 
 const requiredDocsNatural = ['Copia del documento de identidad', 'Certificado de ingresos o declaración de renta', 'Certificación bancaria', 'Formulario de vinculación diligenciado'];
@@ -283,7 +283,7 @@ const Investors = () => {
                     </div>
                     Proceso de Vinculación
                   </CardTitle>
-                  <CardDescription>Sigue estos pasos para convertirte en inversionista de InnovaFin</CardDescription>
+                  <CardDescription>Sigue estos pasos para convertirte en inversionista</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-5">
                   {processSteps.map((step, index) => (
