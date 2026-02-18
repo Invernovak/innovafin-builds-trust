@@ -133,17 +133,19 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <div
-              className={`transition-all duration-300 rounded-xl ${
-                showSolidHeader ? '' : 'bg-white/95 px-4 py-2'
-              }`}
-            >
-              <img
-                alt="Innovafin"
-                className="h-14 md:h-20 lg:h-24 w-auto object-contain"
-                src="/lovable-uploads/e5546305-49f3-46f8-9903-dc6821f73e5a.png"
-              />
-            </div>
+            <Link to="/">
+              <div
+                className={`transition-all duration-300 rounded-xl ${
+                  showSolidHeader ? '' : 'bg-white/95 px-4 py-2'
+                }`}
+              >
+                <img
+                  alt="Innovafin"
+                  className="h-14 md:h-20 lg:h-24 w-auto object-contain"
+                  src="/lovable-uploads/e5546305-49f3-46f8-9903-dc6821f73e5a.png"
+                />
+              </div>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
