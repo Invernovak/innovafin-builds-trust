@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -19,6 +20,8 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
   const { signIn, signUp } = useAuth();
 
   if (!isOpen) return null;
@@ -40,12 +43,25 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
           return;
         }
 
+        if (!authChecked) {
+          toast.error('Debe autorizar el tratamiento de datos personales');
+          setIsLoading(false);
+          return;
+        }
+
+        if (!termsChecked) {
+          toast.error('Debe aceptar los términos y condiciones');
+          setIsLoading(false);
+          return;
+        }
+
         const { error } = await signUp(email, password);
         if (error) throw error;
 
         toast.success('Cuenta creada exitosamente');
         onSuccess?.();
         onClose();
+        resetForm();
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
@@ -53,6 +69,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
         toast.success('Sesión iniciada exitosamente');
         onSuccess?.();
         onClose();
+        resetForm();
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Error en la autenticación';
@@ -67,11 +84,13 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
     setPassword('');
     setConfirmPassword('');
     setShowPassword(false);
+    setAuthChecked(false);
+    setTermsChecked(false);
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md animate-scale-in">
+      <Card className="w-full max-w-md animate-scale-in max-h-[90vh] overflow-y-auto">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
@@ -94,7 +113,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   : 'Complete el formulario para registrarse'}
               </CardDescription>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={() => { onClose(); resetForm(); }}>
               <X className="w-5 h-5" />
             </Button>
           </div>
@@ -139,20 +158,31 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
             </div>
 
             {mode === 'register' && (
-              <div>
-                <label className="text-sm font-medium mb-2 block">Confirmar Contraseña</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    required
+              <>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Confirmar Contraseña</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-border focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <LegalCheckboxes
+                    authChecked={authChecked}
+                    onAuthChange={setAuthChecked}
+                    termsChecked={termsChecked}
+                    onTermsChange={setTermsChecked}
                   />
                 </div>
-              </div>
+              </>
             )}
 
             <Button type="submit" className="w-full h-12 rounded-xl" disabled={isLoading}>

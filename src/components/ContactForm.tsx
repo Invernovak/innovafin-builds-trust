@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,6 +17,9 @@ const ContactForm = () => {
     mensaje: '',
   });
 
+  const [authChecked, setAuthChecked] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
@@ -25,7 +29,7 @@ const ContactForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate inputs
     if (!formData.nombre.trim() || !formData.email.trim() || !formData.mensaje.trim()) {
       toast({
@@ -47,14 +51,33 @@ const ContactForm = () => {
       return;
     }
 
+    // Validate legal checkboxes
+    if (!authChecked) {
+      toast({
+        title: "Error",
+        description: "Debe autorizar el tratamiento de datos personales.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!termsChecked) {
+      toast({
+        title: "Error",
+        description: "Debe aceptar los términos y condiciones.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     setIsSubmitting(false);
     setIsSubmitted(true);
-    
+
     toast({
       title: "¡Enviado!",
       description: "El formulario se ha enviado con éxito",
@@ -64,6 +87,8 @@ const ContactForm = () => {
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({ nombre: '', email: '', mensaje: '' });
+      setAuthChecked(false);
+      setTermsChecked(false);
     }, 3000);
   };
 
@@ -105,14 +130,24 @@ const ContactForm = () => {
           disabled={isSubmitting}
         />
       </div>
+
+      <LegalCheckboxes
+        authChecked={authChecked}
+        onAuthChange={setAuthChecked}
+        termsChecked={termsChecked}
+        onTermsChange={setTermsChecked}
+        itemClassName="flex items-start space-x-3 rounded-xl p-3 bg-white/10 border border-white/20 hover:bg-white/15 transition-colors"
+        labelClassName="text-sm text-white/90 cursor-pointer leading-relaxed"
+        linkClassName="p-0 h-auto font-normal text-xs text-secondary hover:text-secondary/80 underline justify-start"
+      />
+
       <Button
         type="submit"
-        disabled={isSubmitting || isSubmitted}
-        className={`w-full h-11 font-medium rounded-xl transition-all duration-300 ${
-          isSubmitted 
-            ? 'bg-secondary hover:bg-secondary text-secondary-foreground' 
-            : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
-        }`}
+        disabled={isSubmitting || isSubmitted || !authChecked || !termsChecked}
+        className={`w-full h-11 font-medium rounded-xl transition-all duration-300 ${isSubmitted
+          ? 'bg-secondary hover:bg-secondary text-secondary-foreground'
+          : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
+          }`}
       >
         {isSubmitting ? (
           <span className="flex items-center gap-2">

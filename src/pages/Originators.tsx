@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
+import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
@@ -80,6 +81,7 @@ const Originators = () => {
     businessDescription: '',
     financingNeeds: '',
     aceptaHabeasData: false,
+    aceptaTerminos: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [departamentoOpen, setDepartamentoOpen] = useState(false);
@@ -118,6 +120,11 @@ const Originators = () => {
     // Additional validation for checkbox
     if (!formData.aceptaHabeasData) {
       toast.error('Debe aceptar la política de tratamiento de datos personales');
+      return;
+    }
+
+    if (!formData.aceptaTerminos) {
+      toast.error('Debe aceptar los términos y condiciones');
       return;
     }
 
@@ -166,6 +173,7 @@ const Originators = () => {
         businessDescription: '',
         financingNeeds: '',
         aceptaHabeasData: false,
+        aceptaTerminos: false,
       });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -632,36 +640,13 @@ const Originators = () => {
                     </div>
 
                     {/* Habeas Data Checkbox */}
-                    <div className="bg-muted/30 rounded-xl p-4 space-y-4">
-                      <div className="flex items-start gap-3">
-                        <Checkbox
-                          id="habeas-data"
-                          checked={formData.aceptaHabeasData}
-                          onCheckedChange={(checked) =>
-                            setFormData({ ...formData, aceptaHabeasData: checked === true })
-                          }
-                          className="mt-1"
-                          required
-                        />
-                        <label
-                          htmlFor="habeas-data"
-                          className="text-sm text-muted-foreground cursor-pointer leading-relaxed"
-                        >
-                          Autorizo de manera previa, expresa e informada a InnovaFin para el tratamiento de mis datos personales, de acuerdo con su{' '}
-                          <a href="#" className="text-secondary underline hover:text-secondary/80">
-                            Política de Tratamiento de Datos Personales
-                          </a>. *
-                        </label>
-                      </div>
-                      {/* Hidden input for HTML5 validation */}
-                      <input
-                        type="checkbox"
-                        checked={formData.aceptaHabeasData}
-                        onChange={() => { }}
-                        required
-                        className="sr-only"
-                        tabIndex={-1}
-                        aria-hidden="true"
+                    {/* Legal Checkboxes */}
+                    <div className="bg-white rounded-xl border border-border">
+                      <LegalCheckboxes
+                        authChecked={formData.aceptaHabeasData}
+                        onAuthChange={(checked) => setFormData({ ...formData, aceptaHabeasData: checked })}
+                        termsChecked={formData.aceptaTerminos} // @ts-ignore
+                        onTermsChange={(checked) => setFormData({ ...formData, aceptaTerminos: checked })}
                       />
                     </div>
 
@@ -669,7 +654,7 @@ const Originators = () => {
                       type="submit"
                       size="lg"
                       className="w-full bg-secondary hover:bg-secondary/90 rounded-xl"
-                      disabled={isSubmitting || !formData.aceptaHabeasData}
+                      disabled={isSubmitting || !formData.aceptaHabeasData || !formData.aceptaTerminos}
                     >
                       {isSubmitting ? (
                         <>Enviando...</>

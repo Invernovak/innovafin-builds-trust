@@ -15,6 +15,7 @@ import { useInvoiceRequests, type InvoiceRequest } from '@/hooks/useInvoiceReque
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/AuthModal';
 import { toast } from 'sonner';
+import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('es-CO', {
@@ -71,6 +72,8 @@ const FactoringWeb = () => {
     invoiceAmount: '',
     dueDate: '',
     description: '',
+    aceptaHabeasData: false,
+    aceptaTerminos: false,
   });
   const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
 
@@ -143,6 +146,16 @@ const FactoringWeb = () => {
       return;
     }
 
+    if (!formData.aceptaHabeasData) {
+      toast.error('Debe aceptar la política de tratamiento de datos personales');
+      return;
+    }
+
+    if (!formData.aceptaTerminos) {
+      toast.error('Debe aceptar los términos y condiciones');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -164,7 +177,7 @@ const FactoringWeb = () => {
 
       if (result) {
         setShowNewInvoice(false);
-        setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '' });
+        setFormData({ clientName: '', clientNit: '', invoiceNumber: '', invoiceAmount: '', dueDate: '', description: '', aceptaHabeasData: false, aceptaTerminos: false });
         setUploadedDocs([]);
       }
     } finally {
@@ -791,11 +804,21 @@ const FactoringWeb = () => {
                     </div>
                   </div>
 
+                  {/* Legal Checkboxes */}
+                  <div className="bg-white rounded-xl border border-border">
+                    <LegalCheckboxes
+                      authChecked={formData.aceptaHabeasData}
+                      onAuthChange={(checked) => setFormData({ ...formData, aceptaHabeasData: checked })}
+                      termsChecked={formData.aceptaTerminos}
+                      onTermsChange={(checked) => setFormData({ ...formData, aceptaTerminos: checked })}
+                    />
+                  </div>
+
                   <div className="flex gap-4 pt-4">
                     <Button type="button" variant="outline" onClick={() => setShowNewInvoice(false)} className="flex-1 h-12 rounded-xl" disabled={isSubmitting}>
                       Cancelar
                     </Button>
-                    <Button type="submit" className="flex-1 h-12 rounded-xl" disabled={isSubmitting}>
+                    <Button type="submit" className="flex-1 h-12 rounded-xl" disabled={isSubmitting || !formData.aceptaHabeasData || !formData.aceptaTerminos}>
                       {isSubmitting ? (
                         <>
                           <Clock className="w-4 h-4 mr-2 animate-spin" />

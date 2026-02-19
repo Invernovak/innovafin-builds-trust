@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
+import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import Header from '@/components/Header';
@@ -73,7 +74,8 @@ const Investors = () => {
     horarioContacto: '',
     montoInversion: '',
     mensaje: '',
-    aceptaHabeasData: false
+    aceptaHabeasData: false,
+    aceptaTerminos: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDepartment, setOpenDepartment] = useState(false);
@@ -112,6 +114,11 @@ const Investors = () => {
 
     if (!formData.aceptaHabeasData) {
       toast.error('Debe aceptar la política de tratamiento de datos personales.');
+      return;
+    }
+
+    if (!formData.aceptaTerminos) {
+      toast.error('Debe aceptar los términos y condiciones.');
       return;
     }
 
@@ -162,7 +169,8 @@ const Investors = () => {
         horarioContacto: '',
         montoInversion: '',
         mensaje: '',
-        aceptaHabeasData: false
+        aceptaHabeasData: false,
+        aceptaTerminos: false
       });
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -627,24 +635,17 @@ const Investors = () => {
                     </div>
 
                     {/* Habeas Data Checkbox */}
-                    <div className="flex items-start space-x-3 bg-muted/30 rounded-xl p-4">
-                      <Checkbox
-                        id="habeasData"
-                        checked={formData.aceptaHabeasData}
-                        onCheckedChange={(checked) => handleInputChange('aceptaHabeasData', checked as boolean)}
-                        className="mt-0.5"
-                        required
+                    {/* Legal Checkboxes */}
+                    <div className="bg-white rounded-xl border border-border">
+                      <LegalCheckboxes
+                        authChecked={formData.aceptaHabeasData}
+                        onAuthChange={(checked) => handleInputChange('aceptaHabeasData', checked)}
+                        termsChecked={formData.aceptaTerminos} // @ts-ignore
+                        onTermsChange={(checked) => handleInputChange('aceptaTerminos', checked)}
                       />
-                      <label htmlFor="habeasData" className="text-sm text-muted-foreground cursor-pointer leading-relaxed">
-                        Autorizo de manera previa, expresa e informada a InnovaFin para el tratamiento de mis datos personales, de acuerdo con su{' '}
-                        <a href="#" className="text-primary underline hover:text-primary/80">
-                          Política de Tratamiento de Datos Personales
-                        </a>
-                        . *
-                      </label>
                     </div>
 
-                    <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 rounded-xl" disabled={isSubmitting || !formData.aceptaHabeasData}>
+                    <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 rounded-xl" disabled={isSubmitting || !formData.aceptaHabeasData || !formData.aceptaTerminos}>
                       {isSubmitting ? (
                         <>Enviando...</>
                       ) : (
