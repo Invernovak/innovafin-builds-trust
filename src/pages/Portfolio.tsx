@@ -394,7 +394,7 @@ const Portfolio = () => {
 
                     {/* Tabla de compartimentos */}
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-sm min-w-[800px]">
                         <thead>
                           <tr className="bg-secondary text-white">
                             <th className="text-left py-3 px-4 font-semibold">Compartimento</th>
@@ -600,7 +600,7 @@ const Portfolio = () => {
 
                     {/* Tabla de datos */}
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-sm min-w-[600px]">
                         <thead>
                           <tr className="bg-[#0F172A] text-white">
                             <th className="text-left py-3 px-4 font-semibold">Fondo</th>
@@ -675,7 +675,7 @@ const Portfolio = () => {
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-sm min-w-[1000px]">
                         <thead>
                           <tr className="bg-muted/50">
                             <th className="text-left py-4 px-4 font-semibold text-muted-foreground">Tipo de participación</th>

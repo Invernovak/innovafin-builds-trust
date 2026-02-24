@@ -636,14 +636,12 @@ const Investors = () => {
 
                     {/* Habeas Data Checkbox */}
                     {/* Legal Checkboxes */}
-                    <div className="bg-white rounded-xl border border-border">
-                      <LegalCheckboxes
-                        authChecked={formData.aceptaHabeasData}
-                        onAuthChange={(checked) => handleInputChange('aceptaHabeasData', checked)}
-                        termsChecked={formData.aceptaTerminos} // @ts-ignore
-                        onTermsChange={(checked) => handleInputChange('aceptaTerminos', checked)}
-                      />
-                    </div>
+                    <LegalCheckboxes
+                      authChecked={formData.aceptaHabeasData}
+                      onAuthChange={(checked) => handleInputChange('aceptaHabeasData', checked)}
+                      termsChecked={formData.aceptaTerminos} // @ts-ignore
+                      onTermsChange={(checked) => handleInputChange('aceptaTerminos', checked)}
+                    />
 
                     <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90 rounded-xl" disabled={isSubmitting || !formData.aceptaHabeasData || !formData.aceptaTerminos}>
                       {isSubmitting ? (

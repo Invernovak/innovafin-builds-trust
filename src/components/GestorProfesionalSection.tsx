@@ -51,9 +51,9 @@ const GestorProfesionalSection = () => {
               <div className="bg-primary rounded-3xl p-8 shadow-xl relative overflow-hidden">
                 {/* Logo watermark */}
                 <div className="absolute top-6 right-6 opacity-20">
-                  <img src={logoInnovafin} alt="" className="w-20 h-auto brightness-0 invert" />
+                  <img loading="lazy" decoding="async" src={logoInnovafin} alt="" className="w-20 h-auto brightness-0 invert" />
                 </div>
-                
+
                 {/* Dashboard Header */}
                 <div className="flex items-center justify-between mb-8 relative z-10">
                   <div>
@@ -74,7 +74,7 @@ const GestorProfesionalSection = () => {
                   </div>
                   <div className="h-32 flex items-end gap-1.5">
                     {[30, 45, 35, 60, 50, 75, 65, 80, 70, 85, 90, 95].map((height, i) => (
-                      <div 
+                      <div
                         key={i}
                         className="flex-1 bg-gradient-to-t from-secondary/50 to-secondary rounded-t-md"
                         style={{ height: `${height}%` }}

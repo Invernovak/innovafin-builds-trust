@@ -19,6 +19,8 @@ import EstructuracionNegocios from "./pages/services/EstructuracionNegocios";
 import ReperfilamientoDeuda from "./pages/services/ReperfilamientoDeuda";
 import AvatarShowcase from "./components/AvatarShowcase";
 
+import { CookieConsent } from "@/components/CookieConsent";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -26,6 +28,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <CookieConsent />
       <BrowserRouter>
         <ScrollToTop />
         <Routes>

@@ -83,21 +83,21 @@ const Header = () => {
   const scrollToSection = (href: string) => {
     const isHashLink = href.includes('#');
     const [path, hash] = href.split('#');
-    
+
     // If we need to navigate to a different path first
     if (path && path !== '/' && location.pathname !== path) {
       window.location.href = href;
       return;
     }
-    
+
     // If we're on a different page and need to go to home page sections
     if (!path && location.pathname !== '/') {
       window.location.href = '/' + href;
       return;
     }
-    
+
     const targetHash = hash ? `#${hash}` : href;
-    
+
     if (targetHash === '#hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -123,11 +123,10 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        showSolidHeader
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${showSolidHeader
           ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50'
           : 'bg-transparent'
-      }`}
+        }`}
     >
       <div className="container-narrow mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
@@ -135,9 +134,8 @@ const Header = () => {
           <div className="flex items-center">
             <Link to="/">
               <div
-                className={`transition-all duration-300 rounded-xl ${
-                  showSolidHeader ? '' : 'bg-white/95 px-4 py-2'
-                }`}
+                className={`transition-all duration-300 rounded-xl ${showSolidHeader ? '' : 'bg-white/95 px-4 py-2'
+                  }`}
               >
                 <img
                   alt="Innovafin"
@@ -155,11 +153,10 @@ const Header = () => {
                 <DropdownMenu key={item.label}>
                   <DropdownMenuTrigger asChild>
                     <button
-                      className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${
-                        showSolidHeader
+                      className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${showSolidHeader
                           ? 'text-foreground hover:text-primary hover:bg-muted'
                           : 'text-white/90 hover:text-white hover:bg-white/10'
-                      }`}
+                        }`}
                     >
                       {item.label}
                       <ChevronDown className="w-3 h-3" />
@@ -191,11 +188,10 @@ const Header = () => {
                 <Link
                   key={item.label}
                   to={item.href}
-                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
-                    showSolidHeader
+                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </Link>
@@ -203,11 +199,10 @@ const Header = () => {
                 <button
                   key={item.label}
                   onClick={() => scrollToSection(item.href)}
-                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${
-                    showSolidHeader
+                  className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
                       ? 'text-foreground hover:text-primary hover:bg-muted'
                       : 'text-white/90 hover:text-white hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   {item.label}
                 </button>
@@ -216,11 +211,10 @@ const Header = () => {
             {isAdmin && (
               <Link
                 to="/admin"
-                className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${
-                  showSolidHeader
+                className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${showSolidHeader
                     ? 'text-primary hover:text-primary/80 hover:bg-primary/10'
                     : 'text-white/90 hover:text-white hover:bg-white/10'
-                }`}
+                  }`}
               >
                 <Shield className="w-3.5 h-3.5" />
                 Admin
@@ -239,9 +233,9 @@ const Header = () => {
           <Button
             variant="ghost"
             size="icon"
-            className={`md:hidden rounded-full ${
-              showSolidHeader ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
-            }`}
+            aria-label="Abrir o cerrar menú"
+            className={`md:hidden rounded-full ${showSolidHeader ? 'text-foreground hover:bg-muted' : 'text-white hover:bg-white/10'
+              }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -262,9 +256,8 @@ const Header = () => {
                   >
                     {item.label}
                     <ChevronDown
-                      className={`w-4 h-4 transition-transform ${
-                        openMobileSubmenu === item.label ? 'rotate-180' : ''
-                      }`}
+                      className={`w-4 h-4 transition-transform ${openMobileSubmenu === item.label ? 'rotate-180' : ''
+                        }`}
                     />
                   </button>
                   {openMobileSubmenu === item.label && (

@@ -78,7 +78,7 @@ const AboutSection = () => {
               )}
             >
               <div className="absolute top-4 right-4 opacity-5">
-                <img src={logoInnovafin} alt="" className="w-16 h-auto" />
+                <img loading="lazy" decoding="async" src={logoInnovafin} alt="" className="w-16 h-auto" />
               </div>
 
               <div className="flex items-start gap-6">

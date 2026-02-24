@@ -113,7 +113,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
                   : 'Complete el formulario para registrarse'}
               </CardDescription>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => { onClose(); resetForm(); }}>
+            <Button variant="ghost" size="icon" aria-label="Cerrar modal" onClick={() => { onClose(); resetForm(); }}>
               <X className="w-5 h-5" />
             </Button>
           </div>

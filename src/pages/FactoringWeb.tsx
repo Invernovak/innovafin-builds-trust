@@ -532,7 +532,7 @@ const FactoringWeb = () => {
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
-                      <table className="w-full">
+                      <table className="w-full min-w-[800px]">
                         <thead>
                           <tr className="border-b border-border">
                             <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Factura</th>
@@ -805,14 +805,12 @@ const FactoringWeb = () => {
                   </div>
 
                   {/* Legal Checkboxes */}
-                  <div className="bg-white rounded-xl border border-border">
-                    <LegalCheckboxes
-                      authChecked={formData.aceptaHabeasData}
-                      onAuthChange={(checked) => setFormData({ ...formData, aceptaHabeasData: checked })}
-                      termsChecked={formData.aceptaTerminos}
-                      onTermsChange={(checked) => setFormData({ ...formData, aceptaTerminos: checked })}
-                    />
-                  </div>
+                  <LegalCheckboxes
+                    authChecked={formData.aceptaHabeasData}
+                    onAuthChange={(checked) => setFormData({ ...formData, aceptaHabeasData: checked })}
+                    termsChecked={formData.aceptaTerminos}
+                    onTermsChange={(checked) => setFormData({ ...formData, aceptaTerminos: checked })}
+                  />
 
                   <div className="flex gap-4 pt-4">
                     <Button type="button" variant="outline" onClick={() => setShowNewInvoice(false)} className="flex-1 h-12 rounded-xl" disabled={isSubmitting}>

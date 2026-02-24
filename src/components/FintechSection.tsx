@@ -35,12 +35,12 @@ const FintechSection = () => {
             <Sparkles className="w-4 h-4 text-secondary" />
             <span className="text-sm font-medium text-white/80">Innova Fintech</span>
           </div>
-          
+
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
             Tecnología de{' '}
             <span className="text-secondary">Última Generación</span>
           </h2>
-          
+
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
             Innovamos constantemente para transformar la gestión financiera empresarial
           </p>
@@ -58,11 +58,11 @@ const FintechSection = () => {
                 <div className="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-6 group-hover:bg-secondary/30 transition-colors">
                   <Icon className="w-8 h-8 text-secondary" strokeWidth={1.5} />
                 </div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-4">
                   {feature.title}
                 </h3>
-                
+
                 <p className="text-white/70 leading-relaxed">
                   {feature.description}
                 </p>
@@ -75,7 +75,7 @@ const FintechSection = () => {
         <div className="mt-16 text-center">
           <div className="inline-flex items-center gap-4 glass-dark rounded-full px-8 py-4">
             <div className="w-12 h-12 rounded-full bg-white/20 border-2 border-white/30 flex items-center justify-center p-2">
-              <img src={logoInnovafin} alt="Innovafin" className="w-full h-auto" />
+              <img loading="lazy" decoding="async" src={logoInnovafin} alt="Innovafin" className="w-full h-auto" />
             </div>
             <div className="text-left">
               <p className="text-white font-medium">Equipo de expertos</p>
