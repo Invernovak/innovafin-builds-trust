@@ -9,6 +9,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    DialogClose,
 } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -50,7 +51,7 @@ export function LegalCheckboxes({
                     id="authHandling"
                     checked={authChecked}
                     onCheckedChange={(checked) => onAuthChange(checked === true)}
-                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-white/20"
+                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20"
                     required
                 />
                 <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 leading-tight mt-0.5">
@@ -290,9 +291,11 @@ export function LegalCheckboxes({
                                 </div>
                             </ScrollArea>
                             <div className="flex justify-end pt-2">
-                                <Button onClick={() => onAuthChange(true)} className="bg-primary text-primary-foreground">
-                                    Aceptar y Cerrar
-                                </Button>
+                                <DialogClose asChild>
+                                    <Button onClick={() => onAuthChange(true)} className="bg-primary text-primary-foreground">
+                                        Aceptar y Cerrar
+                                    </Button>
+                                </DialogClose>
                             </div>
                         </DialogContent>
                     </Dialog>
@@ -305,7 +308,7 @@ export function LegalCheckboxes({
                     id="termsConditions"
                     checked={termsChecked}
                     onCheckedChange={(checked) => onTermsChange(checked === true)}
-                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-white/20"
+                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20"
                     required
                 />
                 <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 leading-tight mt-0.5">
@@ -414,9 +417,11 @@ export function LegalCheckboxes({
                                 </div>
                             </ScrollArea>
                             <div className="flex justify-end pt-2">
-                                <Button onClick={() => onTermsChange(true)} className="bg-primary text-primary-foreground">
-                                    Aceptar y Cerrar
-                                </Button>
+                                <DialogClose asChild>
+                                    <Button onClick={() => onTermsChange(true)} className="bg-primary text-primary-foreground">
+                                        Aceptar y Cerrar
+                                    </Button>
+                                </DialogClose>
                             </div>
                         </DialogContent>
                     </Dialog>
