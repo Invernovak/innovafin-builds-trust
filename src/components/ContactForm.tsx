@@ -154,6 +154,7 @@ const ContactForm = () => {
             onTermsChange={(checked) => form.setValue("aceptaTerminos", checked, { shouldValidate: true })}
             labelClassName="text-xs text-white/70 cursor-pointer leading-tight"
             linkClassName="p-0 h-auto font-normal text-xs text-white/70 hover:text-white underline decoration-white/50 underline-offset-4 justify-start transition-colors"
+            checkboxClassName="border-white/50 data-[state=checked]:bg-secondary data-[state=checked]:text-white"
           />
           {/* Manually render errors for the checkboxes since we mapped them manually */}
           {form.formState.errors.aceptaHabeasData && (

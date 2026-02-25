@@ -22,6 +22,7 @@ interface LegalCheckboxesProps {
     itemClassName?: string;
     labelClassName?: string;
     linkClassName?: string;
+    checkboxClassName?: string;
 }
 
 export function LegalCheckboxes({
@@ -33,6 +34,7 @@ export function LegalCheckboxes({
     itemClassName,
     labelClassName,
     linkClassName,
+    checkboxClassName,
 }: LegalCheckboxesProps) {
     const defaultItemClass = "flex items-start space-x-3";
     const finalItemClass = itemClassName !== undefined ? itemClassName : defaultItemClass;
@@ -51,7 +53,7 @@ export function LegalCheckboxes({
                     id="authHandling"
                     checked={authChecked}
                     onCheckedChange={(checked) => onAuthChange(checked === true)}
-                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20"
+                    className={cn("mt-0.5 rounded-sm data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20", checkboxClassName)}
                     required
                 />
                 <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 leading-tight mt-0.5">
@@ -308,7 +310,7 @@ export function LegalCheckboxes({
                     id="termsConditions"
                     checked={termsChecked}
                     onCheckedChange={(checked) => onTermsChange(checked === true)}
-                    className="mt-0.5 data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20"
+                    className={cn("mt-0.5 rounded-sm data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground border-primary/50 dark:border-white/20", checkboxClassName)}
                     required
                 />
                 <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 leading-tight mt-0.5">
