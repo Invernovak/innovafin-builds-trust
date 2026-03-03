@@ -14,16 +14,16 @@ const RATE_LIMIT_WINDOW_MS = 3600000; // 1 hour window
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
-  
+
   if (!record || now > record.resetTime) {
     rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
     return true;
   }
-  
+
   if (record.count >= RATE_LIMIT_MAX) {
     return false;
   }
-  
+
   record.count++;
   return true;
 }
@@ -71,51 +71,51 @@ function validateInput(data: OriginatorLeadInput): { valid: boolean; error?: str
   if (!data.razon_social || data.razon_social.length < 2 || data.razon_social.length > 200) {
     return { valid: false, error: 'Razón social inválida' };
   }
-  
+
   if (!data.nit || data.nit.length < 5 || data.nit.length > 30) {
     return { valid: false, error: 'NIT inválido' };
   }
-  
+
   if (!data.nombre_contacto || data.nombre_contacto.length < 2 || data.nombre_contacto.length > 200) {
     return { valid: false, error: 'Nombre de contacto inválido' };
   }
-  
+
   if (!data.correo_electronico || !isValidEmail(data.correo_electronico)) {
     return { valid: false, error: 'Correo electrónico inválido' };
   }
-  
+
   if (!data.telefono || !isValidPhone(data.telefono)) {
     return { valid: false, error: 'Número de teléfono inválido' };
   }
-  
+
   if (!data.tipo_originacion || data.tipo_originacion.length > 100) {
     return { valid: false, error: 'Tipo de originación inválido' };
   }
-  
+
   if (!data.departamento || data.departamento.length > 100) {
     return { valid: false, error: 'Departamento inválido' };
   }
-  
+
   if (!data.ciudad || data.ciudad.length > 100) {
     return { valid: false, error: 'Ciudad inválida' };
   }
-  
+
   if (!data.horario_contacto || data.horario_contacto.length > 50) {
     return { valid: false, error: 'Horario de contacto inválido' };
   }
-  
+
   if (!data.descripcion_negocio || data.descripcion_negocio.length < 3 || data.descripcion_negocio.length > 2000) {
     return { valid: false, error: 'Descripción del negocio inválida (mínimo 3 caracteres)' };
   }
-  
+
   if (!data.necesidades_financiacion || data.necesidades_financiacion.length < 3 || data.necesidades_financiacion.length > 2000) {
     return { valid: false, error: 'Necesidades de financiación inválidas (mínimo 3 caracteres)' };
   }
-  
+
   if (data.acepta_habeas_data !== true) {
     return { valid: false, error: 'Debe aceptar la política de tratamiento de datos' };
   }
-  
+
   return { valid: true };
 }
 
@@ -127,32 +127,32 @@ serve(async (req) => {
 
   try {
     // Get client IP for rate limiting
-    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-                     req.headers.get('cf-connecting-ip') || 
-                     'unknown';
-    
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+      req.headers.get('cf-connecting-ip') ||
+      'unknown';
+
     // Check rate limit
     if (!checkRateLimit(clientIP)) {
       return new Response(
         JSON.stringify({ error: 'Demasiadas solicitudes. Intente nuevamente más tarde.' }),
-        { 
-          status: 429, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        {
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
 
     // Parse request body
     const body = await req.json() as OriginatorLeadInput;
-    
+
     // Validate input
     const validation = validateInput(body);
     if (!validation.valid) {
       return new Response(
         JSON.stringify({ error: validation.error }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
@@ -173,47 +173,45 @@ serve(async (req) => {
       acepta_habeas_data: true,
     };
 
-    // Create Supabase client pointing to EXTERNAL Supabase project (InnovaFin)
-    const externalUrl = Deno.env.get('EXTERNAL_SUPABASE_URL');
-    const externalKey = Deno.env.get('EXTERNAL_SUPABASE_SERVICE_KEY');
-    
-    if (!externalUrl || !externalKey) {
-      console.error('External Supabase credentials not configured');
+    // Create Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY');
+
+    if (!supabaseUrl || !supabaseKey) {
+      console.error('Supabase credentials not configured');
       return new Response(
-        JSON.stringify({ error: 'Configuración de base de datos externa incompleta' }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        JSON.stringify({ error: 'Configuración de base de datos incompleta' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
-    
-    // Connect directly to external Supabase - NO data stored in Lovable Cloud
-    const supabase = createClient(externalUrl, externalKey);
+
+    // Connect to Supabase
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Insert into originadores_leads table in external database
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('originadores_leads')
-      .insert(sanitizedData)
-      .select('id')
-      .single();
+      .insert(sanitizedData);
 
     if (error) {
       console.error('Database error:', error);
       return new Response(
         JSON.stringify({ error: 'Error al procesar la solicitud' }),
-        { 
-          status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
 
     return new Response(
-      JSON.stringify({ success: true, id: data.id }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
 
@@ -221,9 +219,9 @@ serve(async (req) => {
     console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({ error: 'Error interno del servidor' }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
     );
   }
