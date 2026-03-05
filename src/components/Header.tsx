@@ -20,9 +20,7 @@ const serviceItems = [
 
 const aboutItems = [
   { label: '¿Por qué nosotros?', href: '#por-que-nosotros', isSection: true },
-  { label: 'Visión', href: '#vision', isSection: true },
-  { label: 'Misión', href: '#mision', isSection: true },
-  { label: 'Equipo', href: '#equipo', isSection: true },
+  { label: 'Visión y Misión', href: '#vision', isSection: true },
 ];
 
 const originatorItems = [
@@ -124,8 +122,8 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${showSolidHeader
-          ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50'
-          : 'bg-transparent'
+        ? 'bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50'
+        : 'bg-transparent'
         }`}
     >
       <div className="container-narrow mx-auto px-4 md:px-8">
@@ -154,8 +152,8 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
                     <button
                       className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${showSolidHeader
-                          ? 'text-foreground hover:text-primary hover:bg-muted'
-                          : 'text-white/90 hover:text-white hover:bg-white/10'
+                        ? 'text-foreground hover:text-primary hover:bg-muted'
+                        : 'text-white/90 hover:text-white hover:bg-white/10'
                         }`}
                     >
                       {item.label}
@@ -189,8 +187,8 @@ const Header = () => {
                   key={item.label}
                   to={item.href}
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
-                      ? 'text-foreground hover:text-primary hover:bg-muted'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                    ? 'text-foreground hover:text-primary hover:bg-muted'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
                     }`}
                 >
                   {item.label}
@@ -200,8 +198,8 @@ const Header = () => {
                   key={item.label}
                   onClick={() => scrollToSection(item.href)}
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
-                      ? 'text-foreground hover:text-primary hover:bg-muted'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
+                    ? 'text-foreground hover:text-primary hover:bg-muted'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
                     }`}
                 >
                   {item.label}
@@ -212,8 +210,8 @@ const Header = () => {
               <Link
                 to="/admin"
                 className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${showSolidHeader
-                    ? 'text-primary hover:text-primary/80 hover:bg-primary/10'
-                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                  ? 'text-primary hover:text-primary/80 hover:bg-primary/10'
+                  : 'text-white/90 hover:text-white hover:bg-white/10'
                   }`}
               >
                 <Shield className="w-3.5 h-3.5" />

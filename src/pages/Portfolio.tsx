@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -44,8 +45,8 @@ const fondoCapitalPrivado = {
   name: 'FCP Alternativos Plus',
   administrador: 'AVAL Fiduciaria - Asset Management',
   gestorProfesional: 'InnovaFin',
-  fechaReporte: 'domingo, 25 de enero de 2026',
-  totalFondo: 177186627829,
+  fechaReporte: 'Sábado, 28 de febrero de 2026',
+  totalFondo: 16167535432873,
   totalDisponible: 12573673214,
   totalInvertido: 164326139428,
   porcentajeTotal: 93,
@@ -102,12 +103,12 @@ const fondoCapitalPrivado = {
 const ficAlternativos180Plus = {
   name: 'FIC Alternativos 180 Plus',
   administrador: 'AVAL Fiduciaria - Asset Management',
-  fechaReporte: '26 de enero de 2026',
-  valorUnidad: 14363.9,
-  valorFondo: 188573100000,
-  saldo: 188573100000,
-  rentabilidadEA30dias: 11.88,
-  rentabilidadEA365dias: 12.41,
+  fechaReporte: '3 de marzo de 2026',
+  valorUnidad: 14523.53,
+  valorFondo: 189151641011.20,
+  saldo: 189151641011.20,
+  rentabilidadEA30dias: 11.65,
+  rentabilidadEA365dias: 12.07,
   tiposParticipacion: [
     {
       id: 'tp1',
@@ -133,22 +134,22 @@ const ficAlternativos180Plus = {
     {
       id: 'tp1',
       nombre: 'Alternativo 180 plus - tp1',
-      anoCorridoEA: 11.96,
-      diariaEA: 9.67,
-      dias30EA: 11.52,
-      dias180EA: 11.7,
-      ano1EA: 12.19,
-      ano2EA: 12.81,
-      ano3EA: 11.55,
+      anoCorridoEA: 11.73,
+      diariaEA: 11.93,
+      dias30EA: 11.65,
+      dias180EA: 11.44,
+      ano1EA: 12.07,
+      ano2EA: 12.68,
+      ano3EA: 12.16,
     },
     {
       id: 'tp2',
       nombre: 'Alternativo 180 plus - tp2',
-      anoCorridoEA: 12.52,
-      diariaEA: 10.22,
-      dias30EA: 12.08,
-      dias180EA: 12.13,
-      ano1EA: 12.69,
+      anoCorridoEA: 12.29,
+      diariaEA: 12.49,
+      dias30EA: 12.22,
+      dias180EA: 12.0,
+      ano1EA: 12.57,
       ano2EA: null,
       ano3EA: null,
     },
@@ -166,6 +167,7 @@ const beneficios = [
 ];
 
 const Portfolio = () => {
+  const [activeTab, setActiveTab] = useState('capital-privado');
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
@@ -249,8 +251,17 @@ const Portfolio = () => {
     }))
     : ficAlternativos180Plus.comportamientoHistorico;
 
-  // Calculate total portfolio (solo Capital Privado)
-  const portafolioTotal = capitalPrivadoData.totalFondo;
+  // Calculate total portfolio by summing all compartimentos' total assets
+  const portafolioTotal = compartimentosData.reduce((acc, curr) => acc + curr.totalActivos, 0);
+
+  // Dynamic values based on active tab
+  const isFicActive = activeTab === 'fic';
+  const displayLabel = isFicActive ? 'Valor Fondo' : 'Portafolio Total Administrado';
+  const displayValue = isFicActive ? ficAlternativos180Plus.saldo : portafolioTotal;
+  const secondaryLabel = isFicActive ? 'Participaciones' : 'Compartimentos';
+  const secondaryValue = isFicActive ? ficAlternativos180Plus.tiposParticipacion.length : compartimentosData.length;
+  const displayDate = isFicActive ? ficAlternativos180Plus.fechaReporte : capitalPrivadoData.fechaReporte;
+  const MainIcon = isFicActive ? Users : Wallet;
 
   return (
     <div className="min-h-screen bg-background">
@@ -295,48 +306,39 @@ const Portfolio = () => {
               statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <Card className="bg-card shadow-xl border-0">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center">
-                      <Wallet className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Portafolio Total Administrado</p>
-                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A]">{formatCOP(portafolioTotal)}</p>
+            <Card className="bg-card shadow-xl border-0 overflow-hidden">
+              <div className="grid md:grid-cols-4 divide-y md:divide-y-0 md:divide-x border-b">
+                <div className="p-6 md:col-span-3 bg-white">
+                  <div className="flex flex-col h-full justify-between">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center">
+                          <MainIcon className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{displayLabel}</p>
+                          <p className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <Badge variant="outline" className="bg-muted text-muted-foreground hidden md:flex">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    {ficData.fechaReporte}
-                  </Badge>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-secondary/10 rounded-xl">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="w-4 h-4 text-secondary" />
-                      <p className="text-sm text-muted-foreground">Rent. EA 30 días</p>
-                    </div>
-                    <p className="text-2xl font-bold text-secondary">{ficData.rentabilidadEA30dias}%</p>
+                <div className="p-6 bg-muted/30 flex flex-col justify-center items-center md:items-start border-l border-border/50">
+                  <div className="flex items-center gap-2 mb-2 w-full justify-center md:justify-start">
+                    <Briefcase className="w-5 h-5 text-muted-foreground" />
+                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{secondaryLabel}</p>
                   </div>
-                  <div className="p-4 bg-secondary/10 rounded-xl">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="w-4 h-4 text-secondary" />
-                      <p className="text-sm text-muted-foreground">Rent. EA 365 días</p>
-                    </div>
-                    <p className="text-2xl font-bold text-secondary">{ficData.rentabilidadEA365dias}%</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-xl">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Briefcase className="w-4 h-4 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground">Compartimentos</p>
-                    </div>
-                    <p className="text-2xl font-bold text-foreground">{compartimentosData.length}</p>
+                  <p className="text-4xl font-bold text-foreground text-center md:text-left w-full pl-0 md:pl-7">{secondaryValue}</p>
+
+                  <div className="mt-6 w-full flex justify-center md:justify-start pl-0 md:pl-7">
+                    <Badge variant="outline" className="bg-white text-muted-foreground py-1.5 px-3">
+                      <Calendar className="w-3.5 h-3.5 mr-1.5" />
+                      <span className="text-xs">{displayDate}</span>
+                    </Badge>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
         </section>
@@ -344,7 +346,7 @@ const Portfolio = () => {
         {/* Main Content Tabs */}
         <section className="py-12">
           <div className="container mx-auto px-4 max-w-7xl">
-            <Tabs defaultValue="capital-privado" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-xl mx-auto">
                 <TabsTrigger
                   value="capital-privado"
