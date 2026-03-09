@@ -45,55 +45,62 @@ const fondoCapitalPrivado = {
   name: 'FCP Alternativos Plus',
   administrador: 'AVAL Fiduciaria - Asset Management',
   gestorProfesional: 'InnovaFin',
-  fechaReporte: 'Sábado, 28 de febrero de 2026',
-  totalFondo: 16167535432873,
-  totalDisponible: 12573673214,
-  totalInvertido: 164326139428,
-  porcentajeTotal: 93,
+  fechaReporte: 'Domingo, 1 de marzo de 2026',
+  totalFondo: 176105542113,
+  totalDisponible: 30467449563,
+  totalInvertido: 145884698337,
+  porcentajeTotal: 83,
   compartimentos: [
     {
       id: 'libranzas',
       name: 'Libranzas',
-      totalActivos: 167844754457,
-      disponible: 9230991982,
-      invertido: 158305470171,
-      porcentajeActivos: 94,
-      rentabilidadDia: 14.19,
-      rentabilidad30dias: 14.81,
-      rentabilidad60dias: 14.52,
-      rentabilidad90dias: 14.35,
-      rentabilidad180dias: 14.10,
-      rentabilidad365dias: 13.85,
+      totalActivos: 161790346855,
+      disponible: 21910278783,
+      invertido: 140107284109,
+      porcentajeActivos: 87,
+      rentabilidadDia: 16.59,
+      rentabilidad7dias: 12.28,
+      rentabilidad30dias: 15.25,
+      rentabilidad90dias: 14.95,
+      rentabilidad180dias: 14.55,
+      rentabilidad365dias: 15.14,
       nivelRiesgo: 'Bajo',
     },
     {
       id: 'educapital1',
       name: 'Educapital1',
-      totalActivos: 9153246775,
-      disponible: 3152991722,
-      invertido: 6020669257,
-      porcentajeActivos: 66,
-      rentabilidadDia: 6.07,
-      rentabilidad30dias: 12.28,
-      rentabilidad60dias: 11.85,
-      rentabilidad90dias: 11.42,
-      rentabilidad180dias: 10.95,
-      rentabilidad365dias: 10.50,
+      totalActivos: 9244353648,
+      disponible: 3481654092,
+      invertido: 5777414228,
+      porcentajeActivos: 62,
+      rentabilidadDia: 11.88,
+      rentabilidad7dias: 11.67,
+      rentabilidad30dias: 10.15,
+      rentabilidad90dias: 11.93,
+      rentabilidad180dias: 15.51,
+      rentabilidad365dias: 19.63,
       nivelRiesgo: 'Bajo',
     },
     {
       id: 'evolucion',
       name: 'Evolución',
-      totalActivos: 188626597,
-      disponible: 189689510,
+      totalActivos: 24432932,
+      disponible: 25516688,
       invertido: 0,
       porcentajeActivos: 0,
-      rentabilidadDia: 8.27,
-      rentabilidad30dias: 40.69,
-      rentabilidad60dias: 35.20,
-      rentabilidad90dias: 28.50,
-      rentabilidad180dias: 22.15,
-      rentabilidad365dias: 18.40,
+      rentabilidadDia: 9.23,
+      rentabilidad7dias: 9.23,
+      nivelRiesgo: 'Medio',
+    },
+    {
+      id: 'Integra Plus',
+      name: 'Integra Plus',
+      totalActivos: 5046408678,
+      disponible: 5050000000,
+      invertido: 0,
+      porcentajeActivos: 0,
+      rentabilidadDia: 9.63,
+      rentabilidad7dias: 9.23,
       nivelRiesgo: 'Medio',
     },
   ],
@@ -256,7 +263,7 @@ const Portfolio = () => {
 
   // Dynamic values based on active tab
   const isFicActive = activeTab === 'fic';
-  const displayLabel = isFicActive ? 'Valor Fondo' : 'Portafolio Total Administrado';
+  const displayLabel = isFicActive ? 'Valor Fondo FIC' : 'Portafolio Total Administrado FCP';
   const displayValue = isFicActive ? ficAlternativos180Plus.saldo : portafolioTotal;
   const secondaryLabel = isFicActive ? 'Participaciones' : 'Compartimentos';
   const secondaryValue = isFicActive ? ficAlternativos180Plus.tiposParticipacion.length : compartimentosData.length;
@@ -308,18 +315,14 @@ const Portfolio = () => {
           >
             <Card className="bg-card shadow-xl border-0 overflow-hidden">
               <div className="grid md:grid-cols-4 divide-y md:divide-y-0 md:divide-x border-b">
-                <div className="p-6 md:col-span-3 bg-white">
-                  <div className="flex flex-col h-full justify-between">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center">
-                          <MainIcon className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{displayLabel}</p>
-                          <p className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
-                        </div>
-                      </div>
+                <div className="p-6 md:col-span-3 bg-white flex flex-col items-center justify-center">
+                  <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                    <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center shrink-0">
+                      <MainIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex flex-col items-center md:items-start">
+                      <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{displayLabel}</p>
+                      <p className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
                     </div>
                   </div>
                 </div>

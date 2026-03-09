@@ -97,7 +97,7 @@ const ContactForm = () => {
               <FormControl>
                 <Input
                   placeholder="Nombre"
-                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-11 rounded-xl"
+                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-9 text-sm rounded-xl"
                   disabled={isSubmitting}
                   {...field}
                 />
@@ -116,7 +116,7 @@ const ContactForm = () => {
                 <Input
                   type="email"
                   placeholder="Email"
-                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-11 rounded-xl"
+                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-9 text-sm rounded-xl"
                   disabled={isSubmitting}
                   {...field}
                 />
@@ -134,8 +134,8 @@ const ContactForm = () => {
               <FormControl>
                 <Textarea
                   placeholder="Mensaje"
-                  rows={3}
-                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 resize-none rounded-xl"
+                  rows={2}
+                  className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 resize-none rounded-xl text-sm"
                   disabled={isSubmitting}
                   {...field}
                 />
@@ -168,7 +168,7 @@ const ContactForm = () => {
         <Button
           type="submit"
           disabled={isSubmitting || isSubmitted || !form.watch("aceptaHabeasData") || !form.watch("aceptaTerminos")}
-          className={`w-full h-11 font-medium rounded-xl transition-all duration-300 ${isSubmitted
+          className={`w-full h-9 text-sm font-medium rounded-xl transition-all duration-300 ${isSubmitted
             ? 'bg-secondary hover:bg-secondary text-secondary-foreground'
             : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
             }`}
