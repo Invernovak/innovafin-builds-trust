@@ -108,11 +108,6 @@ const FactoringWeb = () => {
         } else {
           setShowAuthModal(true);
         }
-      } else if (hash === '#historial') {
-        setActiveTab('historial');
-        setTimeout(() => {
-          document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
       }
     };
 
@@ -355,14 +350,10 @@ const FactoringWeb = () => {
         {/* Main Content */}
         <section id="calculadora" className="container-narrow mx-auto px-4 py-12">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full max-w-lg mx-auto grid-cols-3 h-12">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
               <TabsTrigger value="calculadora" className="text-sm">
                 <Calculator className="w-4 h-4 mr-2" />
                 Calculadora
-              </TabsTrigger>
-              <TabsTrigger value="historial" id="historial" className="text-sm">
-                <FileText className="w-4 h-4 mr-2" />
-                Historial
               </TabsTrigger>
               <TabsTrigger value="guia" className="text-sm">
                 <CreditCard className="w-4 h-4 mr-2" />
@@ -471,117 +462,7 @@ const FactoringWeb = () => {
               </div>
             </TabsContent>
 
-            {/* History Tab */}
-            <TabsContent value="historial" id="historial" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>Historial de Facturas</CardTitle>
-                      <CardDescription>
-                        {isAuthenticated
-                          ? 'Seguimiento de facturas enviadas para descuento'
-                          : 'Inicie sesión para ver su historial de facturas'}
-                      </CardDescription>
-                    </div>
-                    <div className="flex gap-2">
-                      {isAuthenticated && (
-                        <>
-                          <Button variant="outline" size="sm">
-                            <Filter className="w-4 h-4 mr-2" />
-                            Filtrar
-                          </Button>
-                          <Button size="sm" onClick={handleNewInvoiceClick}>
-                            <FileText className="w-4 h-4 mr-2" />
-                            Nueva
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {!isAuthenticated ? (
-                    <div className="text-center py-12">
-                      <LogIn className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Acceso Requerido</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Inicie sesión para ver y gestionar sus solicitudes de factoring
-                      </p>
-                      <Button onClick={() => setShowAuthModal(true)}>
-                        <LogIn className="w-4 h-4 mr-2" />
-                        Iniciar Sesión
-                      </Button>
-                    </div>
-                  ) : requestsLoading ? (
-                    <div className="text-center py-12">
-                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                      <p className="text-muted-foreground">Cargando solicitudes...</p>
-                    </div>
-                  ) : requests.length === 0 ? (
-                    <div className="text-center py-12">
-                      <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">Sin Solicitudes</h3>
-                      <p className="text-muted-foreground mb-4">
-                        Aún no tiene solicitudes de factoring. ¡Cree su primera solicitud!
-                      </p>
-                      <Button onClick={handleNewInvoiceClick}>
-                        <FileText className="w-4 h-4 mr-2" />
-                        Nueva Solicitud
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full min-w-[800px]">
-                        <thead>
-                          <tr className="border-b border-border">
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Factura</th>
-                            <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Pagador</th>
-                            <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Bruto</th>
-                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Tasa</th>
-                            <th className="text-right py-3 px-4 text-sm font-medium text-muted-foreground">Valor Neto</th>
-                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Estado</th>
-                            <th className="text-center py-3 px-4 text-sm font-medium text-muted-foreground">Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {requests.map((invoice) => (
-                            <tr key={invoice.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                              <td className="py-4 px-4 text-sm font-medium">{invoice.invoice_number}</td>
-                              <td className="py-4 px-4">
-                                <div>
-                                  <p className="text-sm font-medium">{invoice.payer_name}</p>
-                                  <p className="text-xs text-muted-foreground">{invoice.payer_nit}</p>
-                                </div>
-                              </td>
-                              <td className="py-4 px-4 text-sm text-right font-medium">{formatCurrency(Number(invoice.invoice_amount))}</td>
-                              <td className="py-4 px-4 text-sm text-center">{invoice.monthly_rate}%</td>
-                              <td className="py-4 px-4 text-sm text-right font-bold text-secondary">{formatCurrency(Number(invoice.net_amount))}</td>
-                              <td className="py-4 px-4 text-center">
-                                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(invoice.status)}`}>
-                                  {getStatusIcon(invoice.status)}
-                                  {getStatusLabel(invoice.status)}
-                                </span>
-                              </td>
-                              <td className="py-4 px-4 text-center">
-                                <div className="flex items-center justify-center gap-1">
-                                  <Button variant="ghost" size="sm" onClick={() => setSelectedInvoice(invoice)}>
-                                    <Eye className="w-4 h-4" />
-                                  </Button>
-                                  <Button variant="ghost" size="sm">
-                                    <Download className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
+
 
             {/* Guide Tab */}
             <TabsContent value="guia" className="space-y-8">
