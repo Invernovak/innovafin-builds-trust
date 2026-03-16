@@ -1,6 +1,22 @@
-import { ArrowRight, TrendingUp, Shield, BarChart3 } from 'lucide-react';
+import { ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ComposedChart, Line, Bar, ResponsiveContainer, YAxis, XAxis, CartesianGrid } from 'recharts';
 import heroVideo from '@/assets/animacion_1.mp4';
+
+const chartData = [
+  { name: '1', bars: 20, line1: 25, line2: 15 },
+  { name: '2', bars: 35, line1: 30, line2: 25 },
+  { name: '3', bars: 25, line1: 45, line2: 35 },
+  { name: '4', bars: 45, line1: 40, line2: 45 },
+  { name: '5', bars: 30, line1: 55, line2: 52 },
+  { name: '6', bars: 55, line1: 65, line2: 60 },
+  { name: '7', bars: 40, line1: 60, line2: 70 },
+  { name: '8', bars: 65, line1: 75, line2: 85 },
+  { name: '9', bars: 50, line1: 85, line2: 92 },
+  { name: '10', bars: 75, line1: 80, line2: 95 },
+  { name: '11', bars: 85, line1: 95, line2: 105 },
+  { name: '12', bars: 92, line1: 100, line2: 115 },
+];
 
 const HeroSection = () => {
   const scrollToContact = () => {
@@ -65,38 +81,87 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right: Abstract Financial Graphic */}
+          {/* Right: Holographic Financial Graphic */}
           <div className="hidden lg:block relative animate-fade-up" style={{ animationDelay: '0.3s' }}>
-            <div className="relative">
-              {/* Main Card */}
-              <div className="glass-dark rounded-3xl p-8 shadow-2xl">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-white/60 text-sm mb-1">Rendimiento del Portafolio</p>
-                  </div>
-                </div>
-                
-                {/* Chart Placeholder */}
-                <div className="h-40 flex items-end gap-2">
-                  {[20, 30, 35, 45, 50, 60, 65, 75, 80, 85, 92, 100].map((height, i) => (
-                    <div 
-                      key={i}
-                      className="flex-1 bg-gradient-to-t from-secondary/40 to-secondary rounded-t-lg transition-all duration-500"
-                      style={{ height: `${height}%`, animationDelay: `${i * 0.05}s` }}
-                    />
-                  ))}
+            <div className="relative p-6">
+              {/* Futuristic HUD Frame */}
+              <div className="absolute inset-0 border border-cyan-400/30 rounded-sm">
+                {/* Corners */}
+                <div className="absolute -top-[2px] -left-[2px] w-8 h-8 border-t-2 border-l-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+                <div className="absolute -top-[2px] -right-[2px] w-8 h-8 border-t-2 border-r-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+                <div className="absolute -bottom-[2px] -left-[2px] w-8 h-8 border-b-2 border-l-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+                <div className="absolute -bottom-[2px] -right-[2px] w-8 h-8 border-b-2 border-r-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+              </div>
+
+              {/* Main Card with Holographic effect */}
+              <div className="relative glass-dark rounded-xl p-8 shadow-2xl overflow-hidden bg-cyan-900/10 backdrop-blur-md border border-cyan-400/10">
+                <div className="h-64 w-full relative">
+                  {/* Arrow markers for SVG */}
+                  <svg width="0" height="0" className="absolute">
+                    <defs>
+                      <marker id="arrow-cyan" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#22d3ee" />
+                      </marker>
+                      <marker id="arrow-gold" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4AF37" />
+                      </marker>
+                    </defs>
+                  </svg>
+
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                      <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(34,211,238,0.1)" />
+                      <XAxis hide />
+                      <YAxis hide domain={[0, 130]} />
+                      
+                      {/* Bars */}
+                      <Bar 
+                        dataKey="bars" 
+                        fill="rgba(34,211,238,0.2)" 
+                        stroke="rgba(34,211,238,0.4)" 
+                        radius={[2, 2, 0, 0]} 
+                        barSize={12}
+                        animationDuration={1500}
+                      />
+                      
+                      {/* Line 1: Gold Trend */}
+                      <Line 
+                        type="monotone" 
+                        dataKey="line1" 
+                        stroke="#D4AF37" 
+                        strokeWidth={2} 
+                        dot={false}
+                        markerEnd="url(#arrow-gold)"
+                        animationDuration={2500}
+                        strokeOpacity={0.7}
+                      />
+                      
+                      {/* Line 2: Thick Cyan Trend */}
+                      <Line 
+                        type="monotone" 
+                        dataKey="line2" 
+                        stroke="#22d3ee" 
+                        strokeWidth={4} 
+                        dot={false}
+                        markerEnd="url(#arrow-cyan)"
+                        animationDuration={2000}
+                        strokeDasharray="none"
+                        className="drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]"
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
 
-              {/* Floating Card */}
-              <div className="absolute -bottom-4 -left-6 glass-dark rounded-2xl p-4 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
+              {/* Floating Shield Card */}
+              <div className="absolute -bottom-4 -left-6 glass-dark rounded-2xl p-4 shadow-xl animate-float border border-green-400/20" style={{ animationDelay: '1s' }}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(74,222,128,0.2)]">
                     <Shield className="w-5 h-5 text-green-400" />
                   </div>
                   <div>
-                    <p className="text-white/60 text-xs">Riesgo</p>
-                    <p className="text-green-400 font-semibold">Bajo</p>
+                    <p className="text-white/60 text-xs font-medium">Riesgo Sistema</p>
+                    <p className="text-green-400 font-bold uppercase tracking-wider text-sm">Bajo</p>
                   </div>
                 </div>
               </div>
@@ -107,7 +172,7 @@ const HeroSection = () => {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+        <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2 backdrop-blur-sm">
           <div className="w-1.5 h-3 bg-white/50 rounded-full" />
         </div>
       </div>
