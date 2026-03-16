@@ -94,14 +94,6 @@ const HeroSection = () => {
           {/* Right: Holographic Financial Graphic */}
           <div className="hidden lg:block relative animate-fade-up" style={{ animationDelay: '0.3s' }}>
             <div className="relative p-6">
-              {/* Futuristic HUD Frame */}
-              <div className="absolute inset-0 border border-cyan-400/30 rounded-sm">
-                {/* Corners */}
-                <div className="absolute -top-[2px] -left-[2px] w-8 h-8 border-t-2 border-l-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-                <div className="absolute -top-[2px] -right-[2px] w-8 h-8 border-t-2 border-r-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-                <div className="absolute -bottom-[2px] -left-[2px] w-8 h-8 border-b-2 border-l-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-                <div className="absolute -bottom-[2px] -right-[2px] w-8 h-8 border-b-2 border-r-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
-              </div>
 
               {/* Main Card with Holographic effect */}
               <div className="relative glass-dark rounded-xl p-6 shadow-2xl overflow-hidden bg-cyan-900/5 backdrop-blur-md border border-cyan-400/10">
