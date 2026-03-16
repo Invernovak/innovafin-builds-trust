@@ -2,6 +2,7 @@ import { ArrowRight, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ComposedChart, Line, Bar, ResponsiveContainer, YAxis, XAxis, CartesianGrid } from 'recharts';
 import heroVideo from '@/assets/animacion_1.mp4';
+import { useState, useEffect } from 'react';
 
 const chartData = [
   { name: '1', bars: 20, line1: 25, line2: 15 },
@@ -19,6 +20,15 @@ const chartData = [
 ];
 
 const HeroSection = () => {
+  const [animationKey, setAnimationKey] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationKey(prev => prev + 1);
+    }, 6000); // Loops every 6 seconds
+    return () => clearInterval(interval);
+  }, []);
+
   const scrollToContact = () => {
     const element = document.querySelector('#contacto');
     if (element) {
@@ -94,8 +104,8 @@ const HeroSection = () => {
               </div>
 
               {/* Main Card with Holographic effect */}
-              <div className="relative glass-dark rounded-xl p-8 shadow-2xl overflow-hidden bg-cyan-900/10 backdrop-blur-md border border-cyan-400/10">
-                <div className="h-64 w-full relative">
+              <div className="relative glass-dark rounded-xl p-6 shadow-2xl overflow-hidden bg-cyan-900/5 backdrop-blur-md border border-cyan-400/10">
+                <div className="h-48 w-full relative">
                   {/* Arrow markers for SVG */}
                   <svg width="0" height="0" className="absolute">
                     <defs>
@@ -109,7 +119,7 @@ const HeroSection = () => {
                   </svg>
 
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <ComposedChart key={animationKey} data={chartData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                       <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(34,211,238,0.1)" />
                       <XAxis hide />
                       <YAxis hide domain={[0, 130]} />
