@@ -73,16 +73,12 @@ const HeroSection = () => {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="text-white/60 text-sm mb-1">Rendimiento del Portafolio</p>
-                    <p className="text-3xl font-bold text-white">+24.8%</p>
-                  </div>
-                  <div className="w-12 h-12 rounded-2xl bg-secondary/20 flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-secondary" />
                   </div>
                 </div>
                 
                 {/* Chart Placeholder */}
                 <div className="h-40 flex items-end gap-2">
-                  {[40, 65, 45, 80, 55, 90, 70, 85, 95, 75, 88, 92].map((height, i) => (
+                  {[20, 30, 35, 45, 50, 60, 65, 75, 80, 85, 92, 100].map((height, i) => (
                     <div 
                       key={i}
                       className="flex-1 bg-gradient-to-t from-secondary/40 to-secondary rounded-t-lg transition-all duration-500"
@@ -92,19 +88,7 @@ const HeroSection = () => {
                 </div>
               </div>
 
-              {/* Floating Cards */}
-              <div className="absolute -top-6 -right-6 glass-dark rounded-2xl p-4 shadow-xl animate-float">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-secondary/20 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-white/60 text-xs">Activos</p>
-                    <p className="text-white font-semibold">$2.4M</p>
-                  </div>
-                </div>
-              </div>
-
+              {/* Floating Card */}
               <div className="absolute -bottom-4 -left-6 glass-dark rounded-2xl p-4 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
