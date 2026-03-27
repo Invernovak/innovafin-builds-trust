@@ -32,40 +32,48 @@ const Footer = () => {
           <div className="flex flex-col gap-4">
             <div>
               <h4 className="text-base font-semibold mb-2 text-white">Ubicación</h4>
-              <div className="flex items-start gap-2">
-                <div className="w-8 h-8 rounded-lg bg-white/10 flex-shrink-0 flex items-center justify-center mt-0.5">
-                  <MapPin className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/5 flex-shrink-0 flex items-center justify-center transition-all hover:bg-white/10">
+                  <MapPin className="w-5 h-5 text-secondary" strokeWidth={1.5} />
                 </div>
-                <p className="text-white/70 text-xs leading-relaxed">
-                  Cali - Calle 95 No. 98-414<br />
-                  Piso 15, Edificio Jardín Central 2
-                </p>
+                <div className="flex flex-col">
+                  <p className="text-white font-medium text-sm">Cali</p>
+                  <p className="text-white/60 text-xs">Calle 95 No. 98-414</p>
+                </div>
               </div>
+
             </div>
 
             <div>
               <h4 className="text-base font-semibold mb-2 text-white">Contacto</h4>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-white/10 flex-shrink-0 flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex-shrink-0 flex items-center justify-center transition-all group-hover:bg-white/10">
+                    <Mail className="w-5 h-5 text-secondary" strokeWidth={1.5} />
                   </div>
-                  <a
-                    href="mailto:contacto@innovafin.co"
-                    className="text-white/70 text-xs hover:text-secondary transition-colors"
-                  >
-                    contacto@innovafin.co
-                  </a>
+                  <div className="flex flex-col">
+                    <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Correo</p>
+                    <a
+                      href="mailto:contacto@innovafin.co"
+                      className="text-white/70 text-sm hover:text-secondary transition-colors"
+                    >
+                      contacto@innovafin.co
+                    </a>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-white/10 flex-shrink-0 flex items-center justify-center">
-                    <Clock className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+                <div className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex-shrink-0 flex items-center justify-center transition-all group-hover:bg-white/10">
+                    <Clock className="w-5 h-5 text-secondary" strokeWidth={1.5} />
                   </div>
-                  <p className="text-white/70 text-xs">
-                    Lun - Vie: 8:00 am - 5:00 pm
-                  </p>
+                  <div className="flex flex-col">
+                    <p className="text-white/40 text-[10px] uppercase tracking-wider font-semibold">Horario</p>
+                    <p className="text-white/70 text-sm">
+                      Lun - Vie: 8:00 am - 5:00 pm
+                    </p>
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
 

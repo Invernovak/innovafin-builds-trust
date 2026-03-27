@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
 import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
-import { supabase } from '@/integrations/supabase/client';
+import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 // Tipos de originación
 const originationTypes = [
@@ -131,13 +131,14 @@ const Originators = () => {
     setIsSubmitting(true);
 
     try {
-      // Use edge function for server-side validation and external database insert
-      const response = await supabase.functions.invoke('submit-originator-lead', {
-        body: {
+      // Insert into Supabase Innovafin
+      const { error } = await supabaseInnovafin
+        .from('vinculacion_originadores')
+        .insert({
           razon_social: formData.companyName,
           nit: formData.nit,
           nombre_contacto: formData.contactName,
-          correo_electronico: formData.email,
+          email: formData.email,
           telefono: formData.phone,
           tipo_originacion: formData.originationType,
           departamento: formData.departamento,
@@ -145,18 +146,13 @@ const Originators = () => {
           horario_contacto: formData.horarioContacto,
           descripcion_negocio: formData.businessDescription,
           necesidades_financiacion: formData.financingNeeds,
-          acepta_habeas_data: formData.aceptaHabeasData
-        }
-      });
+          acepta_datos: formData.aceptaHabeasData,
+          acepta_terminos: formData.aceptaTerminos
+        });
 
-      if (response.error) {
-        throw new Error(response.error.message || 'Error al enviar el formulario');
-      }
 
-      const data = response.data;
-      if (data?.error) {
-        toast.error(data.error);
-        return;
+      if (error) {
+        throw new Error(error.message || 'Error al enviar el formulario');
       }
 
       toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');

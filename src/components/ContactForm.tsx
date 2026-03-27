@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { LegalCheckboxes } from '@/components/LegalCheckboxes';
-import { supabase } from '@/integrations/supabase/client';
+import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 const formSchema = z.object({
   nombre: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }).max(100),
@@ -28,7 +28,6 @@ type FormValues = z.infer<typeof formSchema>;
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { toast } = useToast();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -45,16 +44,14 @@ const ContactForm = () => {
     setIsSubmitting(true);
 
     try {
-      // TODO: Implement Turnstile / reCAPTCHA validation here before inserting
-
-      // Insert into Supabase
-      const { error } = await supabase
-        .from('contact_leads' as any) // Assuming the table might not be in the generated types yet
+      // Insert into Supabase Innovafin
+      const { error } = await supabaseInnovafin
+        .from('contacto_general')
         .insert({
           nombre: values.nombre,
           email: values.email,
           mensaje: values.mensaje,
-          acepta_habeas_data: values.aceptaHabeasData,
+          acepta_datos: values.aceptaHabeasData,
           acepta_terminos: values.aceptaTerminos,
         });
 
@@ -64,8 +61,7 @@ const ContactForm = () => {
       }
 
       setIsSubmitted(true);
-      toast({
-        title: "¡Enviado!",
+      toast.success("¡Enviado!", {
         description: "El formulario se ha enviado con éxito. Nos pondremos en contacto pronto.",
       });
 
@@ -76,10 +72,8 @@ const ContactForm = () => {
       }, 5000);
 
     } catch (error: any) {
-      toast({
-        title: "Error al enviar",
+      toast.error("Error al enviar", {
         description: "Ocurrió un problema al enviar su mensaje. Por favor intente nuevamente.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);

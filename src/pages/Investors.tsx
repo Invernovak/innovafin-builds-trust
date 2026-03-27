@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
 import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
-import { supabase } from '@/integrations/supabase/client';
+import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 const beneficios = [{
   icon: TrendingUp,
@@ -125,34 +125,26 @@ const Investors = () => {
     setIsSubmitting(true);
 
     try {
-      // Use edge function for server-side validation and rate limiting
-      const response = await supabase.functions.invoke('submit-investor-lead', {
-        body: {
+      // Insert into Supabase Innovafin
+      const { error } = await supabaseInnovafin
+        .from('vinculacion_clientes')
+        .insert({
           tipo_persona: tipoPersona,
-          nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : null,
-          numero_identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : null,
-          razon_social: tipoPersona === 'juridica' ? formData.razonSocial : null,
-          nit: tipoPersona === 'juridica' ? formData.nit : null,
-          representante_legal: tipoPersona === 'juridica' ? formData.representanteLegal : null,
-          correo_electronico: formData.correoElectronico,
+          nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : formData.razonSocial,
+          identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : formData.nit,
+          email: formData.correoElectronico,
           telefono: formData.telefono,
           departamento: formData.departamento,
           ciudad: formData.ciudad,
           horario_contacto: formData.horarioContacto,
           monto_inversion: formData.montoInversion || null,
-          mensaje: formData.mensaje || null,
-          acepta_habeas_data: formData.aceptaHabeasData
-        }
-      });
+          mensaje_comentarios: formData.mensaje || null,
+          acepta_datos: formData.aceptaHabeasData,
+          acepta_terminos: formData.aceptaTerminos
+        });
 
-      if (response.error) {
-        throw new Error(response.error.message || 'Error al enviar el formulario');
-      }
-
-      const data = response.data;
-      if (data?.error) {
-        toast.error(data.error);
-        return;
+      if (error) {
+        throw new Error(error.message || 'Error al enviar el formulario');
       }
 
       toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
