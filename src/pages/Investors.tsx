@@ -623,7 +623,7 @@ const Investors = () => {
                     <LegalCheckboxes
                       authChecked={formData.aceptaHabeasData}
                       onAuthChange={(checked) => handleInputChange('aceptaHabeasData', checked)}
-                      termsChecked={formData.aceptaTerminos} // @ts-ignore
+                      termsChecked={formData.aceptaTerminos} // @ts-expect-error - acceptsTerminos is part of formData but validation depends on boolean cast
                       onTermsChange={(checked) => handleInputChange('aceptaTerminos', checked)}
                     />
 

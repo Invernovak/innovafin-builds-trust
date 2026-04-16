@@ -194,10 +194,13 @@ const Originators = () => {
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
                 Portal de Originadores
               </span>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 text-center">
                 Impulsa tu Empresa con <span className="text-white/90">Financiamiento Alternativo</span>
               </h1>
-              <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-5">
+              <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-8 text-center">
+                Conectamos empresas con potencial de crecimiento con capital estratégico para impulsar su expansión.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 shadow-lg hover:shadow-primary/40 hover:scale-105 transition-all duration-300" onClick={() => setActiveTab('vinculacion')}>
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Vincularse Ahora
@@ -206,7 +209,6 @@ const Originators = () => {
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Cómo Funciona
                 </Button>
-
               </div>
             </div>
           </div>
@@ -629,7 +631,7 @@ const Originators = () => {
                       <LegalCheckboxes
                         authChecked={formData.aceptaHabeasData}
                         onAuthChange={(checked) => setFormData({ ...formData, aceptaHabeasData: checked })}
-                        termsChecked={formData.aceptaTerminos} // @ts-ignore
+                        termsChecked={formData.aceptaTerminos} // @ts-expect-error - acceptsTerminos validation cast
                         onTermsChange={(checked) => setFormData({ ...formData, aceptaTerminos: checked })}
                       />
                     </div>

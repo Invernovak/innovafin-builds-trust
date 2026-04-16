@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminRequests, type RequestStatus } from '@/hooks/useAdminRequests';
+import type { RequestHistory } from '@/hooks/useInvoiceRequests';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -75,7 +76,7 @@ export default function Admin() {
   const [notes, setNotes] = useState('');
   const [updating, setUpdating] = useState(false);
   const [historyModal, setHistoryModal] = useState<string | null>(null);
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<RequestHistory[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   // Handle status change confirmation

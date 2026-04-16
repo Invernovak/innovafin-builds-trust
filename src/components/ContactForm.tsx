@@ -71,7 +71,7 @@ const ContactForm = () => {
         form.reset();
       }, 5000);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error("Error al enviar", {
         description: "Ocurrió un problema al enviar su mensaje. Por favor intente nuevamente.",
       });

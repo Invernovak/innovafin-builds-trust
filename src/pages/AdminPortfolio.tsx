@@ -47,11 +47,11 @@ const AdminPortfolio = () => {
   const updateHist = useUpdateFICHistorico();
 
   // Local state for forms
-  const [cpForm, setCpForm] = useState<Record<string, any>>({});
-  const [ficForm, setFicForm] = useState<Record<string, any>>({});
-  const [compForms, setCompForms] = useState<Record<string, Record<string, any>>>({});
-  const [tipoForms, setTipoForms] = useState<Record<string, Record<string, any>>>({});
-  const [histForms, setHistForms] = useState<Record<string, Record<string, any>>>({});
+  const [cpForm, setCpForm] = useState<Record<string, unknown>>({});
+  const [ficForm, setFicForm] = useState<Record<string, unknown>>({});
+  const [compForms, setCompForms] = useState<Record<string, Record<string, unknown>>>({});
+  const [tipoForms, setTipoForms] = useState<Record<string, Record<string, unknown>>>({});
+  const [histForms, setHistForms] = useState<Record<string, Record<string, unknown>>>({});
 
   const isLoading = cpLoading || compLoading || ficLoading || tiposLoading || histLoading || isAdminLoading;
 
