@@ -3,7 +3,7 @@ import SEOHead from '@/components/SEOHead';
 import { useLeadSubmission } from '@/hooks/useLeadSubmission';
 import {
   Briefcase, CheckCircle, ClipboardList, Users, Search,
-  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, Check, ChevronsUpDown
+  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, Check, ChevronsUpDown, RefreshCw
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -205,7 +205,7 @@ const Originators = () => {
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Vincularse Ahora
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-funciona')}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-vincularse')}>
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Cómo Funciona
                 </Button>

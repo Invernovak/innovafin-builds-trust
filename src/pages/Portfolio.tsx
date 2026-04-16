@@ -281,8 +281,8 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead 
-        title="Portafolio de Inversiones" 
+      <SEOHead
+        title="Portafolio de Inversiones"
         description="Consulta el desempeño de nuestros fondos y compartimentos. Transparencia en tiempo real sobre tus inversiones con Innovafin."
       />
       <Header />
