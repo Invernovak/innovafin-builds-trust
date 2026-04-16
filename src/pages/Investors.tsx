@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import SEOHead from '@/components/SEOHead';
+import { useLeadSubmission } from '@/hooks/useLeadSubmission';
 import { TrendingUp, Shield, Users, CheckCircle, ClipboardList, FileText, Send, ArrowRight, DollarSign, BarChart3, Calendar, User, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -13,7 +15,6 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
 import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
-import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 const beneficios = [{
   icon: TrendingUp,
@@ -77,10 +78,31 @@ const Investors = () => {
     aceptaHabeasData: false,
     aceptaTerminos: false
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDepartment, setOpenDepartment] = useState(false);
   const [openCity, setOpenCity] = useState(false);
   const [openTimeSlot, setOpenTimeSlot] = useState(false);
+
+  const { submitLead, isSubmitting } = useLeadSubmission({
+    type: 'investor',
+    onSuccess: () => {
+      setFormData({
+        nombreCompleto: '',
+        numeroIdentificacion: '',
+        correoElectronico: '',
+        telefono: '',
+        razonSocial: '',
+        nit: '',
+        representanteLegal: '',
+        departamento: '',
+        ciudad: '',
+        horarioContacto: '',
+        montoInversion: '',
+        mensaje: '',
+        aceptaHabeasData: false,
+        aceptaTerminos: false
+      });
+    }
+  });
 
   const {
     ref: heroRef,
@@ -122,63 +144,33 @@ const Investors = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      // Insert into Supabase Innovafin
-      const { error } = await supabaseInnovafin
-        .from('vinculacion_clientes')
-        .insert({
-          tipo_persona: tipoPersona,
-          nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : formData.razonSocial,
-          identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : formData.nit,
-          email: formData.correoElectronico,
-          telefono: formData.telefono,
-          departamento: formData.departamento,
-          ciudad: formData.ciudad,
-          horario_contacto: formData.horarioContacto,
-          monto_inversion: formData.montoInversion || null,
-          mensaje_comentarios: formData.mensaje || null,
-          acepta_datos: formData.aceptaHabeasData,
-          acepta_terminos: formData.aceptaTerminos
-        });
-
-      if (error) {
-        throw new Error(error.message || 'Error al enviar el formulario');
-      }
-
-      toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
-      setFormData({
-        nombreCompleto: '',
-        numeroIdentificacion: '',
-        correoElectronico: '',
-        telefono: '',
-        razonSocial: '',
-        nit: '',
-        representanteLegal: '',
-        departamento: '',
-        ciudad: '',
-        horarioContacto: '',
-        montoInversion: '',
-        mensaje: '',
-        aceptaHabeasData: false,
-        aceptaTerminos: false
-      });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('Hubo un error al enviar el formulario. Por favor, intente nuevamente.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    await submitLead({
+      tipo_persona: tipoPersona,
+      nombre_completo: tipoPersona === 'natural' ? formData.nombreCompleto : formData.razonSocial,
+      identificacion: tipoPersona === 'natural' ? formData.numeroIdentificacion : formData.nit,
+      email: formData.correoElectronico,
+      telefono: formData.telefono,
+      departamento: formData.departamento,
+      ciudad: formData.ciudad,
+      horario_contacto: formData.horarioContacto,
+      monto_inversion: formData.montoInversion || null,
+      mensaje_comentarios: formData.mensaje || null,
+      acepta_datos: formData.aceptaHabeasData,
+      acepta_terminos: formData.aceptaTerminos
+    });
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Portal de Inversionistas" 
+        description="Haz crecer tu capital con Innovafin. Únete a nuestra red de inversionistas y accede a oportunidades únicas en el mercado de financiamiento alternativo."
+      />
       <Header />
 
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
-        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 py-8 md:py-10 relative overflow-hidden">
+        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 py-24 md:py-40 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
@@ -197,11 +189,11 @@ const Investors = () => {
                 Únete a nuestra comunidad de inversionistas y accede a oportunidades únicas en el mercado de financiamiento alternativo.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Button size="default" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-6" onClick={() => setActiveTab('vinculacion')}>
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-8 shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300" onClick={() => setActiveTab('vinculacion')}>
                   <User className="w-4 h-4 mr-2" />
                   Vincularse Ahora
                 </Button>
-                <Button size="default" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-6" onClick={() => setActiveTab('como-invertir')}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-invertir')}>
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Cómo Invertir
                 </Button>

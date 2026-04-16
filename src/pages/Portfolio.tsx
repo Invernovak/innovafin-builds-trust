@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SEOHead from '@/components/SEOHead';
 import { Link } from 'react-router-dom';
 import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -280,13 +281,17 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Portafolio de Inversiones" 
+        description="Consulta el desempeño de nuestros fondos y compartimentos. Transparencia en tiempo real sobre tus inversiones con Innovafin."
+      />
       <Header />
 
       <main className="pt-20">
         {/* Hero Section */}
         <section
           ref={heroRef}
-          className="bg-[#0F172A] py-16 relative overflow-hidden"
+          className="bg-gradient-to-br from-primary to-primary/80 py-24 md:py-40 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -857,9 +862,9 @@ const Portfolio = () => {
                 {/* CTA Invertir */}
                 <div className="text-center mt-8">
                   <Link to="/investors#vinculacion">
-                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
+                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-10 py-6 text-lg font-bold shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300">
                       Me Interesa
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight className="w-6 h-6 ml-2" />
                     </Button>
                   </Link>
                 </div>

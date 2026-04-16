@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import SEOHead from '@/components/SEOHead';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -133,6 +134,10 @@ export default function Admin() {
   if (authLoading || checkingRole) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
+        <SEOHead 
+          title="Administración" 
+          description="Panel de administración de Innovafin para la gestión de solicitudes y portafolio."
+        />
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );

@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react';
+import SEOHead from '@/components/SEOHead';
+import { useLeadSubmission } from '@/hooks/useLeadSubmission';
 import {
   Briefcase, CheckCircle, ClipboardList, Users, Search,
   BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, Check, ChevronsUpDown
@@ -18,7 +20,6 @@ import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { toast } from 'sonner';
 import { colombiaDepartments, contactTimeSlots } from '@/data/colombiaLocations';
-import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 // Tipos de originación
 const originationTypes = [
@@ -83,9 +84,29 @@ const Originators = () => {
     aceptaHabeasData: false,
     aceptaTerminos: false,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [departamentoOpen, setDepartamentoOpen] = useState(false);
   const [ciudadOpen, setCiudadOpen] = useState(false);
+
+  const { submitLead, isSubmitting } = useLeadSubmission({
+    type: 'originator',
+    onSuccess: () => {
+      setFormData({
+        companyName: '',
+        nit: '',
+        contactName: '',
+        email: '',
+        phone: '',
+        originationType: '',
+        departamento: '',
+        ciudad: '',
+        horarioContacto: '',
+        businessDescription: '',
+        financingNeeds: '',
+        aceptaHabeasData: false,
+        aceptaTerminos: false,
+      });
+    }
+  });
 
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
@@ -128,66 +149,36 @@ const Originators = () => {
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      // Insert into Supabase Innovafin
-      const { error } = await supabaseInnovafin
-        .from('vinculacion_originadores')
-        .insert({
-          razon_social: formData.companyName,
-          nit: formData.nit,
-          nombre_contacto: formData.contactName,
-          email: formData.email,
-          telefono: formData.phone,
-          tipo_originacion: formData.originationType,
-          departamento: formData.departamento,
-          ciudad: formData.ciudad,
-          horario_contacto: formData.horarioContacto,
-          descripcion_negocio: formData.businessDescription,
-          necesidades_financiacion: formData.financingNeeds,
-          acepta_datos: formData.aceptaHabeasData,
-          acepta_terminos: formData.aceptaTerminos
-        });
-
-
-      if (error) {
-        throw new Error(error.message || 'Error al enviar el formulario');
-      }
-
-      toast.success('El formulario se ha enviado con éxito. Un asesor se pondrá en contacto pronto.');
-      setFormData({
-        companyName: '',
-        nit: '',
-        contactName: '',
-        email: '',
-        phone: '',
-        originationType: '',
-        departamento: '',
-        ciudad: '',
-        horarioContacto: '',
-        businessDescription: '',
-        financingNeeds: '',
-        aceptaHabeasData: false,
-        aceptaTerminos: false,
-      });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('Hubo un error al enviar el formulario. Por favor, intente nuevamente.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    await submitLead({
+      razon_social: formData.companyName,
+      nit: formData.nit,
+      nombre_contacto: formData.contactName,
+      email: formData.email,
+      telefono: formData.phone,
+      tipo_originacion: formData.originationType,
+      departamento: formData.departamento,
+      ciudad: formData.ciudad,
+      horario_contacto: formData.horarioContacto,
+      descripcion_negocio: formData.businessDescription,
+      necesidades_financiacion: formData.financingNeeds,
+      acepta_datos: formData.aceptaHabeasData,
+      acepta_terminos: formData.aceptaTerminos
+    });
   };
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Portal de Originadores" 
+        description="Potencia tu originación con Innovafin. Accede a fondeo eficiente y flexible para expandir tu operación de crédito."
+      />
       <Header />
 
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
         <section
           ref={heroRef}
-          className="bg-gradient-to-br from-secondary to-secondary/80 py-8 md:py-10 relative overflow-hidden"
+          className="bg-gradient-to-br from-secondary to-secondary/80 py-24 md:py-40 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -207,16 +198,13 @@ const Originators = () => {
                 Impulsa tu Empresa con <span className="text-white/90">Financiamiento Alternativo</span>
               </h1>
               <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-5">
-                Conectamos empresas con potencial de crecimiento con capital estratégico para impulsar su expansión.
-              </p>
-              <div className="flex flex-wrap justify-center gap-3">
-                <Button
-                  size="default"
-                  className="bg-white text-secondary hover:bg-white/90 rounded-full px-6"
-                  onClick={() => setActiveTab('vinculacion')}
-                >
-                  <Briefcase className="w-4 h-4 mr-2" />
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 shadow-lg hover:shadow-primary/40 hover:scale-105 transition-all duration-300" onClick={() => setActiveTab('vinculacion')}>
+                  <ArrowRight className="w-4 h-4 mr-2" />
                   Vincularse Ahora
+                </Button>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-funciona')}>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Cómo Funciona
                 </Button>
 
               </div>

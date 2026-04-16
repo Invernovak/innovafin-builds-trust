@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import SEOHead from '@/components/SEOHead';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
 import ServicesSection from '@/components/ServicesSection';
@@ -11,6 +12,10 @@ import Footer from '@/components/Footer';
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead 
+        title="Inicio" 
+        description="Bienvenido a Innovafin. Tu aliado estratégico en financiamiento alternativo y gestión de inversiones en Colombia."
+      />
       <Header />
       <main>
         <HeroSection />
