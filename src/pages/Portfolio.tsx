@@ -91,8 +91,8 @@ const fondoCapitalPrivado = {
       rentabilidadDia: 9.92,
       rentabilidad7dias: 9.23, // Valor original
       rentabilidad30dias: 4.94,
-      rentabilidad90dias: -21.02,
-      rentabilidad180dias: -8.86,
+      rentabilidad90dias: 0,
+      rentabilidad180dias: 0,
       rentabilidad365dias: 0.00,
       nivelRiesgo: 'Medio',
     },
