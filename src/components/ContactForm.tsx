@@ -9,7 +9,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { LegalCheckboxes } from '@/components/LegalCheckboxes';
-import { supabaseInnovafin } from '@/lib/supabaseInnovafin';
 
 const formSchema = z.object({
   nombre: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }).max(100),
@@ -26,7 +25,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<FormValues>({
@@ -40,44 +38,19 @@ const ContactForm = () => {
     },
   });
 
-  const onSubmit = async (values: FormValues) => {
-    setIsSubmitting(true);
+  // El envío lo registra el script de seguimiento de GHL (index.html), que captura el formulario al enviarlo.
+  // Ya no se guarda en Supabase.
+  const onSubmit = () => {
+    setIsSubmitted(true);
+    toast.success("¡Enviado!", {
+      description: "El formulario se ha enviado con éxito. Nos pondremos en contacto pronto.",
+    });
 
-    try {
-      // Insert into Supabase Innovafin
-      const { error } = await supabaseInnovafin
-        .from('contacto_general')
-        .insert({
-          nombre: values.nombre,
-          email: values.email,
-          mensaje: values.mensaje,
-          acepta_datos: values.aceptaHabeasData,
-          acepta_terminos: values.aceptaTerminos,
-        });
-
-      if (error) {
-        console.error('Error inserting lead:', error);
-        throw new Error(error.message);
-      }
-
-      setIsSubmitted(true);
-      toast.success("¡Enviado!", {
-        description: "El formulario se ha enviado con éxito. Nos pondremos en contacto pronto.",
-      });
-
-      // Reset form area after successful send
-      setTimeout(() => {
-        setIsSubmitted(false);
-        form.reset();
-      }, 5000);
-
-    } catch (error: unknown) {
-      toast.error("Error al enviar", {
-        description: "Ocurrió un problema al enviar su mensaje. Por favor intente nuevamente.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Limpiar el formulario después de mostrar la confirmación
+    setTimeout(() => {
+      setIsSubmitted(false);
+      form.reset();
+    }, 5000);
   };
 
   return (
@@ -92,7 +65,6 @@ const ContactForm = () => {
                 <Input
                   placeholder="Nombre"
                   className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-9 text-sm rounded-xl"
-                  disabled={isSubmitting}
                   {...field}
                   // Nombre en inglés ("full_name") para que el seguimiento de GHL reconozca el nombre del contacto
                   name="full_name"
@@ -113,7 +85,6 @@ const ContactForm = () => {
                   type="email"
                   placeholder="Email"
                   className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-9 text-sm rounded-xl"
-                  disabled={isSubmitting}
                   {...field}
                 />
               </FormControl>
@@ -132,7 +103,6 @@ const ContactForm = () => {
                   placeholder="Mensaje"
                   rows={2}
                   className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 resize-none rounded-xl text-sm"
-                  disabled={isSubmitting}
                   {...field}
                 />
               </FormControl>
@@ -163,18 +133,13 @@ const ContactForm = () => {
 
         <Button
           type="submit"
-          disabled={isSubmitting || isSubmitted || !form.watch("aceptaHabeasData") || !form.watch("aceptaTerminos")}
+          disabled={isSubmitted || !form.watch("aceptaHabeasData") || !form.watch("aceptaTerminos")}
           className={`w-full h-9 text-sm font-medium rounded-xl transition-all duration-300 ${isSubmitted
             ? 'bg-secondary hover:bg-secondary text-secondary-foreground'
             : 'bg-white/20 hover:bg-white/30 text-white border border-white/20'
             }`}
         >
-          {isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              Enviando...
-            </span>
-          ) : isSubmitted ? (
+          {isSubmitted ? (
             <span className="flex items-center gap-2">
               <Check className="w-5 h-5" />
               Mensaje enviado
