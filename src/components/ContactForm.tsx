@@ -94,6 +94,8 @@ const ContactForm = () => {
                   className="bg-white/10 border-white/20 placeholder:text-white/40 text-white focus:border-secondary focus:ring-secondary/20 h-9 text-sm rounded-xl"
                   disabled={isSubmitting}
                   {...field}
+                  // Nombre en inglés ("full_name") para que el seguimiento de GHL reconozca el nombre del contacto
+                  name="full_name"
                 />
               </FormControl>
               <FormMessage className="text-red-400 text-xs" />
