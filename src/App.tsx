@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import PageLoader from "./components/PageLoader";
 
@@ -46,7 +46,9 @@ const App = () => (
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/portfolio" element={<AdminPortfolio />} />
-            <Route path="/servicios/gestor-profesional" element={<GestorProfesional />} />
+            <Route path="/servicios/gestion-activos-alternativos" element={<GestorProfesional />} />
+            {/* Dirección antigua del servicio: redirige a la nueva para no romper enlaces */}
+            <Route path="/servicios/gestor-profesional" element={<Navigate to="/servicios/gestion-activos-alternativos" replace />} />
             <Route path="/servicios/valoracion-empresas" element={<ValoracionEmpresas />} />
             <Route path="/servicios/consultoria-financiera" element={<ConsultoriaFinanciera />} />
             <Route path="/servicios/estructuracion-negocios" element={<EstructuracionNegocios />} />

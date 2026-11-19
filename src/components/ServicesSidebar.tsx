@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils';
 
 const services = [
   { 
-    label: 'Gestor Profesional', 
-    href: '/servicios/gestor-profesional',
+    label: 'Gestión de Activos Alternativos', 
+    href: '/servicios/gestion-activos-alternativos',
     icon: Briefcase 
   },
   { 

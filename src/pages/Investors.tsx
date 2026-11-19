@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useLeadSubmission } from '@/hooks/useLeadSubmission';
 import { TrendingUp, Shield, Users, CheckCircle, ClipboardList, FileText, Send, ArrowRight, DollarSign, BarChart3, Calendar, User, MapPin, Clock } from 'lucide-react';
@@ -10,6 +11,7 @@ import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import Header from '@/components/Header';
+import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -60,7 +62,28 @@ const requiredDocsNatural = ['Copia del documento de identidad', 'Certificado de
 const requiredDocsJuridica = ['Certificado de existencia y representación legal', 'RUT actualizado', 'Estados financieros últimos 2 años', 'Copia del documento de identidad del representante legal', 'Certificación bancaria de la empresa'];
 
 const Investors = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Abre una pestaña y baja hasta ella
+  const goToTab = (tab: string) => {
+    setActiveTab(tab);
+    setTimeout(() => {
+      document.getElementById('pestanas-inversionistas')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
   const [activeTab, setActiveTab] = useState('como-invertir');
+
+  // Abre la pestaña indicada en la URL (ej. /investors#vinculacion) y baja hasta ella
+  useEffect(() => {
+    const tab = location.hash.replace('#', '');
+    if (!['como-invertir', 'beneficios', 'vinculacion'].includes(tab)) return;
+    setActiveTab(tab);
+    const timer = setTimeout(() => {
+      document.getElementById('pestanas-inversionistas')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [location.hash]);
   const [tipoPersona, setTipoPersona] = useState<'natural' | 'juridica'>('natural');
   const [formData, setFormData] = useState({
     nombreCompleto: '',
@@ -170,7 +193,7 @@ const Investors = () => {
 
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
-        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 py-24 md:py-40 relative overflow-hidden">
+        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
@@ -189,13 +212,17 @@ const Investors = () => {
                 Únete a nuestra comunidad de inversionistas y accede a oportunidades únicas en el mercado de financiamiento alternativo.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
-                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-8 shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300" onClick={() => setActiveTab('vinculacion')}>
-                  <User className="w-4 h-4 mr-2" />
-                  Vincularse Ahora
-                </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-invertir')}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => goToTab('como-invertir')}>
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Cómo Invertir
+                </Button>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => navigate('/portfolio')}>
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Conoce nuestros fondos actuales
+                </Button>
+                <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full px-8 shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300" onClick={() => goToTab('vinculacion')}>
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Agenda tu Asesoría
                 </Button>
               </div>
             </div>
@@ -239,7 +266,7 @@ const Investors = () => {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Plazos</p>
-                    <p className="text-xl font-bold">6 - 24 meses</p>
+                    <p className="text-xl font-bold">18 meses</p>
                   </div>
                 </div>
               </CardContent>
@@ -248,22 +275,25 @@ const Investors = () => {
         </section>
 
         {/* Main Tabs Section */}
-        <section className="container-narrow mx-auto px-4 py-10">
+        <section id="pestanas-inversionistas" className="container-narrow mx-auto px-4 py-10 scroll-mt-24">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-3 h-11">
-              <TabsTrigger value="como-invertir" className="text-xs md:text-sm">
-                <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
-                Cómo Invertir
-              </TabsTrigger>
-              <TabsTrigger value="beneficios" className="text-xs md:text-sm">
-                <TrendingUp className="w-4 h-4 mr-1 md:mr-2" />
-                Beneficios
-              </TabsTrigger>
-              <TabsTrigger value="vinculacion" className="text-xs md:text-sm">
-                <FileText className="w-4 h-4 mr-1 md:mr-2" />
-                Vinculación
-              </TabsTrigger>
-            </TabsList>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+              <TabsHint />
+              <TabsList className="grid w-full max-w-xl mx-auto md:mx-0 grid-cols-3">
+                <TabsTrigger value="como-invertir" className="text-xs md:text-sm">
+                  <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
+                  Cómo Invertir
+                </TabsTrigger>
+                <TabsTrigger value="beneficios" className="text-xs md:text-sm">
+                  <TrendingUp className="w-4 h-4 mr-1 md:mr-2" />
+                  Beneficios
+                </TabsTrigger>
+                <TabsTrigger value="vinculacion" className="text-xs md:text-sm">
+                  <FileText className="w-4 h-4 mr-1 md:mr-2" />
+                  Vinculación
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Cómo Invertir Tab */}
             <TabsContent value="como-invertir" className="space-y-6">

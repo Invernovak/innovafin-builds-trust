@@ -105,10 +105,10 @@ const ServicePageLayout = ({
           </div>
           
           <div className="container-narrow mx-auto px-4 py-16 relative">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="outline"
               onClick={() => navigate('/#servicios')}
-              className="mb-8 group lg:hidden"
+              className="mb-8 group rounded-full border-2 border-secondary text-secondary bg-card font-semibold shadow-md hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 lg:absolute lg:top-8 lg:right-4 lg:mb-0 z-10"
             >
               <ArrowLeft className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Volver a Servicios

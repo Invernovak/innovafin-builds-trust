@@ -5,15 +5,16 @@ const GestorProfesional = () => {
   return (
     <ServicePageLayout
       icon={Briefcase}
-      title="Gestor Profesional"
-      description="Somos expertos en la administración de portafolios y en el manejo de los activos aceptables para invertir de acuerdo a lo establecido en el reglamento del Fondo de Capital Privado."
-      extendedDescription="Analizamos las necesidades de nuestros grupos de interés, lo que permite aumentar la eficiencia y garantizar la entrega de servicios consistentes, rentables, innovadores y de calidad."
+      title="Gestión de Activos Alternativos"
+      description="En Innovafin no solo gestionamos Fondos de Capital Privado: los diseñamos. Estructuramos el fondo y su reglamento, y gestionamos los activos aptos para inversión con rigor profesional y bajo estándares ajustados a los diferentes perfiles de riesgo."
+      extendedDescription="Escuchamos a nuestros grupos de interés para operar con mayor eficiencia y entregar servicios consistentes, rentables e innovadores."
       featuresTitle="Nuestro enfoque incluye:"
       features={[
+        { text: 'Diseño y estructuración del Fondo de Capital Privado y su reglamento' },
         { text: 'Administración profesional de portafolios de inversión' },
-        { text: 'Gestión de activos bajo estándares regulatorios' },
-        { text: 'Análisis continuo de necesidades de grupos de interés' },
-        { text: 'Entrega de servicios consistentes y de alta calidad' },
+        { text: 'Selección de activos aptos para inversión bajo criterios establecidos en los reglamentos que son aprobados por la junta directiva de la sociedad administradora' },
+        { text: 'Análisis permanente de las necesidades de nuestros grupos de interés' },
+        { text: 'Servicios consistentes, rentables y de alta calidad' },
       ]}
       accentColor="primary"
       nextService={{

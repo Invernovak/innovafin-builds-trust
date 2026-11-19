@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 const serviceItems = [
-  { label: 'Gestor Profesional', href: '/servicios/gestor-profesional' },
+  { label: 'Gestión de Activos Alternativos', href: '/servicios/gestion-activos-alternativos' },
   { label: 'Valoración de Empresas', href: '/servicios/valoracion-empresas' },
   { label: 'Consultoría Financiera', href: '/servicios/consultoria-financiera' },
   { label: 'Estructuración de Negocios', href: '/servicios/estructuracion-negocios' },

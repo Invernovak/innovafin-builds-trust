@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import Header from '@/components/Header';
+import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -291,7 +292,7 @@ const Portfolio = () => {
         {/* Hero Section */}
         <section
           ref={heroRef}
-          className="bg-gradient-to-br from-primary to-primary/80 py-24 md:py-40 relative overflow-hidden"
+          className="bg-gradient-to-br from-primary to-primary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -308,7 +309,7 @@ const Portfolio = () => {
                 Portafolio de Inversiones
               </span>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                Inversiones <span className="text-secondary">Inteligentes</span>
+                Conoce nuestros <span className="text-secondary">fondos gestionados</span>
               </h1>
               <p className="text-white/70 text-lg max-w-2xl mx-auto">
                 Gestión profesional de activos con rentabilidades competitivas y diversificación estratégica.
@@ -335,7 +336,7 @@ const Portfolio = () => {
                     </div>
                     <div className="flex flex-col items-center md:items-start">
                       <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{displayLabel}</p>
-                      <p className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
+                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
                     </div>
                   </div>
                 </div>
@@ -363,20 +364,23 @@ const Portfolio = () => {
         <section className="py-12">
           <div className="container mx-auto px-4 max-w-7xl">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8 h-14 bg-muted/50 rounded-xl p-1 max-w-xl mx-auto">
-                <TabsTrigger
-                  value="capital-privado"
-                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
-                >
-                  FCP Alternativos Plus
-                </TabsTrigger>
-                <TabsTrigger
-                  value="fic"
-                  className="rounded-lg text-sm font-medium data-[state=active]:bg-card data-[state=active]:shadow-sm data-[state=active]:text-[#0F172A]"
-                >
-                  FIC 180 Plus
-                </TabsTrigger>
-              </TabsList>
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 mb-8">
+                <TabsHint />
+                <TabsList className="grid w-full grid-cols-2 gap-4 max-w-xl mx-auto md:mx-0">
+                  <TabsTrigger
+                    value="capital-privado"
+                    className="md:text-base"
+                  >
+                    FCP Alternativos Plus
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="fic"
+                    className="md:text-base"
+                  >
+                    FIC 180 Plus
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               {/* Fondo de Capital Privado Tab */}
               <TabsContent value="capital-privado">
@@ -426,7 +430,7 @@ const Portfolio = () => {
                               </div>
                             </th>
                             <th className="text-right py-3 px-4 font-semibold">* Disponible</th>
-                            <th className="text-right py-3 px-4 font-semibold">Invertido</th>
+                            <th className="text-right py-3 px-4 font-semibold">Vr. del Compartimento</th>
                             <th className="text-center py-3 px-4 font-semibold">% de los Activos</th>
                           </tr>
                         </thead>

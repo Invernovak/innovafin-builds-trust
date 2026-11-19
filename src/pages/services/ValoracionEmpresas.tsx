@@ -16,8 +16,8 @@ const ValoracionEmpresas = () => {
       ]}
       accentColor="blue"
       prevService={{
-        title: 'Gestor Profesional',
-        route: '/servicios/gestor-profesional',
+        title: 'Gestión de Activos Alternativos',
+        route: '/servicios/gestion-activos-alternativos',
       }}
       nextService={{
         title: 'Consultoría Financiera',

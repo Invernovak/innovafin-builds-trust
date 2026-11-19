@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import Header from '@/components/Header';
+import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -178,7 +179,7 @@ const Originators = () => {
         {/* Hero Section - Reduced padding */}
         <section
           ref={heroRef}
-          className="bg-gradient-to-br from-secondary to-secondary/80 py-24 md:py-40 relative overflow-hidden"
+          className="bg-gradient-to-br from-secondary to-secondary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -256,17 +257,20 @@ const Originators = () => {
         {/* Main Tabs Section */}
         <section className="container-narrow mx-auto px-4 py-10">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full max-w-xl mx-auto grid-cols-2 h-11">
-              <TabsTrigger value="como-vincularse" className="text-xs md:text-sm">
-                <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
-                Cómo Vincularse
-              </TabsTrigger>
-              <TabsTrigger value="vinculacion" className="text-xs md:text-sm">
-                <ClipboardList className="w-4 h-4 mr-1 md:mr-2" />
-                Vinculación
-              </TabsTrigger>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+              <TabsHint />
+              <TabsList className="grid w-full max-w-xl mx-auto md:mx-0 grid-cols-2">
+                <TabsTrigger value="como-vincularse" className="text-xs md:text-sm">
+                  <ArrowRight className="w-4 h-4 mr-1 md:mr-2" />
+                  Cómo Vincularse
+                </TabsTrigger>
+                <TabsTrigger value="vinculacion" className="text-xs md:text-sm">
+                  <ClipboardList className="w-4 h-4 mr-1 md:mr-2" />
+                  Vinculación
+                </TabsTrigger>
 
-            </TabsList>
+              </TabsList>
+            </div>
 
             {/* Cómo Vincularse Tab */}
             <TabsContent value="como-vincularse" className="space-y-6">

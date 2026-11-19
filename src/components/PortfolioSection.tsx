@@ -42,7 +42,7 @@ const PortfolioSection = () => {
       <div className="container-narrow mx-auto">
         <div className="text-center mb-16">
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
-            Nuestro Portafolio
+            Nuestros Fondos Gestionados
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Fondo de Capital Privado <span className="text-primary">Alternativos Plus</span>

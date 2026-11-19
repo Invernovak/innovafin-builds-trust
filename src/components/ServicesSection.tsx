@@ -13,9 +13,9 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const services = [
   {
     icon: Briefcase,
-    title: 'Gestor Profesional',
-    description: 'Somos expertos en la administración de portafolios y en el manejo de los activos aceptables para invertir de acuerdo a lo establecido en el reglamento del Fondo de Capital Privado.',
-    route: '/servicios/gestor-profesional',
+    title: 'Gestión de Activos Alternativos',
+    description: 'Estructuramos y administramos fondos de capital privado especializados en activos alternativos, con un enfoque disciplinado en la preservación y el crecimiento del capital.',
+    route: '/servicios/gestion-activos-alternativos',
     featured: true,
   },
   {

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { ComposedChart, Line, Bar, ResponsiveContainer, YAxis, XAxis, CartesianGrid } from 'recharts';
 import heroVideo from '@/assets/animacion_1.mp4';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const chartData = [
   { name: '1', bars: 20, line1: 25, line2: 15 },
@@ -29,11 +30,10 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToContact = () => {
-    const element = document.querySelector('#contacto');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const navigate = useNavigate();
+
+  const goToVinculacion = () => {
+    navigate('/investors#vinculacion');
   };
 
   return (
@@ -66,17 +66,28 @@ const HeroSection = () => {
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              Tu tranquilidad es nuestra{' '}
-              <span className="text-secondary">prioridad</span>
+              Tu tranquilidad,{' '}
+              <span className="text-secondary">nuestra prioridad</span>
             </h1>
 
+            <p className="text-xl md:text-2xl font-semibold text-white/90 mb-4 leading-snug max-w-xl animate-fade-up" style={{ animationDelay: '0.15s' }}>
+              Gestión de activos y banca de inversión de clase institucional
+            </p>
+
             <p className="text-lg md:text-xl text-white/75 mb-10 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              Gestión de activos y banca de inversión con tecnología de punta. Logra tus objetivos con controles permanentes y expertos.
+              En Innovafin estructuramos y administramos fondos de capital privado con tecnología de vanguardia y controles permanentes, para que alcances tus objetivos de inversión con respaldo experto.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 mb-10 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-              <Button 
-                onClick={scrollToContact}
+              <Button
+                onClick={() => navigate('/portfolio')}
+                size="lg"
+                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 py-6 text-base rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
+              >
+                Conoce nuestros fondos gestionados
+              </Button>
+              <Button
+                onClick={goToVinculacion}
                 size="lg"
                 className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 py-6 text-base rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-0.5"
               >
@@ -152,19 +163,6 @@ const HeroSection = () => {
                       />
                     </ComposedChart>
                   </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* Floating Shield Card */}
-              <div className="absolute -bottom-4 -left-6 glass-dark rounded-2xl p-4 shadow-xl animate-float border border-green-400/20" style={{ animationDelay: '1s' }}>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center shadow-[0_0_10px_rgba(74,222,128,0.2)]">
-                    <Shield className="w-5 h-5 text-green-400" />
-                  </div>
-                  <div>
-                    <p className="text-white/60 text-xs font-medium">Riesgo Sistema</p>
-                    <p className="text-green-400 font-bold uppercase tracking-wider text-sm">Bajo</p>
-                  </div>
                 </div>
               </div>
             </div>

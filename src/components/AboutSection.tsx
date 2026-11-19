@@ -49,7 +49,8 @@ const AboutSection = () => {
               ¿Por qué <span className="text-primary">Innovafin</span> es su mejor opción?
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-12">
-              Diseñamos servicios financieros con innovación y excelencia para construir valor y confianza
+              <strong className="font-semibold text-foreground">Rigor y cumplimiento.</strong>{' '}
+              Integramos métricas de VaR, ROIC e IRR en todo el proceso de inversión y operamos bajo los estándares de la Superintendencia Financiera de Colombia (SFC) y los marcos contables NIIF.
             </p>
           </div>
 

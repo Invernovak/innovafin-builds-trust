@@ -5,6 +5,7 @@ import {
   CreditCard, AlertCircle, ArrowRight, X, TrendingUp, LogIn, LogOut, User
 } from 'lucide-react';
 import Header from '@/components/Header';
+import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -273,7 +274,12 @@ const FactoringWeb = () => {
                   size="default"
                   variant="outline"
                   className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-6"
-                  onClick={() => setActiveTab('calculadora')}
+                  onClick={() => {
+                    setActiveTab('calculadora');
+                    setTimeout(() => {
+                      document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
+                    }, 50);
+                  }}
                 >
                   <Calculator className="w-4 h-4 mr-2" />
                   Simular Descuento
@@ -350,16 +356,19 @@ const FactoringWeb = () => {
         {/* Main Content */}
         <section id="calculadora" className="container-narrow mx-auto px-4 py-12">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
-              <TabsTrigger value="calculadora" className="text-sm">
-                <Calculator className="w-4 h-4 mr-2" />
-                Calculadora
-              </TabsTrigger>
-              <TabsTrigger value="guia" className="text-sm">
-                <CreditCard className="w-4 h-4 mr-2" />
-                Guía
-              </TabsTrigger>
-            </TabsList>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+              <TabsHint />
+              <TabsList className="grid w-full max-w-md mx-auto md:mx-0 grid-cols-2">
+                <TabsTrigger value="calculadora" className="text-sm">
+                  <Calculator className="w-4 h-4 mr-2" />
+                  Calculadora
+                </TabsTrigger>
+                <TabsTrigger value="guia" className="text-sm">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Guía
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
             {/* Calculator Tab */}
             <TabsContent value="calculadora" id="calculadora" className="space-y-6">
