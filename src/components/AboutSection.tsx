@@ -33,7 +33,7 @@ const AboutSection = () => {
     <section id="nosotros" className="section-padding bg-muted">
       <div className="container-narrow mx-auto">
         {/* Why Innovafin */}
-        <div id="por-que-nosotros" className="text-center mb-20 scroll-mt-24">
+        <div id="por-que-nosotros" className="text-center mb-10 scroll-mt-24">
           <div
             ref={headerRef}
             className={cn(
@@ -41,14 +41,14 @@ const AboutSection = () => {
               headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-semibold mb-4">
+              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
               Quiénes Somos
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              ¿Por qué <span className="text-primary">Innovafin</span> es su mejor opción?
+              ¿Por qué <span className="text-secondary">Innovafin</span> es su mejor opción?
             </h2>
-            <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-12">
+            <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
               <strong className="font-semibold text-foreground">Rigor y cumplimiento.</strong>{' '}
               Integramos métricas de VaR, ROIC e IRR en todo el proceso de inversión y operamos bajo los estándares de la Superintendencia Financiera de Colombia (SFC) y los marcos contables NIIF.
             </p>
@@ -65,7 +65,7 @@ const AboutSection = () => {
         </div>
 
         {/* Vision & Mission */}
-        <div className="grid md:grid-cols-2 gap-8 mb-20">
+        <div className="grid md:grid-cols-2 gap-8">
           {/* Vision Card */}
           <div
             id="vision"
@@ -88,7 +88,7 @@ const AboutSection = () => {
                 </div>
                 <div className="flex-1">
                   <span className="inline-block px-3 py-1 rounded-full bg-secondary/10 text-secondary text-xs font-semibold mb-3">
-                    Visión 2026
+                    Visión 2030
                   </span>
                   <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4 leading-tight">
                     "Seremos reconocidos como el mejor{' '}
@@ -128,7 +128,7 @@ const AboutSection = () => {
                     Nuestra Misión
                   </span>
                   <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
-                    Construir <span className="text-primary">valor y confianza</span> para nuestros clientes
+                    Construir <span className="text-secondary">valor y confianza</span> para nuestros clientes
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
                     Brindar servicios financieros de alta calidad impulsando el crecimiento sostenible de sus negocios a través de soluciones innovadoras y un equipo de profesionales comprometidos.

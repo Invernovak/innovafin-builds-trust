@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  FileText, Upload, CheckCircle, Clock,
-  DollarSign, Calculator, Send, Download, Eye, Filter,
-  CreditCard, AlertCircle, ArrowRight, X, TrendingUp, LogIn, LogOut, User
-} from 'lucide-react';
+import { FileText, Upload, CheckCircle, Clock, DollarSign, Calculator, Send, CreditCard, AlertCircle, ArrowRight, X, TrendingUp, LogIn, LogOut, User } from 'lucide-react';
 import Header from '@/components/Header';
 import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
@@ -61,6 +57,14 @@ const FactoringWeb = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<InvoiceRequest | null>(null);
   const [activeTab, setActiveTab] = useState('calculadora');
+
+  // Al presionar una pestaña, baja suavemente para mostrar su contenido
+  const goToTab = (tab: string) => {
+    setActiveTab(tab);
+    setTimeout(() => {
+      document.getElementById('calculadora')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
   const [calculatorData, setCalculatorData] = useState({
     invoiceAmount: '',
     daysToMaturity: '30',
@@ -83,7 +87,6 @@ const FactoringWeb = () => {
   const {
     requests,
     loading: requestsLoading,
-    stats,
     createRequest,
     fetchRequests,
     getStatusLabel
@@ -91,7 +94,6 @@ const FactoringWeb = () => {
 
   // Animation refs
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
-  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
   // Handle URL hash on mount and changes
   useEffect(() => {
@@ -227,25 +229,26 @@ const FactoringWeb = () => {
               "text-center transition-all duration-700",
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
-              {/* Auth status badge */}
-              <div className="flex justify-center mb-4">
+              {/* Sesión: arriba a la derecha en computador, arriba centrado en celular */}
+              <div className="flex justify-center mb-4 lg:mb-0 lg:absolute lg:top-0 lg:right-4 z-10">
                 {isAuthenticated ? (
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/20 border border-secondary/30 text-white text-xs font-medium">
-                    <User className="w-3 h-3" />
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 border border-white/30 text-white text-sm font-medium backdrop-blur-sm">
+                    <User className="w-4 h-4" />
                     {user?.email}
                     <button
                       onClick={handleSignOut}
                       className="ml-2 hover:text-secondary transition-colors"
+                      title="Cerrar sesión"
                     >
-                      <LogOut className="w-3 h-3" />
+                      <LogOut className="w-4 h-4" />
                     </button>
                   </span>
                 ) : (
                   <button
                     onClick={() => setShowAuthModal(true)}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 border border-white/30 text-white text-xs font-medium hover:bg-white/30 transition-colors"
+                    className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-primary text-sm font-semibold shadow-lg transition-all duration-300 hover:bg-secondary hover:text-white hover:shadow-xl hover:-translate-y-0.5"
                   >
-                    <LogIn className="w-3 h-3" />
+                    <LogIn className="w-4 h-4" />
                     Iniciar Sesión
                   </button>
                 )}
@@ -289,73 +292,9 @@ const FactoringWeb = () => {
           </div>
         </section>
 
-        {/* Stats Cards */}
-        <section className="container-narrow mx-auto px-4 -mt-6 relative z-10">
-          <div
-            ref={statsRef}
-            className={cn(
-              "grid md:grid-cols-4 gap-4 transition-all duration-700",
-              statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            )}
-          >
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <FileText className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Facturas</p>
-                    <p className="text-2xl font-bold">{stats.totalCount}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center">
-                    <Clock className="w-6 h-6 text-yellow-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">En Proceso</p>
-                    <p className="text-xl font-bold">{formatCurrency(stats.totalPending)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Aprobadas</p>
-                    <p className="text-xl font-bold">{formatCurrency(stats.totalApproved)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-lg border-0">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Desembolsado</p>
-                    <p className="text-xl font-bold">{formatCurrency(stats.totalDisbursed)}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
         {/* Main Content */}
-        <section id="calculadora" className="container-narrow mx-auto px-4 py-12">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+        <section id="calculadora" className="container-narrow mx-auto px-4 py-8 scroll-mt-20">
+          <Tabs value={activeTab} onValueChange={goToTab} className="space-y-8">
             <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
               <TabsHint />
               <TabsList className="grid w-full max-w-md mx-auto md:mx-0 grid-cols-2">

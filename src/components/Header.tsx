@@ -12,10 +12,7 @@ import {
 
 const serviceItems = [
   { label: 'Gestión de Activos Alternativos', href: '/servicios/gestion-activos-alternativos' },
-  { label: 'Valoración de Empresas', href: '/servicios/valoracion-empresas' },
-  { label: 'Consultoría Financiera', href: '/servicios/consultoria-financiera' },
   { label: 'Estructuración de Negocios', href: '/servicios/estructuracion-negocios' },
-  { label: 'Re-perfilamiento de Deuda', href: '/servicios/reperfilamiento-deuda' },
 ];
 
 const aboutItems = [
@@ -26,7 +23,6 @@ const aboutItems = [
 const originatorItems = [
   { label: 'Info General', href: '/originators', isRoute: true },
   { label: 'Registro', href: '/originators#registro', isSection: true },
-  { label: 'Originadores Activos', href: '/originators#activos', isSection: true },
   { label: 'Portal Originadores', href: '/originators', isRoute: true },
 ];
 
@@ -52,8 +48,8 @@ const navItems: NavItem[] = [
   { label: 'Quiénes Somos', href: '#nosotros', isRoute: false, hasSubmenu: true, submenuItems: aboutItems },
   { label: 'Servicios', href: '#servicios', isRoute: false, hasSubmenu: true, submenuItems: serviceItems },
   { label: 'Inversionistas', href: '/investors', isRoute: true },
-  { label: 'Originadores', href: '/originators', isRoute: true },
   { label: 'Portafolio', href: '/portfolio', isRoute: true },
+  { label: 'Originadores', href: '/originators', isRoute: true },
   { label: 'Factoring', href: '/factoring', isRoute: true },
 ];
 

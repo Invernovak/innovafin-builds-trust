@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Briefcase, BarChart3, Calculator, Building2, RefreshCw } from 'lucide-react';
+import { Briefcase, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const services = [
@@ -9,24 +9,9 @@ const services = [
     icon: Briefcase 
   },
   { 
-    label: 'Valoración de Empresas', 
-    href: '/servicios/valoracion-empresas',
-    icon: BarChart3 
-  },
-  { 
-    label: 'Consultoría Financiera', 
-    href: '/servicios/consultoria-financiera',
-    icon: Calculator 
-  },
-  { 
     label: 'Estructuración de Negocios', 
     href: '/servicios/estructuracion-negocios',
     icon: Building2 
-  },
-  { 
-    label: 'Re-perfilamiento de Deuda', 
-    href: '/servicios/reperfilamiento-deuda',
-    icon: RefreshCw 
   },
 ];
 

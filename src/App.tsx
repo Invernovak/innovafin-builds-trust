@@ -19,13 +19,11 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminPortfolio = lazy(() => import("./pages/AdminPortfolio"));
 const GestorProfesional = lazy(() => import("./pages/services/GestorProfesional"));
-const ValoracionEmpresas = lazy(() => import("./pages/services/ValoracionEmpresas"));
-const ConsultoriaFinanciera = lazy(() => import("./pages/services/ConsultoriaFinanciera"));
 const EstructuracionNegocios = lazy(() => import("./pages/services/EstructuracionNegocios"));
-const ReperfilamientoDeuda = lazy(() => import("./pages/services/ReperfilamientoDeuda"));
 const AvatarShowcase = lazy(() => import("./components/AvatarShowcase"));
 
 import { CookieConsent } from "@/components/CookieConsent";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +33,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <CookieConsent />
+      <WhatsAppButton />
       <BrowserRouter>
         <ScrollToTop />
         <Suspense fallback={<PageLoader />}>
@@ -49,10 +48,11 @@ const App = () => (
             <Route path="/servicios/gestion-activos-alternativos" element={<GestorProfesional />} />
             {/* Dirección antigua del servicio: redirige a la nueva para no romper enlaces */}
             <Route path="/servicios/gestor-profesional" element={<Navigate to="/servicios/gestion-activos-alternativos" replace />} />
-            <Route path="/servicios/valoracion-empresas" element={<ValoracionEmpresas />} />
-            <Route path="/servicios/consultoria-financiera" element={<ConsultoriaFinanciera />} />
+            {/* Servicios retirados: sus direcciones llevan a la sección Servicios de la portada */}
+            <Route path="/servicios/valoracion-empresas" element={<Navigate to="/#servicios" replace />} />
+            <Route path="/servicios/consultoria-financiera" element={<Navigate to="/#servicios" replace />} />
             <Route path="/servicios/estructuracion-negocios" element={<EstructuracionNegocios />} />
-            <Route path="/servicios/reperfilamiento-deuda" element={<ReperfilamientoDeuda />} />
+            <Route path="/servicios/reperfilamiento-deuda" element={<Navigate to="/#servicios" replace />} />
             <Route path="/avatar-showcase" element={<AvatarShowcase />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

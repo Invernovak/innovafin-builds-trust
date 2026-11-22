@@ -34,8 +34,13 @@ const Index = () => {
         <HeroSection />
         <AboutSection />
         <ServicesSection />
-        <InvestorsSection />
-        <OriginatorsSection />
+        {/* Inversionistas y Originadores, uno al lado del otro */}
+        <div className="section-padding bg-muted">
+          <div className="container-narrow mx-auto grid md:grid-cols-2 gap-6">
+            <InvestorsSection />
+            <OriginatorsSection />
+          </div>
+        </div>
         <PortfolioSection />
         <FactoringSection />
       </main>

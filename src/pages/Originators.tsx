@@ -1,10 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useLeadSubmission } from '@/hooks/useLeadSubmission';
-import {
-  Briefcase, CheckCircle, ClipboardList, Users, Search,
-  BadgeCheck, Banknote, Upload, Send, ArrowRight, MapPin, Building2, Check, ChevronsUpDown, RefreshCw
-} from 'lucide-react';
+import { CheckCircle, ClipboardList, Users, Search, BadgeCheck, Upload, Send, ArrowRight, Check, ChevronsUpDown, RefreshCw, Briefcase, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -34,6 +32,20 @@ const originationTypes = [
 ];
 
 
+
+// Beneficios que se muestran junto al proceso de vinculación
+const originatorBenefits = [
+  {
+    icon: Briefcase,
+    title: 'Financiamiento Ágil',
+    description: 'Obtén capital de trabajo de manera rápida y eficiente para impulsar el crecimiento de tu empresa.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Acompañamiento Integral',
+    description: 'Te brindamos asesoría continua y herramientas para optimizar tu gestión financiera.',
+  },
+];
 
 const processSteps = [
   {
@@ -70,6 +82,27 @@ const requiredDocuments = [
 
 const Originators = () => {
   const [activeTab, setActiveTab] = useState('como-vincularse');
+  const location = useLocation();
+
+  // Abre una pestaña y baja suavemente hasta ella
+  const goToTab = (tab: string) => {
+    setActiveTab(tab);
+    setTimeout(() => {
+      document.getElementById('pestanas-originadores')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
+
+  // Abre la pestaña indicada en la URL (ej. /originators#vinculacion o #registro)
+  useEffect(() => {
+    const hash = location.hash.replace('#', '');
+    const tab = hash === 'registro' ? 'vinculacion' : hash;
+    if (!['como-vincularse', 'vinculacion'].includes(tab)) return;
+    setActiveTab(tab);
+    const timer = setTimeout(() => {
+      document.getElementById('pestanas-originadores')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [location.hash]);
   const [formData, setFormData] = useState({
     companyName: '',
     nit: '',
@@ -110,7 +143,6 @@ const Originators = () => {
   });
 
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
-  const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
   // Get cities based on selected department
   const availableCities = useMemo(() => {
@@ -179,7 +211,7 @@ const Originators = () => {
         {/* Hero Section - Reduced padding */}
         <section
           ref={heroRef}
-          className="bg-gradient-to-br from-secondary to-secondary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden"
+          className="bg-gradient-to-br from-secondary to-secondary/80 pt-8 pb-8 md:pt-10 md:pb-10 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -202,11 +234,11 @@ const Originators = () => {
                 Conectamos empresas con potencial de crecimiento con capital estratégico para impulsar su expansión.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 shadow-lg hover:shadow-primary/40 hover:scale-105 transition-all duration-300" onClick={() => setActiveTab('vinculacion')}>
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 shadow-lg hover:shadow-primary/40 hover:scale-105 transition-all duration-300" onClick={() => goToTab('vinculacion')}>
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Vincularse Ahora
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => setActiveTab('como-vincularse')}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => goToTab('como-vincularse')}>
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Cómo Funciona
                 </Button>
@@ -215,48 +247,9 @@ const Originators = () => {
           </div>
         </section>
 
-        {/* Stats Cards with hover effects */}
-        <section className="container-narrow mx-auto px-4 -mt-6 relative z-10">
-          <div
-            ref={statsRef}
-            className={cn(
-              "grid md:grid-cols-2 gap-4 max-w-3xl mx-auto transition-all duration-700",
-              statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            )}
-          >
-            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="pt-5 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-secondary/10 flex items-center justify-center">
-                    <Building2 className="w-5 h-5 text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Originadores Activos</p>
-                    <p className="text-xl font-bold text-secondary">4</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="pt-5 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Banknote className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Financiamiento Total</p>
-                    <p className="text-xl font-bold">$10.1M USD</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-          </div>
-        </section>
-
         {/* Main Tabs Section */}
-        <section className="container-narrow mx-auto px-4 py-10">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <section id="pestanas-originadores" className="container-narrow mx-auto px-4 py-8 scroll-mt-24">
+          <Tabs value={activeTab} onValueChange={goToTab} className="space-y-6">
             <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
               <TabsHint />
               <TabsList className="grid w-full max-w-xl mx-auto md:mx-0 grid-cols-2">
@@ -275,28 +268,49 @@ const Originators = () => {
             {/* Cómo Vincularse Tab */}
             <TabsContent value="como-vincularse" className="space-y-6">
               <Card className="border-2 border-secondary/10">
-                <CardHeader className="pb-4">
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <div className="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center">
-                      <ArrowRight className="w-4 h-4 text-secondary" />
-                    </div>
-                    Proceso de Vinculación
-                  </CardTitle>
-                  <CardDescription>Siga estos pasos para convertirse en originador de InnovaFin</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  {processSteps.map((step, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
-                        <step.icon className="w-5 h-5 text-secondary-foreground" />
+                <div className="grid lg:grid-cols-2 items-center">
+                  {/* Pasos del proceso */}
+                  <div>
+                    <CardHeader className="pb-4">
+                      <CardTitle className="flex items-center gap-2 text-xl">
+                        <div className="w-9 h-9 rounded-xl bg-secondary/10 flex items-center justify-center">
+                          <ArrowRight className="w-4 h-4 text-secondary" />
+                        </div>
+                        Proceso de Vinculación
+                      </CardTitle>
+                      <CardDescription>Siga estos pasos para convertirse en originador de InnovaFin</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-5">
+                      {processSteps.map((step, index) => (
+                        <div key={index} className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0">
+                            <step.icon className="w-5 h-5 text-secondary-foreground" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-foreground text-sm">{step.title}</h3>
+                            <p className="text-xs text-muted-foreground">{step.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </div>
+
+                  {/* Beneficios para originadores */}
+                  <div className="grid sm:grid-cols-2 gap-4 px-6 pb-6 lg:pt-6 lg:pl-0">
+                    {originatorBenefits.map((benefit) => (
+                      <div
+                        key={benefit.title}
+                        className="bento-card text-center group hover:border-secondary/20 hover:shadow-xl transition-all duration-300"
+                      >
+                        <div className="w-14 h-14 rounded-2xl bg-secondary/10 mx-auto mb-4 flex items-center justify-center group-hover:bg-secondary/20 group-hover:scale-110 transition-all duration-300">
+                          <benefit.icon className="w-7 h-7 text-secondary" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-lg font-semibold text-foreground mb-2">{benefit.title}</h3>
+                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-foreground text-sm">{step.title}</h3>
-                        <p className="text-xs text-muted-foreground">{step.description}</p>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
+                    ))}
+                  </div>
+                </div>
               </Card>
 
               {/* Documentos Requeridos */}
@@ -323,7 +337,7 @@ const Originators = () => {
                 <Button
                   size="default"
                   className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
-                  onClick={() => setActiveTab('vinculacion')}
+                  onClick={() => goToTab('vinculacion')}
                 >
                   Me Interesa
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -357,6 +371,7 @@ const Originators = () => {
                           type="text"
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="Empresa S.A.S"
+                          name="company_name"
                           value={formData.companyName}
                           onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
                           required
@@ -387,6 +402,7 @@ const Originators = () => {
                           type="text"
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="Juan Pérez"
+                          name="full_name"
                           value={formData.contactName}
                           onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
                           required
@@ -402,6 +418,7 @@ const Originators = () => {
                           type="email"
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="contacto@empresa.com"
+                          name="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           required
@@ -417,6 +434,7 @@ const Originators = () => {
                           type="tel"
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="+57 300 123 4567"
+                          name="phone"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           required
@@ -447,6 +465,7 @@ const Originators = () => {
                         {/* Hidden input for HTML5 validation */}
                         <input
                           type="text"
+                          name="tipo_originacion"
                           value={formData.originationType}
                           onChange={() => { }}
                           required
@@ -502,6 +521,7 @@ const Originators = () => {
                         {/* Hidden input for HTML5 validation */}
                         <input
                           type="text"
+                          name="state"
                           value={formData.departamento}
                           onChange={() => { }}
                           required
@@ -558,6 +578,7 @@ const Originators = () => {
                         {/* Hidden input for HTML5 validation */}
                         <input
                           type="text"
+                          name="city"
                           value={formData.ciudad}
                           onChange={() => { }}
                           required
@@ -591,6 +612,7 @@ const Originators = () => {
                         {/* Hidden input for HTML5 validation */}
                         <input
                           type="text"
+                          name="horario_contacto"
                           value={formData.horarioContacto}
                           onChange={() => { }}
                           required
@@ -609,6 +631,7 @@ const Originators = () => {
                       <textarea
                         className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all resize-y min-h-[100px]"
                         placeholder="Describa brevemente su modelo de negocio y propuesta de valor..."
+                        name="message"
                         value={formData.businessDescription}
                         onChange={(e) => setFormData({ ...formData, businessDescription: e.target.value })}
                         required
@@ -623,6 +646,7 @@ const Originators = () => {
                       <textarea
                         className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all resize-y min-h-[100px]"
                         placeholder="Monto requerido y uso de los fondos..."
+                        name="necesidades_financiacion"
                         value={formData.financingNeeds}
                         onChange={(e) => setFormData({ ...formData, financingNeeds: e.target.value })}
                         required

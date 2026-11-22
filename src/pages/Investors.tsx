@@ -193,7 +193,7 @@ const Investors = () => {
 
       <main className="pt-20">
         {/* Hero Section - Reduced padding */}
-        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden">
+        <section ref={heroRef} className="bg-gradient-to-br from-primary to-primary/80 pt-8 pb-12 md:pt-10 md:pb-14 relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
             <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
@@ -216,7 +216,7 @@ const Investors = () => {
                   <ArrowRight className="w-4 h-4 mr-2" />
                   Cómo Invertir
                 </Button>
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => navigate('/portfolio')}>
+                <Button size="lg" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white rounded-full px-8 backdrop-blur-sm transition-all duration-300" onClick={() => navigate('/portfolio', { state: { desde: 'inversionistas' } })}>
                   <BarChart3 className="w-4 h-4 mr-2" />
                   Conoce nuestros fondos actuales
                 </Button>
@@ -275,8 +275,8 @@ const Investors = () => {
         </section>
 
         {/* Main Tabs Section */}
-        <section id="pestanas-inversionistas" className="container-narrow mx-auto px-4 py-10 scroll-mt-24">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <section id="pestanas-inversionistas" className="container-narrow mx-auto px-4 py-8 scroll-mt-24">
+          <Tabs value={activeTab} onValueChange={goToTab} className="space-y-6">
             <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
               <TabsHint />
               <TabsList className="grid w-full max-w-xl mx-auto md:mx-0 grid-cols-3">
@@ -422,6 +422,11 @@ const Investors = () => {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Datos que se eligen con botones o listas: se envían ocultos para el seguimiento de GHL */}
+                    <input type="hidden" name="tipo_persona" value={tipoPersona === 'natural' ? 'Persona natural' : 'Persona jurídica'} />
+                    <input type="hidden" name="state" value={formData.departamento} />
+                    <input type="hidden" name="city" value={formData.ciudad} />
+                    <input type="hidden" name="horario_contacto" value={formData.horarioContacto} />
                     {/* Tipo de Persona */}
                     <div>
                       <label className="text-sm font-medium mb-2 block">Tipo de Persona *</label>
@@ -444,7 +449,7 @@ const Investors = () => {
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
                             Nombre Completo *
                           </label>
-                          <input type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Juan Pérez" value={formData.nombreCompleto} onChange={e => handleInputChange('nombreCompleto', e.target.value)} required />
+                          <input name="full_name" type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Juan Pérez" value={formData.nombreCompleto} onChange={e => handleInputChange('nombreCompleto', e.target.value)} required />
                         </div>
                         <div>
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -459,7 +464,7 @@ const Investors = () => {
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
                             Razón Social *
                           </label>
-                          <input type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Empresa S.A.S" value={formData.razonSocial} onChange={e => handleInputChange('razonSocial', e.target.value)} required />
+                          <input name="company_name" type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Empresa S.A.S" value={formData.razonSocial} onChange={e => handleInputChange('razonSocial', e.target.value)} required />
                         </div>
                         <div>
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -471,7 +476,7 @@ const Investors = () => {
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
                             Representante Legal *
                           </label>
-                          <input type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Nombre del representante legal" value={formData.representanteLegal} onChange={e => handleInputChange('representanteLegal', e.target.value)} required />
+                          <input name="full_name" type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="Nombre del representante legal" value={formData.representanteLegal} onChange={e => handleInputChange('representanteLegal', e.target.value)} required />
                         </div>
                       </div>
                     )}
@@ -482,13 +487,13 @@ const Investors = () => {
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Correo Electrónico *
                         </label>
-                        <input type="email" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="correo@ejemplo.com" value={formData.correoElectronico} onChange={e => handleInputChange('correoElectronico', e.target.value)} required />
+                        <input name="email" type="email" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="correo@ejemplo.com" value={formData.correoElectronico} onChange={e => handleInputChange('correoElectronico', e.target.value)} required />
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground mb-2 block">
                           Teléfono *
                         </label>
-                        <input type="tel" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="+57 300 123 4567" value={formData.telefono} onChange={e => handleInputChange('telefono', e.target.value)} required />
+                        <input name="phone" type="tel" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="+57 300 123 4567" value={formData.telefono} onChange={e => handleInputChange('telefono', e.target.value)} required />
                       </div>
                     </div>
 
@@ -631,7 +636,7 @@ const Investors = () => {
                       <label className="text-sm font-medium text-muted-foreground mb-2 block">
                         Monto Aproximado de Inversión
                       </label>
-                      <select className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" value={formData.montoInversion} onChange={e => handleInputChange('montoInversion', e.target.value)}>
+                      <select name="monto_inversion" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" value={formData.montoInversion} onChange={e => handleInputChange('montoInversion', e.target.value)}>
                         <option value="">Seleccione un rango</option>
                         <option value="10-50">$10 - $50 millones COP</option>
                         <option value="50-100">$50 - $100 millones COP</option>
@@ -645,7 +650,7 @@ const Investors = () => {
                       <label className="text-sm font-medium text-muted-foreground mb-2 block">
                         Mensaje o Comentarios
                       </label>
-                      <textarea className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y min-h-[80px] text-sm" placeholder="Cuéntenos sobre sus objetivos de inversión..." value={formData.mensaje} onChange={e => handleInputChange('mensaje', e.target.value)} />
+                      <textarea name="message" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y min-h-[80px] text-sm" placeholder="Cuéntenos sobre sus objetivos de inversión..." value={formData.mensaje} onChange={e => handleInputChange('mensaje', e.target.value)} />
                     </div>
 
                     {/* Habeas Data Checkbox */}

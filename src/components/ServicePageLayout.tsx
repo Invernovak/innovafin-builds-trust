@@ -97,18 +97,18 @@ const ServicePageLayout = ({
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pt-24 pb-16">
+      <main className="pt-20 pb-10">
         {/* Hero section with gradient background */}
-        <div className={cn("relative overflow-hidden mb-12", `bg-gradient-to-br ${colors.gradient}`)}>
+        <div className={cn("relative overflow-hidden mb-8", `bg-gradient-to-br ${colors.gradient}`)}>
           <div className="absolute inset-0 opacity-[0.03]">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
           </div>
           
-          <div className="container-narrow mx-auto px-4 py-16 relative">
+          <div className="container-narrow mx-auto px-4 py-8 md:py-10 relative">
             <Button
               variant="outline"
               onClick={() => navigate('/#servicios')}
-              className="mb-8 group rounded-full border-2 border-secondary text-secondary bg-card font-semibold shadow-md hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 lg:absolute lg:top-8 lg:right-4 lg:mb-0 z-10"
+              className="mb-6 group rounded-full border-2 border-secondary text-secondary bg-card font-semibold shadow-md hover:bg-secondary hover:text-secondary-foreground transition-all duration-300 lg:absolute lg:top-8 lg:right-4 lg:mb-0 z-10"
             >
               <ArrowLeft className="mr-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Volver a Servicios
@@ -153,7 +153,7 @@ const ServicePageLayout = ({
         </div>
 
         <div className="container-narrow mx-auto px-4">
-          <div className="flex gap-12">
+          <div className="flex gap-10">
             <ServicesSidebar />
             
             <div className="flex-1 max-w-4xl">
@@ -170,7 +170,7 @@ const ServicePageLayout = ({
                 </p>
                 
                 {extendedDescription && (
-                  <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                  <p className="text-muted-foreground text-lg leading-relaxed mb-6">
                     {extendedDescription}
                   </p>
                 )}
@@ -217,7 +217,7 @@ const ServicePageLayout = ({
               </div>
 
               {/* Navigation between services */}
-              <div className="mt-12 pt-8 border-t border-border/50">
+              <div className="mt-8 pt-6 border-t border-border/50">
                 <div className="flex justify-between items-center gap-4">
                   {prevService ? (
                     <Link 

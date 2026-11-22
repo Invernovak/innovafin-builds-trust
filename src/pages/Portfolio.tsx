@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import SEOHead from '@/components/SEOHead';
-import { Link } from 'react-router-dom';
-import { CheckCircle, TrendingUp, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users, Clock, Percent, RefreshCw } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { ArrowLeft, Wallet, ShieldCheck, Briefcase, Calendar, ArrowRight, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import Header from '@/components/Header';
 import TabsHint from '@/components/TabsHint';
 import Footer from '@/components/Footer';
@@ -54,8 +52,8 @@ const fondoCapitalPrivado = {
   porcentajeTotal: 88,
   compartimentos: [
     {
-      id: 'libranzas',
-      name: 'Libranzas',
+      id: 'integra-plus-libranzas',
+      name: 'Integra Plus - Libranzas',
       totalActivos: 142285655709,
       disponible: 2234163609,
       invertido: 140278708137,
@@ -69,8 +67,8 @@ const fondoCapitalPrivado = {
       nivelRiesgo: 'Bajo',
     },
     {
-      id: 'educapital1',
-      name: 'Educapital1',
+      id: 'evolucion-libranzas',
+      name: 'Evolución - Libranzas',
       totalActivos: 9272035443,
       disponible: 907806217,
       invertido: 8378943898,
@@ -83,36 +81,6 @@ const fondoCapitalPrivado = {
       rentabilidad365dias: 19.41,
       nivelRiesgo: 'Bajo',
     },
-    {
-      id: 'evolucion',
-      name: 'Evolución',
-      totalActivos: 24467897,
-      disponible: 25551653,
-      invertido: 0,
-      porcentajeActivos: 0,
-      rentabilidadDia: 9.92,
-      rentabilidad7dias: 9.23, // Valor original
-      rentabilidad30dias: 4.94,
-      rentabilidad90dias: 0,
-      rentabilidad180dias: 0,
-      rentabilidad365dias: 0.00,
-      nivelRiesgo: 'Medio',
-    },
-    {
-      id: 'Integra Plus',
-      name: 'Integra Plus',
-      totalActivos: 20068907053,
-      disponible: 17835049861,
-      invertido: 2236054770,
-      porcentajeActivos: 11,
-      rentabilidadDia: 8.49,
-      rentabilidad7dias: 9.23, // Valor original
-      rentabilidad30dias: 0.00,
-      rentabilidad90dias: 0.00,
-      rentabilidad180dias: 0.00,
-      rentabilidad365dias: 0.00,
-      nivelRiesgo: 'Medio',
-    },
   ],
 };
 
@@ -120,7 +88,7 @@ const fondoCapitalPrivado = {
 const ficAlternativos180Plus = {
   name: 'FIC Alternativos 180 Plus',
   administrador: 'AVAL Fiduciaria - Asset Management',
-  fechaReporte: '30 de marzo de 2026',
+  fechaReporte: 'Domingo, 30 de marzo de 2026',
   valorUnidad: 14637.11,
   valorFondo: 186673273435.14,
   saldo: 186673273435.14,
@@ -183,8 +151,27 @@ const beneficios = [
   'Reportes periódicos de desempeño',
 ];
 
+// Monto mínimo de inversión por tipo de participación del FIC (TP1 / TP2)
+const montoMinimoFIC = (nombre: string) => {
+  const n = nombre.toLowerCase();
+  if (n.includes('tp1')) return '$ 10.000.000';
+  if (n.includes('tp2')) return '$ 1.000.000.000';
+  return '-';
+};
+
 const Portfolio = () => {
+  // Si se llegó desde el botón "Conoce nuestros fondos actuales" de Inversionistas, se ofrece volver
+  const location = useLocation();
+  const vieneDeInversionistas = (location.state as { desde?: string } | null)?.desde === 'inversionistas';
   const [activeTab, setActiveTab] = useState('capital-privado');
+
+  // Al presionar una pestaña, baja suavemente dejando visibles las burbujas de datos (cambian con la pestaña)
+  const goToTab = (tab: string) => {
+    setActiveTab(tab);
+    setTimeout(() => {
+      document.getElementById('datos-portafolio')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
   const { ref: statsRef, isVisible: statsVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.2 });
 
@@ -227,7 +214,7 @@ const Portfolio = () => {
   const ficData = dbFIC ? {
     name: dbFIC.name,
     administrador: dbFIC.administrador,
-    fechaReporte: new Date(dbFIC.fecha_reporte).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
+    fechaReporte: new Date(dbFIC.fecha_reporte).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
     valorUnidad: Number(dbFIC.valor_unidad),
     valorFondo: Number(dbFIC.valor_fondo),
     saldo: Number(dbFIC.valor_fondo),
@@ -269,16 +256,27 @@ const Portfolio = () => {
     : ficAlternativos180Plus.comportamientoHistorico;
 
   // Calculate total portfolio by summing all compartimentos' total assets
-  const portafolioTotal = compartimentosData.reduce((acc, curr) => acc + curr.totalActivos, 0);
+  // Total reportado del fondo (no depende de cuántos compartimentos se muestren)
+  const portafolioTotal = capitalPrivadoData.totalFondo;
+  // Fila de totales de la tabla: suma de los compartimentos que se muestran
+  const totalVrCompartimentos = compartimentosData.reduce((acc, c) => acc + c.invertido, 0);
+  const totalActivosMostrados = compartimentosData.reduce((acc, c) => acc + c.totalActivos, 0);
+  const porcentajeTotalMostrado = totalActivosMostrados > 0 ? Math.round((totalVrCompartimentos / totalActivosMostrados) * 100) : 0;
 
   // Dynamic values based on active tab
   const isFicActive = activeTab === 'fic';
-  const displayLabel = isFicActive ? 'Valor Fondo FIC' : 'Portafolio Total Administrado FCP';
-  const displayValue = isFicActive ? ficAlternativos180Plus.saldo : portafolioTotal;
-  const secondaryLabel = isFicActive ? 'Participaciones' : 'Compartimentos';
-  const secondaryValue = isFicActive ? ficAlternativos180Plus.tiposParticipacion.length : compartimentosData.length;
   const displayDate = isFicActive ? ficAlternativos180Plus.fechaReporte : capitalPrivadoData.fechaReporte;
-  const MainIcon = isFicActive ? Users : Wallet;
+  // Burbujas de datos bajo la franja superior (cambian según la pestaña activa)
+  const statBubbles = isFicActive
+    ? [
+        { label: 'Valor Fondo FIC', value: formatCOP(ficAlternativos180Plus.saldo), icon: Users, iconBox: 'bg-primary/10', iconColor: 'text-primary' },
+        { label: 'Participaciones', value: String(ficAlternativos180Plus.tiposParticipacion.length), icon: Briefcase, iconBox: 'bg-secondary/10', iconColor: 'text-secondary' },
+      ]
+    : [
+        { label: 'Portafolio Total Gestionado', value: formatCOP(portafolioTotal), icon: Wallet, iconBox: 'bg-primary/10', iconColor: 'text-primary' },
+        { label: 'Fondos de Capital Privado', value: '1', icon: ShieldCheck, iconBox: 'bg-secondary/10', iconColor: 'text-secondary' },
+        { label: 'Compartimentos', value: '2', icon: Briefcase, iconBox: 'bg-accent', iconColor: 'text-accent-foreground' },
+      ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -292,7 +290,7 @@ const Portfolio = () => {
         {/* Hero Section */}
         <section
           ref={heroRef}
-          className="bg-gradient-to-br from-primary to-primary/80 pt-12 pb-16 md:pt-16 md:pb-20 relative overflow-hidden"
+          className="bg-gradient-to-br from-primary to-primary/80 pt-6 pb-16 md:pt-8 md:pb-16 relative overflow-hidden"
         >
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
@@ -300,15 +298,24 @@ const Portfolio = () => {
           </div>
 
           <div className="container-narrow mx-auto px-4 relative">
+            {vieneDeInversionistas && (
+              <Link
+                to="/investors"
+                className="group inline-flex items-center gap-2 mb-6 lg:mb-0 lg:absolute lg:top-0 lg:left-4 px-5 py-2.5 rounded-full border-2 border-white/40 bg-white/10 text-white text-sm font-semibold backdrop-blur-sm transition-all duration-300 hover:bg-white hover:text-primary z-10"
+              >
+                <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+                Volver a Inversionistas
+              </Link>
+            )}
             <div className={cn(
               "text-center transition-all duration-700",
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-6">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-white text-sm font-semibold mb-4">
                 <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
                 Portafolio de Inversiones
               </span>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">
                 Conoce nuestros <span className="text-secondary">fondos gestionados</span>
               </h1>
               <p className="text-white/70 text-lg max-w-2xl mx-auto">
@@ -318,8 +325,8 @@ const Portfolio = () => {
           </div>
         </section>
 
-        {/* Stats Cards */}
-        <section className="container-narrow mx-auto px-4 -mt-8 relative z-10">
+        {/* Stats Cards: burbujas como las de Inversionistas */}
+        <section id="datos-portafolio" className="container-narrow mx-auto px-4 -mt-14 relative z-10 scroll-mt-24">
           <div
             ref={statsRef}
             className={cn(
@@ -327,44 +334,39 @@ const Portfolio = () => {
               statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
           >
-            <Card className="bg-card shadow-xl border-0 overflow-hidden">
-              <div className="grid md:grid-cols-4 divide-y md:divide-y-0 md:divide-x border-b">
-                <div className="p-6 md:col-span-3 bg-white flex flex-col items-center justify-center">
-                  <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-                    <div className="w-12 h-12 rounded-xl bg-[#0F172A] flex items-center justify-center shrink-0">
-                      <MainIcon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex flex-col items-center md:items-start">
-                      <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-1">{displayLabel}</p>
-                      <p className="text-3xl md:text-4xl font-bold text-[#0F172A] leading-none tracking-tight">{formatCOP(displayValue)}</p>
-                    </div>
-                  </div>
-                </div>
+            {/* Fecha del reporte, arriba a la izquierda */}
+            <div className="mb-3 flex justify-center md:justify-start">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-medium backdrop-blur-sm">
+                <Calendar className="w-3.5 h-3.5" />
+                {displayDate}
+              </span>
+            </div>
 
-                <div className="p-6 bg-muted/30 flex flex-col justify-center items-center md:items-start border-l border-border/50">
-                  <div className="flex items-center gap-2 mb-2 w-full justify-center md:justify-start">
-                    <Briefcase className="w-5 h-5 text-muted-foreground" />
-                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{secondaryLabel}</p>
-                  </div>
-                  <p className="text-4xl font-bold text-foreground text-center md:text-left w-full pl-0 md:pl-7">{secondaryValue}</p>
-
-                  <div className="mt-6 w-full flex justify-center md:justify-start pl-0 md:pl-7">
-                    <Badge variant="outline" className="bg-white text-muted-foreground py-1.5 px-3">
-                      <Calendar className="w-3.5 h-3.5 mr-1.5" />
-                      <span className="text-xs">{displayDate}</span>
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <div className={cn("grid gap-4", statBubbles.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2")}>
+              {statBubbles.map(({ label, value, icon: Icon, iconBox, iconColor }) => (
+                <Card key={label} className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
+                  <CardContent className="pt-5 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", iconBox)}>
+                        <Icon className={cn("w-5 h-5", iconColor)} />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">{label}</p>
+                        <p className="text-xl font-bold text-foreground">{value}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Main Content Tabs */}
-        <section className="py-12">
+        <section id="pestanas-portafolio" className="pt-6 pb-8 scroll-mt-20">
           <div className="container mx-auto px-4 max-w-7xl">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 mb-8">
+            <Tabs value={activeTab} onValueChange={goToTab} className="w-full">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 mb-6">
                 <TabsHint />
                 <TabsList className="grid w-full grid-cols-2 gap-4 max-w-xl mx-auto md:mx-0">
                   <TabsTrigger
@@ -407,20 +409,22 @@ const Portfolio = () => {
                   </div>
 
                   <CardContent className="p-0">
-                    {/* Fecha */}
-                    <div className="px-4 py-3 border-b border-border bg-muted/30">
-                      <p className="text-sm text-muted-foreground font-medium">
-                        {capitalPrivadoData.fechaReporte}
-                      </p>
-                    </div>
 
                     {/* Tabla de compartimentos */}
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm min-w-[800px]">
+                      <table className="w-full text-sm min-w-[600px] table-fixed">
+                        {/* Anchos de columna repartidos de forma pareja */}
+                        <colgroup>
+                          <col className="w-[25%]" />
+                          <col className="w-[8.33%]" />
+                          <col className="w-[8.33%]" />
+                          <col className="w-[8.34%]" />
+                          <col className="w-[25%]" />
+                          <col className="w-[25%]" />
+                        </colgroup>
                         <thead>
                           <tr className="bg-secondary text-white">
                             <th className="text-left py-3 px-4 font-semibold">Compartimento</th>
-                            <th className="text-right py-3 px-4 font-semibold">Total Activos</th>
                             <th className="text-center py-3 px-4 font-semibold" colSpan={3}>
                               <div>Rentabilidad EA</div>
                               <div className="flex justify-center gap-4 mt-1 text-xs font-normal text-white/80">
@@ -429,8 +433,7 @@ const Portfolio = () => {
                                 <span>365 días</span>
                               </div>
                             </th>
-                            <th className="text-right py-3 px-4 font-semibold">* Disponible</th>
-                            <th className="text-right py-3 px-4 font-semibold">Vr. del Compartimento</th>
+                            <th className="text-center py-3 px-4 font-semibold">Vr. del Compartimento</th>
                             <th className="text-center py-3 px-4 font-semibold">% de los Activos</th>
                           </tr>
                         </thead>
@@ -441,7 +444,6 @@ const Portfolio = () => {
                               index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
                             )}>
                               <td className="py-3 px-4 text-muted-foreground">Comp. {comp.name}</td>
-                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.totalActivos)}</td>
                               <td className="py-3 px-4 text-center" colSpan={3}>
                                 <div className="flex justify-center gap-4">
                                   <span className="font-bold text-secondary">{comp.rentabilidad30dias}%</span>
@@ -449,125 +451,25 @@ const Portfolio = () => {
                                   <span className="font-bold text-secondary">{comp.rentabilidad365dias}%</span>
                                 </div>
                               </td>
-                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{formatCOP(comp.disponible)}</td>
-                              <td className="py-3 px-4 text-right font-medium text-[#0F172A]">{comp.invertido > 0 ? formatCOP(comp.invertido) : '-'}</td>
+                              <td className="py-3 px-4 text-center font-medium text-[#0F172A]">{comp.invertido > 0 ? formatCOP(comp.invertido) : '-'}</td>
                               <td className="py-3 px-4 text-center font-bold text-[#0F172A]">{comp.porcentajeActivos}%</td>
                             </tr>
                           ))}
                           {/* Fila de Totales */}
                           <tr className="bg-muted/30 font-bold border-t-2 border-secondary/30">
                             <td className="py-3 px-4 text-[#0F172A]">Total {capitalPrivadoData.name}</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalFondo)}</td>
                             <td className="py-3 px-4 text-center text-muted-foreground" colSpan={3}>-</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalDisponible)}</td>
-                            <td className="py-3 px-4 text-right text-[#0F172A]">{formatCOP(capitalPrivadoData.totalInvertido)}</td>
-                            <td className="py-3 px-4 text-center text-[#0F172A]">{capitalPrivadoData.porcentajeTotal}%</td>
+                            <td className="py-3 px-4 text-center text-[#0F172A]">{formatCOP(totalVrCompartimentos)}</td>
+                            <td className="py-3 px-4 text-center text-[#0F172A]">{porcentajeTotalMostrado}%</td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
-
-                    {/* Nota al pie */}
-                    <div className="px-4 py-3 bg-muted/20 border-t border-border">
-                      <p className="text-xs text-muted-foreground">* (Bancos + Inversiones a la vista)</p>
-                    </div>
                   </CardContent>
                 </Card>
 
-                {/* Compartimentos Grid Header */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-[#0F172A] mb-2">Detalle por Compartimento</h3>
-                  <p className="text-muted-foreground">Información detallada de rentabilidad por período</p>
-                </div>
-
-                {/* Compartimentos Grid */}
-                <div className="grid lg:grid-cols-3 gap-6">
-                  {compartimentosData.map((comp, idx) => (
-                    <Card
-                      key={comp.id}
-                      className="border border-border/50 hover:border-[#0F172A]/30 hover:shadow-lg transition-all duration-300"
-                    >
-                      <CardHeader className="pb-4">
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-xl text-[#0F172A]">{comp.name}</CardTitle>
-                          <div className={cn(
-                            "w-3 h-3 rounded-full",
-                            idx === 0 ? 'bg-[#0F172A]' :
-                              idx === 1 ? 'bg-secondary' : 'bg-amber-500'
-                          )} />
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        {/* Total Activos */}
-                        <div className="bg-muted/50 rounded-xl p-4">
-                          <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                            <Wallet className="w-3 h-3" />
-                            Total de Activos
-                          </p>
-                          <p className="text-xl font-bold text-[#0F172A]">{formatCOP(comp.totalActivos)}</p>
-                        </div>
-
-                        {/* Rentabilidad EA - Todos los períodos */}
-                        <div>
-                          <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" />
-                            Rentabilidad EA por Período
-                          </p>
-                          <div className="grid grid-cols-3 gap-2">
-
-                            <div className="bg-secondary/10 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">30 días</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad30dias}%</p>
-                            </div>
-                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">60 días</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad60dias}%</p>
-                            </div>
-                            <div className="bg-secondary/10 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">90 días</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad90dias}%</p>
-                            </div>
-                            <div className="bg-secondary/5 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">180 días</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad180dias}%</p>
-                            </div>
-                            <div className="bg-secondary/15 rounded-lg p-2 text-center">
-                              <p className="text-[10px] text-muted-foreground">365 días</p>
-                              <p className="text-sm font-bold text-secondary">{comp.rentabilidad365dias}%</p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Distribución */}
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Saldo Disponible</span>
-                            <span className="font-medium text-foreground">{formatCOP(comp.disponible)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Saldo Invertido</span>
-                            <span className="font-medium text-foreground">{comp.invertido > 0 ? formatCOP(comp.invertido) : '-'}</span>
-                          </div>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div>
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs text-muted-foreground">% de Activos Invertidos</span>
-                            <span className="text-sm font-bold text-[#0F172A]">{comp.porcentajeActivos}%</span>
-                          </div>
-                          <Progress
-                            value={comp.porcentajeActivos}
-                            className="h-2 bg-muted"
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
                 {/* CTA Invertir */}
-                <div className="text-center mt-8">
+                <div className="text-center mt-6">
                   <Link to="/investors#vinculacion">
                     <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
                       Empezar Ahora
@@ -697,10 +599,11 @@ const Portfolio = () => {
                   </CardHeader>
                   <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                      <table className="w-full text-sm min-w-[1000px]">
+                      <table className="w-full text-sm min-w-[1100px]">
                         <thead>
                           <tr className="bg-muted/50">
                             <th className="text-left py-4 px-4 font-semibold text-muted-foreground">Tipo de participación</th>
+                            <th className="text-center py-4 px-4 font-semibold text-muted-foreground">Monto mínimo<br />de inversión</th>
                             <th className="text-center py-4 px-4 font-semibold text-muted-foreground">Año corrido<br />% E.A</th>
                             <th className="text-center py-4 px-4 font-semibold text-muted-foreground">Diaria<br />% E.A</th>
                             <th className="text-center py-4 px-4 font-semibold text-muted-foreground">30 días<br />% E.A</th>
@@ -717,6 +620,7 @@ const Portfolio = () => {
                               index % 2 === 0 ? 'bg-white' : 'bg-muted/10'
                             )}>
                               <td className="py-4 px-4 text-muted-foreground">{item.nombre}</td>
+                              <td className="py-4 px-4 text-center font-medium text-[#0F172A] whitespace-nowrap">{montoMinimoFIC(item.nombre)}</td>
                               <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.anoCorridoEA}</td>
                               <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.diariaEA}</td>
                               <td className="py-4 px-4 text-center font-medium text-[#0F172A]">{item.dias30EA}</td>
@@ -732,139 +636,8 @@ const Portfolio = () => {
                   </CardContent>
                 </Card>
 
-                {/* Tipos de Participación Header */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-bold text-[#0F172A] mb-2">Tipos de Participación</h3>
-                  <p className="text-muted-foreground">Seleccione el tipo de participación que mejor se adapte a su perfil de inversión</p>
-                </div>
-
-                {/* Comparison Cards */}
-                <div className="grid md:grid-cols-2 gap-6 mb-8">
-                  {ficTiposData.map((tipo, index) => (
-                    <Card
-                      key={tipo.id}
-                      className={cn(
-                        "relative overflow-hidden border-2 transition-all duration-300",
-                        index === 0
-                          ? "border-secondary bg-gradient-to-br from-secondary/5 to-secondary/10"
-                          : "border-border hover:border-[#0F172A]/30"
-                      )}
-                    >
-                      {index === 0 && (
-                        <div className="absolute top-4 right-4">
-                          <Badge className="bg-secondary text-white">
-                            Recomendado
-                          </Badge>
-                        </div>
-                      )}
-                      <CardHeader>
-                        <CardTitle className="text-2xl text-[#0F172A]">
-                          Tipo {tipo.nombre}
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground">{tipo.descripcion}</p>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        {/* Inversión Mínima */}
-                        <div className="p-4 bg-muted/50 rounded-xl">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Wallet className="w-4 h-4 text-[#0F172A]" />
-                            <p className="text-sm text-muted-foreground">Inversión Inicial Mínima</p>
-                          </div>
-                          <p className="text-2xl font-bold text-[#0F172A]">
-                            {formatCOP(tipo.inversionMinimaInicial)}
-                          </p>
-                        </div>
-
-                        {/* Metrics Grid */}
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="p-4 bg-card border border-border rounded-xl">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Percent className="w-4 h-4 text-muted-foreground" />
-                              <p className="text-xs text-muted-foreground">Comisión Admin.</p>
-                            </div>
-                            <p className="text-xl font-bold text-[#0F172A]">{tipo.comisionAdministracion}%</p>
-                          </div>
-                          <div className="p-4 bg-card border border-border rounded-xl">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Clock className="w-4 h-4 text-muted-foreground" />
-                              <p className="text-xs text-muted-foreground">Permanencia</p>
-                            </div>
-                            <p className="text-xl font-bold text-[#0F172A]">{tipo.pactoPermanencia} días</p>
-                          </div>
-                        </div>
-
-                        {/* Rentabilidad Estimada */}
-                        <div className="p-4 bg-secondary/10 rounded-xl">
-                          <div className="flex items-center gap-2 mb-2">
-                            <TrendingUp className="w-4 h-4 text-secondary" />
-                            <p className="text-sm text-muted-foreground">Rentabilidad Estimada</p>
-                          </div>
-                          <p className="text-2xl font-bold text-secondary">{tipo.rentabilidadEstimada}% E.A.</p>
-                        </div>
-
-                        <Link to="/investors#vinculacion">
-                          <Button
-                            className={cn(
-                              "w-full",
-                              index === 0
-                                ? "bg-secondary hover:bg-secondary/90 text-white"
-                                : "bg-[#0F172A] hover:bg-[#0F172A]/90 text-white"
-                            )}
-                          >
-                            Me Interesa {tipo.nombre}
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-
-                {/* Comparison Table */}
-                <Card className="border-border/50">
-                  <CardHeader>
-                    <CardTitle className="text-lg text-[#0F172A]">Comparativa Detallada</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="bg-muted/50">
-                            <th className="text-left py-4 px-4 font-semibold text-[#0F172A] rounded-tl-lg">Característica</th>
-                            <th className="text-center py-4 px-4 font-semibold text-[#0F172A]">TP1</th>
-                            <th className="text-center py-4 px-4 font-semibold text-secondary rounded-tr-lg">TP2</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-border/50">
-                            <td className="py-4 px-4 text-muted-foreground">Inversión Inicial Mínima</td>
-                            <td className="py-4 px-4 text-center font-medium">$10.000.000</td>
-                            <td className="py-4 px-4 text-center font-medium text-secondary">$1.000.000.000</td>
-                          </tr>
-                          <tr className="border-b border-border/50 bg-muted/20">
-                            <td className="py-4 px-4 text-muted-foreground">Comisión de Administración</td>
-                            <td className="py-4 px-4 text-center font-medium">2.25%</td>
-                            <td className="py-4 px-4 text-center font-medium text-secondary">1.75%</td>
-                          </tr>
-                          <tr className="border-b border-border/50">
-                            <td className="py-4 px-4 text-muted-foreground rounded-bl-lg">Pacto de Permanencia</td>
-                            <td className="py-4 px-4 text-center font-medium">180 días</td>
-                            <td className="py-4 px-4 text-center font-medium rounded-br-lg">180 días</td>
-                          </tr>
-
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="mt-4 px-4">
-                      <p className="text-xs text-muted-foreground italic text-center">
-                        Fuente de esta información: Fiduciaria Aval Vigilada Superfinanciera
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
                 {/* CTA Invertir */}
-                <div className="text-center mt-8">
+                <div className="text-center mt-6">
                   <Link to="/investors#vinculacion">
                     <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-10 py-6 text-lg font-bold shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300">
                       Me Interesa

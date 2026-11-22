@@ -1,6 +1,13 @@
-import { MapPin, Mail, Clock } from 'lucide-react';
+import { MapPin, Mail, Clock, Instagram, Facebook, Linkedin } from 'lucide-react';
 import ContactForm from './ContactForm';
 import logoInnovafin from '@/assets/logo-innovafin.png';
+
+// Redes sociales. Cuando existan las cuentas, poner la dirección en "href" (ej. 'https://instagram.com/innovafin').
+const socialLinks = [
+  { label: 'Instagram', icon: Instagram, href: '' },
+  { label: 'Facebook', icon: Facebook, href: '' },
+  { label: 'LinkedIn', icon: Linkedin, href: '' },
+];
 
 const Footer = () => {
   return (
@@ -26,6 +33,27 @@ const Footer = () => {
             <p className="text-white/60 text-xs leading-relaxed pr-4">
               Somos una firma colombiana de banca de inversión y fintech comprometida con el crecimiento de tu empresa.
             </p>
+
+            {/* Síguenos en */}
+            <div className="mt-5">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-secondary mb-3">Síguenos en:</p>
+              <div className="flex items-center gap-3">
+                {socialLinks.map(({ label, icon: Icon, href }) => (
+                  <a
+                    key={label}
+                    href={href || '#'}
+                    aria-label={label}
+                    title={label}
+                    {...(href
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : { onClick: (e: React.MouseEvent) => e.preventDefault() })}
+                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/80 transition-all duration-300 hover:bg-secondary hover:border-secondary hover:text-white hover:-translate-y-0.5"
+                  >
+                    <Icon className="w-4 h-4" strokeWidth={1.75} />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Column 2: Location & Contact */}

@@ -17,12 +17,8 @@ const EstructuracionNegocios = () => {
       ]}
       accentColor="violet"
       prevService={{
-        title: 'Consultoría Financiera',
-        route: '/servicios/consultoria-financiera',
-      }}
-      nextService={{
-        title: 'Re-perfilamiento de Deuda',
-        route: '/servicios/reperfilamiento-deuda',
+        title: 'Gestión de Activos Alternativos',
+        route: '/servicios/gestion-activos-alternativos',
       }}
     />
   );

@@ -9,10 +9,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { LegalCheckboxes } from '@/components/LegalCheckboxes';
+import PhoneCountryInput from '@/components/PhoneCountryInput';
 
 const formSchema = z.object({
   nombre: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }).max(100),
   email: z.string().email({ message: "Ingrese un correo electrónico válido" }).max(255),
+  whatsappPais: z.string(),
+  whatsapp: z.string().refine(val => {
+    const digitos = val.replace(/\D/g, '').length;
+    return digitos >= 7 && digitos <= 15;
+  }, { message: "Ingrese un número de WhatsApp válido" }),
   mensaje: z.string().min(10, { message: "El mensaje debe tener al menos 10 caracteres" }).max(1000),
   aceptaHabeasData: z.boolean().refine(val => val === true, {
     message: "Debe autorizar el tratamiento de datos",
@@ -32,6 +38,8 @@ const ContactForm = () => {
     defaultValues: {
       nombre: '',
       email: '',
+      whatsappPais: 'co',
+      whatsapp: '',
       mensaje: '',
       aceptaHabeasData: false,
       aceptaTerminos: false,
@@ -88,6 +96,24 @@ const ContactForm = () => {
                   {...field}
                 />
               </FormControl>
+              <FormMessage className="text-red-400 text-xs" />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="whatsapp"
+          render={({ field }) => (
+            <FormItem>
+              <PhoneCountryInput
+                country={form.watch("whatsappPais")}
+                onCountryChange={(code) => form.setValue("whatsappPais", code)}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                placeholder="WhatsApp"
+              />
               <FormMessage className="text-red-400 text-xs" />
             </FormItem>
           )}

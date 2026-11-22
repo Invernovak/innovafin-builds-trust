@@ -18,8 +18,8 @@ const GestorProfesional = () => {
       ]}
       accentColor="primary"
       nextService={{
-        title: 'Valoración de Empresas',
-        route: '/servicios/valoracion-empresas',
+        title: 'Estructuración de Negocios',
+        route: '/servicios/estructuracion-negocios',
       }}
     />
   );

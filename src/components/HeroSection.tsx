@@ -74,7 +74,7 @@ const HeroSection = () => {
               Gestión de activos y banca de inversión de clase institucional
             </p>
 
-            <p className="text-lg md:text-xl text-white/75 mb-10 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            <p className="text-lg text-white/75 mb-10 leading-relaxed max-w-xl animate-fade-up" style={{ animationDelay: '0.2s' }}>
               En Innovafin estructuramos y administramos fondos de capital privado con tecnología de vanguardia y controles permanentes, para que alcances tus objetivos de inversión con respaldo experto.
             </p>
 

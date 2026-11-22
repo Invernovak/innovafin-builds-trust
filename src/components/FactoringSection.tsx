@@ -44,11 +44,11 @@ const FactoringSection = () => {
         <div 
           ref={headerRef}
           className={cn(
-            "text-center mb-16 transition-all duration-700",
+            "text-center mb-8 transition-all duration-700",
             headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 border border-white/30 text-white text-sm font-semibold mb-4">
             <span className="w-2 h-2 rounded-full bg-secondary animate-pulse" />
             Portal Factoring
           </span>
@@ -60,7 +60,7 @@ const FactoringSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
           {features.map((feature, index) => (
             <FeatureCard key={index} feature={feature} delay={index * 100} />
           ))}
