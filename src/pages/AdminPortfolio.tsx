@@ -11,6 +11,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useAuth } from '@/hooks/useAuth';
+import MaintenanceNotice from '@/components/MaintenanceNotice';
+import { PORTAL_EN_MANTENIMIENTO } from '@/lib/mantenimiento';
 import {
   useCapitalPrivado,
   useCompartimentos,
@@ -61,8 +63,14 @@ const AdminPortfolio = () => {
         <Header />
         <main className="pt-24 pb-12">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-2xl font-bold mb-4">Acceso Restringido</h1>
-            <p className="text-muted-foreground">Debes iniciar sesión para acceder a esta página.</p>
+            {PORTAL_EN_MANTENIMIENTO ? (
+              <MaintenanceNotice />
+            ) : (
+              <>
+                <h1 className="text-2xl font-bold mb-4">Acceso Restringido</h1>
+                <p className="text-muted-foreground">Debes iniciar sesión para acceder a esta página.</p>
+              </>
+            )}
           </div>
         </main>
         <Footer />

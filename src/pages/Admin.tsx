@@ -47,6 +47,8 @@ import {
   Briefcase,
 } from 'lucide-react';
 import { AuthModal } from '@/components/AuthModal';
+import MaintenanceNotice from '@/components/MaintenanceNotice';
+import { PORTAL_EN_MANTENIMIENTO } from '@/lib/mantenimiento';
 
 const STATUS_OPTIONS: { value: RequestStatus; label: string; color: string }[] = [
   { value: 'pending', label: 'Pendiente', color: 'bg-yellow-500' },
@@ -150,14 +152,18 @@ export default function Admin() {
       <>
         <Header />
         <main className="min-h-screen pt-24 pb-16 bg-background">
-          <div className="container mx-auto px-4 text-center">
-            <ShieldAlert className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-            <h1 className="text-2xl font-bold mb-2">Acceso Restringido</h1>
-            <p className="text-muted-foreground mb-6">
-              Debe iniciar sesión para acceder al panel de administración.
-            </p>
-            <Button onClick={() => setShowAuthModal(true)}>Iniciar Sesión</Button>
-          </div>
+          {PORTAL_EN_MANTENIMIENTO ? (
+            <MaintenanceNotice />
+          ) : (
+            <div className="container mx-auto px-4 text-center">
+              <ShieldAlert className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+              <h1 className="text-2xl font-bold mb-2">Acceso Restringido</h1>
+              <p className="text-muted-foreground mb-6">
+                Debe iniciar sesión para acceder al panel de administración.
+              </p>
+              <Button onClick={() => setShowAuthModal(true)}>Iniciar Sesión</Button>
+            </div>
+          )}
         </main>
         <Footer />
         <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />

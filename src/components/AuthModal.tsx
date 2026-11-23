@@ -6,6 +6,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { LegalCheckboxes } from '@/components/LegalCheckboxes';
+import MaintenanceNotice from '@/components/MaintenanceNotice';
+import { PORTAL_EN_MANTENIMIENTO } from '@/lib/mantenimiento';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -25,6 +27,9 @@ export function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
   const { signIn, signUp } = useAuth();
 
   if (!isOpen) return null;
+
+  // Mientras la plataforma esté en mantenimiento, se muestra el aviso en lugar del formulario
+  if (PORTAL_EN_MANTENIMIENTO) return <MaintenanceNotice onClose={onClose} />;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
