@@ -14,6 +14,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import Header from '@/components/Header';
 import TabsHint from '@/components/TabsHint';
+import GhlField from '@/components/GhlField';
+import { fechaHoy } from '@/lib/ghl';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -361,6 +363,13 @@ const Originators = () => {
                 </CardHeader>
                 <CardContent>
                   <form id="form-vinculacion-originadores" name="Vinculacion Originadores" onSubmit={handleSubmit} className="space-y-6">
+                    {/* Datos adicionales para GHL (campos invisibles) */}
+                    <GhlField name="tipo_documento" value="NIT" />
+                    <GhlField name="razon_social" value={formData.companyName} />
+                    <GhlField name="autorizacion_tratamiento_de_datos" value={formData.aceptaHabeasData ? 'Sí' : 'No'} />
+                    <GhlField name="fecha_autorizacion_datos" value={formData.aceptaHabeasData ? fechaHoy() : ''} />
+                    <GhlField name="canal_de_entrada" value="Formulario web" />
+                    <GhlField name="formulario" value="formulario-originadores" />
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Nombre de la Empresa */}
                       <div>
@@ -387,6 +396,7 @@ const Originators = () => {
                           type="text"
                           className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
                           placeholder="900.123.456-7"
+                          name="cedula"
                           value={formData.nit}
                           onChange={(e) => setFormData({ ...formData, nit: e.target.value })}
                           required
@@ -631,7 +641,7 @@ const Originators = () => {
                       <textarea
                         className="w-full px-4 py-3 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all resize-y min-h-[100px]"
                         placeholder="Describa brevemente su modelo de negocio y propuesta de valor..."
-                        name="message"
+                        name="mensaje"
                         value={formData.businessDescription}
                         onChange={(e) => setFormData({ ...formData, businessDescription: e.target.value })}
                         required

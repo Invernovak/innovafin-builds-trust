@@ -12,6 +12,8 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import Header from '@/components/Header';
 import TabsHint from '@/components/TabsHint';
+import GhlField from '@/components/GhlField';
+import { fechaHoy } from '@/lib/ghl';
 import Footer from '@/components/Footer';
 import { cn } from '@/lib/utils';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -422,11 +424,17 @@ const Investors = () => {
                 </CardHeader>
                 <CardContent>
                   <form id="form-vinculacion-inversionistas" name="Vinculacion Inversionistas" onSubmit={handleSubmit} className="space-y-5">
-                    {/* Datos que se eligen con botones o listas: se envían ocultos para el seguimiento de GHL */}
-                    <input type="hidden" name="tipo_persona" value={tipoPersona === 'natural' ? 'Persona natural' : 'Persona jurídica'} />
-                    <input type="hidden" name="state" value={formData.departamento} />
-                    <input type="hidden" name="city" value={formData.ciudad} />
-                    <input type="hidden" name="horario_contacto" value={formData.horarioContacto} />
+                    {/* Datos que se eligen con botones o listas: campos de texto invisibles (GHL ignora los de tipo "hidden") */}
+                    <input type="text" name="tipo_persona" value={tipoPersona === 'natural' ? 'Persona natural' : 'Persona jurídica'} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+                    <input type="text" name="state" value={formData.departamento} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+                    <input type="text" name="city" value={formData.ciudad} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+                    <input type="text" name="horario_contacto" value={formData.horarioContacto} readOnly tabIndex={-1} aria-hidden="true" className="sr-only" />
+                    <GhlField name="tipo_documento" value={tipoPersona === 'natural' ? 'Cedula' : 'NIT'} />
+                    <GhlField name="razon_social" value={tipoPersona === 'juridica' ? formData.razonSocial : ''} />
+                    <GhlField name="autorizacion_tratamiento_de_datos" value={formData.aceptaHabeasData ? 'Sí' : 'No'} />
+                    <GhlField name="fecha_autorizacion_datos" value={formData.aceptaHabeasData ? fechaHoy() : ''} />
+                    <GhlField name="canal_de_entrada" value="Formulario web" />
+                    <GhlField name="formulario" value="formulario-inversionistas" />
                     {/* Tipo de Persona */}
                     <div>
                       <label className="text-sm font-medium mb-2 block">Tipo de Persona *</label>
@@ -455,7 +463,7 @@ const Investors = () => {
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
                             Número de Identificación *
                           </label>
-                          <input type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="1234567890" value={formData.numeroIdentificacion} onChange={e => handleInputChange('numeroIdentificacion', e.target.value)} required />
+                          <input type="text" name="cedula" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="1234567890" value={formData.numeroIdentificacion} onChange={e => handleInputChange('numeroIdentificacion', e.target.value)} required />
                         </div>
                       </div>
                     ) : (
@@ -470,7 +478,7 @@ const Investors = () => {
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
                             NIT *
                           </label>
-                          <input type="text" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="900.123.456-7" value={formData.nit} onChange={e => handleInputChange('nit', e.target.value)} required />
+                          <input type="text" name="cedula" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" placeholder="900.123.456-7" value={formData.nit} onChange={e => handleInputChange('nit', e.target.value)} required />
                         </div>
                         <div className="md:col-span-2">
                           <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -650,7 +658,7 @@ const Investors = () => {
                       <label className="text-sm font-medium text-muted-foreground mb-2 block">
                         Mensaje o Comentarios
                       </label>
-                      <textarea name="message" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y min-h-[80px] text-sm" placeholder="Cuéntenos sobre sus objetivos de inversión..." value={formData.mensaje} onChange={e => handleInputChange('mensaje', e.target.value)} />
+                      <textarea name="mensaje" className="w-full px-3 py-2.5 rounded-xl border-2 border-border bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-y min-h-[80px] text-sm" placeholder="Cuéntenos sobre sus objetivos de inversión..." value={formData.mensaje} onChange={e => handleInputChange('mensaje', e.target.value)} />
                     </div>
 
                     {/* Habeas Data Checkbox */}

@@ -10,6 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { toast } from 'sonner';
 import { LegalCheckboxes } from '@/components/LegalCheckboxes';
 import PhoneCountryInput from '@/components/PhoneCountryInput';
+import GhlField from '@/components/GhlField';
+import { fechaHoy } from '@/lib/ghl';
 
 const formSchema = z.object({
   nombre: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }).max(100),
@@ -64,6 +66,11 @@ const ContactForm = () => {
   return (
     <Form {...form}>
       <form id="form-escribenos" name="Escribenos - Pie de pagina" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* Datos adicionales para GHL (campos invisibles) */}
+        <GhlField name="autorizacion_tratamiento_de_datos" value={form.watch("aceptaHabeasData") ? 'Sí' : 'No'} />
+        <GhlField name="fecha_autorizacion_datos" value={form.watch("aceptaHabeasData") ? fechaHoy() : ''} />
+        <GhlField name="canal_de_entrada" value="Formulario web" />
+        <GhlField name="formulario" value="formulario-escribenos" />
         <FormField
           control={form.control}
           name="nombre"
