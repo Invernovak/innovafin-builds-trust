@@ -363,7 +363,7 @@ const Investors = () => {
               </div>
 
               <div className="text-center">
-                <Button size="default" className="bg-primary hover:bg-primary/90 rounded-full px-6" onClick={() => setActiveTab('vinculacion')}>
+                <Button size="default" className="bg-primary hover:bg-primary/90 rounded-full px-6" onClick={() => goToTab('vinculacion')}>
                   Comenzar Vinculación
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>

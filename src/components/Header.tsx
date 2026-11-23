@@ -63,13 +63,47 @@ const Header = () => {
   // Check if we're on a page with white background (not the homepage)
   const isInternalPage = location.pathname !== '/';
 
+  // En la portada: sección que se está viendo (para marcar Quiénes Somos o Servicios en el menú)
+  const [homeSection, setHomeSection] = useState<'nosotros' | 'servicios' | null>(null);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      if (window.location.pathname !== '/') return;
+      const linea = 140; // altura (px) bajo el menú desde la que se considera "estar" en una sección
+      const enVista = (['nosotros', 'servicios'] as const).find((id) => {
+        const r = document.getElementById(id)?.getBoundingClientRect();
+        return r && r.top <= linea && r.bottom > linea;
+      });
+      setHomeSection(enVista ?? null);
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
+
+  // Opción del menú que corresponde a la página (o sección) actual
+  const activeLabel = (() => {
+    const path = location.pathname;
+    if (path.startsWith('/servicios')) return 'Servicios';
+    if (path.startsWith('/investors')) return 'Inversionistas';
+    if (path.startsWith('/portfolio')) return 'Portafolio';
+    if (path.startsWith('/originators')) return 'Originadores';
+    if (path.startsWith('/factoring')) return 'Factoring';
+    if (path === '/') {
+      if (homeSection === 'nosotros') return 'Quiénes Somos';
+      if (homeSection === 'servicios') return 'Servicios';
+      return 'Inicio';
+    }
+    return null;
+  })();
+
+  // Línea verde bajo la opción activa
+  const ActiveLine = ({ label }: { label: string }) =>
+    activeLabel === label ? (
+      <span className="pointer-events-none absolute left-3 right-3 -bottom-0.5 h-0.5 rounded-full bg-secondary" />
+    ) : null;
+  const activeText = (label: string) => (activeLabel === label ? ' relative font-semibold' : ' relative');
 
   // Force "scrolled" style on internal pages or when actually scrolled
   const showSolidHeader = isScrolled || isInternalPage;
@@ -150,10 +184,11 @@ const Header = () => {
                       className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap inline-flex items-center gap-1 ${showSolidHeader
                         ? 'text-foreground hover:text-primary hover:bg-muted'
                         : 'text-white/90 hover:text-white hover:bg-white/10'
-                        }`}
+                        }${activeText(item.label)}`}
                     >
                       {item.label}
                       <ChevronDown className="w-3 h-3" />
+                      <ActiveLine label={item.label} />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -185,9 +220,10 @@ const Header = () => {
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
                     ? 'text-foreground hover:text-primary hover:bg-muted'
                     : 'text-white/90 hover:text-white hover:bg-white/10'
-                    }`}
+                    }${activeText(item.label)}`}
                 >
                   {item.label}
+                  <ActiveLine label={item.label} />
                 </Link>
               ) : (
                 <button
@@ -196,9 +232,10 @@ const Header = () => {
                   className={`px-3 py-2 text-xs lg:text-sm font-medium transition-all duration-300 rounded-full whitespace-nowrap ${showSolidHeader
                     ? 'text-foreground hover:text-primary hover:bg-muted'
                     : 'text-white/90 hover:text-white hover:bg-white/10'
-                    }`}
+                    }${activeText(item.label)}`}
                 >
                   {item.label}
+                  <ActiveLine label={item.label} />
                 </button>
               )
             )}

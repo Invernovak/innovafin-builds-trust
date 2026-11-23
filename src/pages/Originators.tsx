@@ -336,10 +336,10 @@ const Originators = () => {
               <div className="text-center">
                 <Button
                   size="default"
-                  className="bg-secondary hover:bg-secondary/90 rounded-full px-6"
+                  className="bg-primary hover:bg-primary/90 rounded-full px-6"
                   onClick={() => goToTab('vinculacion')}
                 >
-                  Me Interesa
+                  Comenzar Vinculación
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
