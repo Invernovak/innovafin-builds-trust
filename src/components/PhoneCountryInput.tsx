@@ -134,7 +134,17 @@ const PhoneCountryInput = ({
       />
 
       {/* Número completo con indicativo, para el seguimiento de GHL */}
-      <input type="hidden" name={hiddenName} value={digits ? `${selected.dial}${digits}` : ''} />
+      {/* Campo de teléfono real (no "hidden", porque GHL ignora esos), visualmente oculto y fuera del tabulador */}
+      <input
+        type="tel"
+        name={hiddenName}
+        value={digits ? `${selected.dial}${digits}` : ''}
+        readOnly
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="off"
+        className="sr-only"
+      />
     </div>
   );
 };

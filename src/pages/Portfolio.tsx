@@ -165,11 +165,11 @@ const Portfolio = () => {
   const vieneDeInversionistas = (location.state as { desde?: string } | null)?.desde === 'inversionistas';
   const [activeTab, setActiveTab] = useState('capital-privado');
 
-  // Al presionar una pestaña, baja suavemente dejando visibles las burbujas de datos (cambian con la pestaña)
+  // Al presionar una pestaña, baja suavemente para mostrar su contenido
   const goToTab = (tab: string) => {
     setActiveTab(tab);
     setTimeout(() => {
-      document.getElementById('datos-portafolio')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('pestanas-portafolio')?.scrollIntoView({ behavior: 'smooth' });
     }, 50);
   };
   const { ref: heroRef, isVisible: heroVisible } = useScrollAnimation<HTMLDivElement>({ threshold: 0.1 });
@@ -266,17 +266,12 @@ const Portfolio = () => {
   // Dynamic values based on active tab
   const isFicActive = activeTab === 'fic';
   const displayDate = isFicActive ? ficAlternativos180Plus.fechaReporte : capitalPrivadoData.fechaReporte;
-  // Burbujas de datos bajo la franja superior (cambian según la pestaña activa)
-  const statBubbles = isFicActive
-    ? [
-        { label: 'Valor Fondo FIC', value: formatCOP(ficAlternativos180Plus.saldo), icon: Users, iconBox: 'bg-primary/10', iconColor: 'text-primary' },
-        { label: 'Participaciones', value: String(ficAlternativos180Plus.tiposParticipacion.length), icon: Briefcase, iconBox: 'bg-secondary/10', iconColor: 'text-secondary' },
-      ]
-    : [
-        { label: 'Portafolio Total Gestionado', value: formatCOP(portafolioTotal), icon: Wallet, iconBox: 'bg-primary/10', iconColor: 'text-primary' },
-        { label: 'Fondos de Capital Privado', value: '1', icon: ShieldCheck, iconBox: 'bg-secondary/10', iconColor: 'text-secondary' },
-        { label: 'Compartimentos', value: '2', icon: Briefcase, iconBox: 'bg-accent', iconColor: 'text-accent-foreground' },
-      ];
+  // Burbujas de datos bajo la franja superior (las mismas en las pestañas FCP y FIC)
+  const statBubbles = [
+    { label: 'Portafolio Total Gestionado', value: formatCOP(portafolioTotal), icon: Wallet, iconBox: 'bg-primary/10', iconColor: 'text-primary' },
+    { label: 'Fondos de Capital Privado', value: '1', icon: ShieldCheck, iconBox: 'bg-secondary/10', iconColor: 'text-secondary' },
+    { label: 'Compartimentos', value: '2', icon: Briefcase, iconBox: 'bg-accent', iconColor: 'text-accent-foreground' },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -346,11 +341,12 @@ const Portfolio = () => {
               {statBubbles.map(({ label, value, icon: Icon, iconBox, iconColor }) => (
                 <Card key={label} className="bg-white shadow-lg border-0 hover:shadow-xl transition-shadow duration-300">
                   <CardContent className="pt-5 pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shrink-0", iconBox)}>
+                    {/* Ícono a la izquierda; etiqueta y número centrados en el recuadro */}
+                    <div className="relative flex items-center min-h-11">
+                      <div className={cn("absolute left-0 w-11 h-11 rounded-xl flex items-center justify-center shrink-0", iconBox)}>
                         <Icon className={cn("w-5 h-5", iconColor)} />
                       </div>
-                      <div>
+                      <div className="w-full text-center px-12">
                         <p className="text-xs text-muted-foreground">{label}</p>
                         <p className="text-xl font-bold text-foreground">{value}</p>
                       </div>
@@ -433,7 +429,7 @@ const Portfolio = () => {
                                 <span>365 días</span>
                               </div>
                             </th>
-                            <th className="text-center py-3 px-4 font-semibold">Vr. del Compartimento</th>
+                            <th className="text-center py-3 px-4 font-semibold">Valor del Compartimento</th>
                             <th className="text-center py-3 px-4 font-semibold">% de los Activos</th>
                           </tr>
                         </thead>
@@ -472,7 +468,7 @@ const Portfolio = () => {
                 <div className="text-center mt-6">
                   <Link to="/investors#vinculacion">
                     <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
-                      Empezar Ahora
+                      Me Interesa
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>
@@ -507,7 +503,7 @@ const Portfolio = () => {
                         <p className="text-sm font-medium">Rentabilidad / Vr. Fondo</p>
                         <p className="text-lg font-bold">{ficData.name}</p>
                       </div>
-                      <div className="text-right">
+                      <div className="text-center">
                         <p className="text-xs text-white/60 uppercase tracking-wider mb-1">Administrador</p>
                         <p className="text-sm font-bold">{ficData.administrador}</p>
                       </div>
@@ -639,9 +635,9 @@ const Portfolio = () => {
                 {/* CTA Invertir */}
                 <div className="text-center mt-6">
                   <Link to="/investors#vinculacion">
-                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-10 py-6 text-lg font-bold shadow-lg hover:shadow-secondary/40 hover:scale-105 transition-all duration-300">
+                    <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-white rounded-full px-8">
                       Me Interesa
-                      <ArrowRight className="w-6 h-6 ml-2" />
+                      <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   </Link>
                 </div>

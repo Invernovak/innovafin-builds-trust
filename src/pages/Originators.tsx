@@ -360,7 +360,7 @@ const Originators = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form id="form-vinculacion-originadores" name="Vinculacion Originadores" onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Nombre de la Empresa */}
                       <div>

@@ -43,7 +43,7 @@ const PortfolioSection = () => {
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
               {currentCompartments.map((compartment, index) => (
-                <div key={index} className="bento-card min-h-[144px] flex flex-col items-center justify-center text-center group hover:shadow-lg transition-all duration-300">
+                <div key={index} className="bento-card min-h-[144px] flex flex-col items-center justify-center text-center border-2 border-primary/20 hover:border-primary/40 group hover:shadow-lg transition-all duration-300">
                   <div
                     className="w-4 h-4 rounded-full mx-auto mb-4"
                     style={{ backgroundColor: compartment.color }}
@@ -69,7 +69,7 @@ const PortfolioSection = () => {
             </h3>
             <div className="grid sm:grid-cols-2 gap-4">
               {futureCompartments.map((compartment, index) => (
-                <div key={index} className="bento-card min-h-[144px] flex flex-col items-center justify-center border-dashed border-2 border-muted-foreground/20 bg-muted/30 text-center group hover:shadow-lg transition-all duration-300">
+                <div key={index} className="bento-card min-h-[144px] flex flex-col items-center justify-center border-dashed border-2 border-secondary/40 hover:border-secondary/60 bg-muted/30 text-center group hover:shadow-lg transition-all duration-300">
                   <h4 className="text-lg font-semibold text-foreground mb-2">
                     {compartment.name}
                   </h4>

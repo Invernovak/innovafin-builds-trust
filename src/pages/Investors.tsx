@@ -421,7 +421,7 @@ const Investors = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-5">
+                  <form id="form-vinculacion-inversionistas" name="Vinculacion Inversionistas" onSubmit={handleSubmit} className="space-y-5">
                     {/* Datos que se eligen con botones o listas: se envían ocultos para el seguimiento de GHL */}
                     <input type="hidden" name="tipo_persona" value={tipoPersona === 'natural' ? 'Persona natural' : 'Persona jurídica'} />
                     <input type="hidden" name="state" value={formData.departamento} />
